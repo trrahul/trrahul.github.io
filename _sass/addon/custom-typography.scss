@@ -1,0 +1,206 @@
+@import 'addon/font-alternatives';
+
+
+:root {
+  font-size: 16px;
+}
+
+body {
+  line-height: 1.8;
+  letter-spacing: -0.011em;
+  font-feature-settings: 'liga' 1, 'calt' 1;
+}
+
+
+h1, h2, h3, h4, h5,
+header .post-desc,
+#toc-bar .label,
+#search-results a {
+  /* Note: font-family is set in font-alternatives.scss */
+  font-weight: 700;
+  letter-spacing: -0.022em;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+h2 {
+  font-size: 1.625rem;
+  margin-top: 2.5rem;
+}
+
+main h2 {
+  margin: 2.5rem 0 1.25rem;
+}
+
+h3 {
+  font-size: 1.375rem;
+  margin-top: 2rem;
+}
+
+main h3 {
+  margin: 2rem 0 1rem;
+}
+
+h4 {
+  font-size: 1.18rem;
+  font-weight: 600;
+}
+
+main h4 {
+  margin: 2rem 0 1rem;
+}
+
+h5 {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+
+.content {
+  font-size: 1.08rem;
+  line-height: 1.75;
+}
+
+@media all and (min-width: 1200px) {
+  .content {
+    font-size: 1.03rem;
+  }
+}
+
+.content p {
+  margin-bottom: 1.5rem;
+}
+
+.content strong {
+  font-weight: 600;
+}
+
+
+code,
+pre,
+kbd,
+samp {
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-feature-settings: 'liga' 1, 'calt' 1;
+}
+
+code.highlighter-rouge {
+  font-size: 0.875em;
+  font-weight: 500;
+  padding: 0.2em 0.5em;
+}
+
+.highlight pre,
+pre code {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  letter-spacing: -0.015em;
+}
+
+/* Enhanced code block styling */
+.highlight {
+  border-radius: 8px;
+}
+
+div[class^='language-'] {
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+
+a {
+  font-weight: 500;
+}
+
+
+header .post-desc {
+  font-size: 1.1875rem;
+  line-height: 1.65;
+  font-weight: 400;
+}
+
+
+#sidebar .site-title {
+  font-weight: 800;
+  font-size: 1.875rem;
+  letter-spacing: -0.025em;
+}
+
+#sidebar .site-subtitle {
+  font-weight: 500;
+}
+
+#sidebar ul li.nav-item a.nav-link {
+  font-weight: 500;
+}
+
+
+#post-list .card .card-title {
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.4;
+}
+
+
+kbd {
+  font-weight: 600;
+  font-size: 0.875em;
+  box-shadow: 
+    inset 0 -2px 0 0 var(--kbd-wrap-color),
+    inset 0 0 0 1px var(--kbd-wrap-color),
+    0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+
+blockquote {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  letter-spacing: -0.003em;
+}
+
+
+.table-wrapper > table thead th {
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  font-size: 0.8125rem;
+}
+
+
+@media all and (max-width: 768px) {
+  :root {
+    font-size: 16px;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.625rem;
+  }
+  
+  h3 {
+    font-size: 1.375rem;
+  }
+  
+  .content {
+    font-size: 1rem;
+  }
+}
+
+@media all and (min-width: 1650px) {
+  :root {
+    font-size: 16px;
+  }
+}
+
+
+::selection {
+  background-color: var(--link-color);
+  color: white;
+}

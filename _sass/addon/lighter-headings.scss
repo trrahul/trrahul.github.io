@@ -1,0 +1,44 @@
+h1, h2, h3, h4, h5, h6 {
+  color: var(--heading-color);
+  font-weight: 600 !important;
+}
+
+h1 {
+  font-weight: 700 !important;
+}
+
+[data-mode="light"] {
+  --heading-color: #2c3e50;
+}
+
+[data-mode="dark"] {
+  --heading-color: #e8eaed;
+}
+
+[data-mode="dark"] {
+  h1, h2, h3, h4, h5, h6 {
+    opacity: 1;
+  }
+  
+  .content,
+  #post-wrapper,
+  #archives,
+  #categories,
+  #tags {
+    opacity: 0.95;
+  }
+}
+
+[data-mode="light"] {
+  h1, h2, h3, h4, h5, h6 {
+    opacity: 0.85;
+  }
+}
+
+header.post-header h1 {
+  opacity: 1;
+}
+
+#sidebar h1 {
+  opacity: 1;
+}
