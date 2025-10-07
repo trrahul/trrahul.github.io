@@ -1,6 +1,15 @@
 ---
 ---
 
+/* prettier-ignore */
+@use 'main
+{%- if jekyll.environment == 'production' -%}
+  .bundle
+{%- endif -%}
+';
+
+/* append your custom style below */
+
 @import 'main';
 /* Temporarily commented out for debugging layout issues
 @import 'addon/custom-typography';
