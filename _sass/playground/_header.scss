@@ -1,0 +1,43 @@
+/**
+ * Playground - Header & Controls
+ * Button styles now centralized in _buttons.scss
+ */
+
+.pane-header {
+  padding: 0.75rem 1rem;
+  background: var(--sidebar-bg);
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pane-header .header-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Button styles moved to _buttons.scss */
+/* .run-btn and .disassemble-btn are now .btn-primary and .btn-secondary */
+
+.optimization-select {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--card-bg);
+  color: var(--text-color);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: var(--link-color);
+  }
+
+  &:focus {
+    outline: 2px solid var(--link-color);
+    outline-offset: 2px;
+  }
+}
