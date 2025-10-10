@@ -1,0 +1,82 @@
+---
+layout: default
+refactor: true
+panel_includes: []
+---
+
+{% include lang.html %}
+
+<article class="px-1">
+  <div id="page-category">
+    <h1 class="ps-lg-2">
+      <i class="far fa-folder-open fa-fw text-muted"></i>
+      {{ page.title }}
+      <span class="lead text-muted ps-2">{{ page.posts.size }}</span>
+    </h1>
+
+    <ul class="content ps-0 category-enhanced-list">
+      {% assign posts = page.posts %}
+      {% for post in posts %}
+        <li class="category-post-item px-md-3 mb-4">
+          <!-- Title and Date -->
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <a href="{{ post.url | relative_url }}" class="post-title-link">{{ post.title }}</a>
+            <span class="dash flex-grow-1"></span>
+            {% include datetime.html date=post.date class='text-muted small text-nowrap' %}
+          </div>
+
+          <!-- Excerpt -->
+          {% if post.description %}
+            <p class="post-excerpt text-muted mb-2">{{ post.description }}</p>
+          {% elsif post.excerpt %}
+            <p class="post-excerpt text-muted mb-2">{{ post.excerpt | strip_html | truncatewords: 30 }}</p>
+          {% endif %}
+
+          <!-- Metadata: Tags and Connections -->
+          <div class="post-metadata d-flex flex-wrap align-items-center gap-2">
+            <!-- Tags -->
+            {% if post.tags.size > 0 %}
+              <div class="post-tags-inline d-flex flex-wrap gap-1">
+                {% for tag in post.tags limit:5 %}
+                  <a href="{{ site.baseurl }}/tags/{{ tag | slugify | url_encode }}/" 
+                     class="badge bg-secondary text-decoration-none">
+                    {{ tag }}
+                  </a>
+                {% endfor %}
+                {% if post.tags.size > 5 %}
+                  <span class="badge bg-secondary">+{{ post.tags.size | minus: 5 }}</span>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            <!-- Connection Indicators -->
+            {% if post.backlinks.size > 0 or post.outgoing_links.size > 0 %}
+              <div class="connection-indicators text-muted small">
+                {% if post.backlinks.size > 0 %}
+                  <span class="connection-indicator" title="{{ post.backlinks.size }} incoming links">
+                    <i class="fas fa-arrow-left fa-xs"></i> {{ post.backlinks.size }}
+                  </span>
+                {% endif %}
+                {% if post.outgoing_links.size > 0 %}
+                  <span class="connection-indicator" title="{{ post.outgoing_links.size }} outgoing links">
+                    <i class="fas fa-arrow-right fa-xs"></i> {{ post.outgoing_links.size }}
+                  </span>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            <!-- Reading Time -->
+            {% assign words = post.content | strip_html | number_of_words %}
+            {% assign reading_time = words | divided_by: 200 %}
+            {% if reading_time == 0 %}
+              {% assign reading_time = 1 %}
+            {% endif %}
+            <span class="reading-time text-muted small">
+              <i class="far fa-clock fa-xs"></i> {{ reading_time }} min read
+            </span>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</article>
