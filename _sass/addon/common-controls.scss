@@ -1,0 +1,260 @@
+/**
+ * Common Controls System - GitBook-inspired
+ * Buttons, Checkboxes, Dropdowns, Form Elements
+ * Clean, text-centric design with subtle borders
+ * Designed for use across the entire site
+ */
+
+/* =====================================================
+   BUTTONS
+   ===================================================== */
+
+/* === BASE BUTTON === */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-color);
+  background: transparent;
+  border: 1px solid var(--btn-border-color, var(--border-color));
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  line-height: 1.4;
+  
+  &:hover:not(:disabled) {
+    color: var(--link-color);
+    background: var(--button-bg, rgba(0, 0, 0, 0.02));
+    border-color: var(--link-color);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  i {
+    font-size: 0.875em;
+    opacity: 0.8;
+  }
+}
+
+/* === PRIMARY VARIANT (Colored background) === */
+.btn-primary {
+  color: white;
+  background: var(--link-color);
+  border-color: var(--link-color);
+
+  &:hover:not(:disabled) {
+    color: white;
+    background: var(--link-color);
+    opacity: 0.9;
+    border-color: var(--link-color);
+  }
+}
+
+/* === SMALL SIZE === */
+.btn-sm {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+}
+
+/* === BUTTON GROUP === */
+.btn-group {
+  display: flex;
+  gap: 0.2rem; // Reduced from 0.5rem for tighter spacing
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* === ACTIVE STATE (for toggles) === */
+.btn.active {
+  color: var(--btn-active-color, var(--link-color));
+  background-color: var(--btn-active-bg, rgba(0, 123, 255, 0.1));
+  border-color: var(--btn-active-border-color, var(--link-color));
+}
+
+/* =====================================================
+   CHECKBOXES
+   ===================================================== */
+
+/* === STANDARD CHECKBOX === */
+input[type="checkbox"].form-check-input {
+  width: 16px;
+  height: 16px;
+  margin-top: 0.15em;
+  cursor: pointer;
+  accent-color: var(--link-color);
+  border: 1px solid var(--btn-border-color, var(--border-color));
+  border-radius: 0.25rem;
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: var(--link-color);
+  }
+
+  &:focus {
+    outline: 2px solid var(--link-color);
+    outline-offset: 2px;
+  }
+}
+
+/* === CHECKBOX BUTTON (like graph page) === */
+.btn-check {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+  pointer-events: none;
+}
+
+.btn-check:checked + .btn {
+  color: var(--btn-active-color, var(--link-color));
+  background-color: var(--btn-active-bg, rgba(0, 123, 255, 0.1));
+  border-color: var(--btn-active-border-color, var(--link-color));
+}
+
+.btn-check + .btn {
+  user-select: none;
+}
+
+/* === CHECKBOX LABEL === */
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  
+  label {
+    cursor: pointer;
+    user-select: none;
+    margin: 0;
+  }
+}
+
+/* =====================================================
+   DROPDOWNS / SELECTS
+   ===================================================== */
+
+.form-select,
+select.form-control {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.875rem;
+  color: var(--text-color);
+  background-color: var(--main-bg, var(--card-bg));
+  border: 1px solid var(--btn-border-color, var(--border-color));
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  
+  &:hover {
+    border-color: var(--link-color);
+  }
+
+  &:focus {
+    border-color: var(--link-color);
+    outline: 2px solid var(--link-color);
+    outline-offset: 2px;
+  }
+
+  option {
+    background-color: var(--main-bg, var(--card-bg));
+    color: var(--text-color);
+  }
+}
+
+/* Small select */
+.form-select-sm {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+}
+
+/* =====================================================
+   FORM LABELS
+   ===================================================== */
+
+.form-label {
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted-color, var(--text-muted));
+  margin-bottom: 0.5rem;
+  display: block;
+
+  i {
+    opacity: 0.7;
+    margin-right: 0.25rem;
+  }
+}
+
+/* =====================================================
+   INPUT FIELDS
+   ===================================================== */
+
+.form-control {
+  padding: 0.5rem 0.8rem;
+  font-size: 0.875rem;
+  color: var(--text-color);
+  background-color: var(--main-bg, var(--card-bg));
+  border: 1px solid var(--btn-border-color, var(--border-color));
+  border-radius: 0.25rem;
+  transition: all 0.15s ease;
+  
+  &:hover {
+    border-color: var(--link-color);
+  }
+
+  &:focus {
+    border-color: var(--link-color);
+    outline: 2px solid var(--link-color);
+    outline-offset: 2px;
+  }
+
+  &::placeholder {
+    color: var(--text-muted-color, var(--text-muted));
+    opacity: 0.6;
+  }
+}
+
+/* =====================================================
+   RESPONSIVE ADJUSTMENTS
+   ===================================================== */
+
+@media (max-width: 768px) {
+  .btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .btn-sm {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.7rem;
+  }
+
+  .btn-group {
+    gap: 0.4rem;
+  }
+
+  .form-select,
+  .form-control {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* =====================================================
+   FOCUS STATES (Accessibility)
+   ===================================================== */
+
+.btn:focus-visible,
+.btn-primary:focus-visible {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+}

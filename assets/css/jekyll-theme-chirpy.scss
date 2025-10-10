@@ -10,8 +10,17 @@
 
 /* append your custom style below */
 
-@import 'addon/custom-typography';
-@import 'addon/h1-underline';
-@import 'addon/lighter-headings';
+/* Site-wide Components */
+@use 'addon/common-controls';  // Buttons, checkboxes, dropdowns, forms
+@use 'addon/typography';  // Typography, headings, fonts
+@use 'addon/link-preview';  // Link preview cards
+@use 'addon/panel-backlinks';  // TOC & backlinks panel (right sidebar)
+
+/* Page-specific Styles */
+@use 'addon/page-home';  // Home page: post cards, category filter
+@use 'addon/page-category';  // Category page layout
+@use 'addon/page-tags';  // Tags page layout
+@use 'addon/page-graph';  // Knowledge graph visualization
+
 
 

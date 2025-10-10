@@ -1,0 +1,86 @@
+/**
+ * Enhanced Tags Page Styling - Minimal with Word Cloud
+ */
+
+#tags-page {
+  
+  // Statistics cards
+  #tag-stats {
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border-color);
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      text-align: center;
+
+      .stat-value {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--heading-color);
+        margin-bottom: 0.15rem;
+      }
+
+      .stat-label {
+        font-size: 0.7rem;
+        color: var(--text-muted-color);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+    }
+  }
+
+  // Search box
+  #tag-search {
+    background: var(--search-input-bg);
+    border: 1px solid var(--btn-border-color);
+    color: var(--text-color);
+    
+    &:focus {
+      border-color: var(--link-color);
+      box-shadow: none;
+    }
+  }
+
+  .input-group-text {
+    background: var(--card-bg);
+    border: 1px solid var(--btn-border-color);
+    color: var(--text-muted-color);
+  }
+
+  // Word Cloud Container
+  #tag-cloud-wrapper {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border-color);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    #tag-cloud {
+      width: 100%;
+      
+      svg {
+        display: block;
+        margin: 0 auto;
+        
+        a {
+          text-decoration: none;
+          
+          text {
+            transition: all 0.2s ease;
+          }
+        }
+      }
+    }
+  }
+
+  // Responsive
+  @media (max-width: 768px) {
+    #tag-cloud-wrapper {
+      padding: 0.75rem;
+      min-height: 300px;
+    }
+  }
+}
