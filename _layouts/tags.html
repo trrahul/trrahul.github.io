@@ -1,0 +1,202 @@
+---
+layout: page
+# All the Tags of posts
+---
+
+<div id="tags-page">
+  <!-- Tag Statistics -->
+  <div id="tag-stats" class="mb-3">
+    <div class="row g-2">
+      <div class="col-md-3 col-6">
+        <div class="stat-card">
+          <div class="stat-value">{{ site.tags.size }}</div>
+          <div class="stat-label">Total Tags</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="stat-card">
+          <div class="stat-value">{{ site.posts.size }}</div>
+          <div class="stat-label">Total Posts</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="stat-card">
+          <div class="stat-value" id="avg-tags-per-post">-</div>
+          <div class="stat-label">Avg Tags/Post</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="stat-card">
+          <div class="stat-value" id="most-popular-tag">-</div>
+          <div class="stat-label">Most Popular</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Box -->
+  <div class="mb-3">
+    <div class="input-group">
+      <span class="input-group-text">
+        <i class="fas fa-search"></i>
+      </span>
+      <input type="text" 
+             class="form-control" 
+             id="tag-search" 
+             placeholder="Search tags..."
+             autocomplete="off">
+    </div>
+    <div class="text-muted small mt-2" id="search-results-count"></div>
+  </div>
+
+  <!-- Interactive Tag Cloud -->
+  <div id="tag-cloud-wrapper">
+    <div id="tag-cloud"></div>
+  </div>
+</div>
+
+<!-- Tag data for JavaScript -->
+<script>
+  const tagData = [
+    {% for tag in site.tags %}
+    {
+      name: "{{ tag[0] }}",
+      count: {{ tag[1].size }},
+      url: "{{ site.baseurl }}/tags/{{ tag[0] | slugify }}/"
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ];
+</script>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-cloud@1.2.7/build/d3.layout.cloud.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Calculate statistics
+  const totalTags = tagData.length;
+  const totalPosts = {{ site.posts.size }};
+  
+  let totalTagCount = 0;
+  let maxCount = 0;
+  let popularTag = '';
+  
+  tagData.forEach(tag => {
+    totalTagCount += tag.count;
+    if (tag.count > maxCount) {
+      maxCount = tag.count;
+      popularTag = tag.name;
+    }
+  });
+  
+  const avgTags = (totalTagCount / totalPosts).toFixed(1);
+  document.getElementById('avg-tags-per-post').textContent = avgTags;
+  document.getElementById('most-popular-tag').textContent = popularTag;
+  
+  // Search functionality
+  const searchInput = document.getElementById('tag-search');
+  const resultsCount = document.getElementById('search-results-count');
+  
+  searchInput.addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase().trim();
+    
+    if (query === '') {
+      renderTagCloud(tagData);
+      resultsCount.textContent = '';
+      return;
+    }
+    
+    const filtered = tagData.filter(tag => tag.name.toLowerCase().includes(query));
+    renderTagCloud(filtered);
+    resultsCount.textContent = `Found ${filtered.length} tag${filtered.length !== 1 ? 's' : ''}`;
+  });
+  
+  // Render tag cloud
+  function renderTagCloud(data) {
+    const container = document.getElementById('tag-cloud');
+    const width = container.offsetWidth || 800;
+    const height = 400;
+    
+    // Clear existing
+    container.innerHTML = '';
+    
+    if (data.length === 0) {
+      container.innerHTML = '<p class="text-muted text-center py-5">No tags found</p>';
+      return;
+    }
+    
+    // Create word cloud layout
+    const layout = d3.layout.cloud()
+      .size([width, height])
+      .words(data.map(d => ({
+        text: d.name,
+        size: 12 + (d.count * 3),
+        count: d.count,
+        url: d.url
+      })))
+      .padding(5)
+      .rotate(() => 0)
+      .font('inherit')
+      .fontSize(d => d.size)
+      .on('end', draw);
+    
+    layout.start();
+    
+    function draw(words) {
+      const svg = d3.select('#tag-cloud')
+        .append('svg')
+        .attr('width', width)
+        .attr('height', height);
+      
+      const g = svg.append('g')
+        .attr('transform', `translate(${width/2},${height/2})`);
+      
+      g.selectAll('text')
+        .data(words)
+        .enter()
+        .append('a')
+        .attr('href', d => d.url)
+        .append('text')
+        .style('font-size', d => `${d.size}px`)
+        .style('font-weight', '500')
+        .style('fill', 'var(--text-color)')
+        .style('cursor', 'pointer')
+        .attr('text-anchor', 'middle')
+        .attr('transform', d => `translate(${d.x},${d.y})`)
+        .text(d => d.text)
+        .append('title')
+        .text(d => `${d.text} (${d.count} post${d.count !== 1 ? 's' : ''})`);
+      
+      // Hover effect
+      g.selectAll('text')
+        .on('mouseover', function() {
+          d3.select(this)
+            .style('fill', 'var(--link-color)')
+            .transition()
+            .duration(200)
+            .style('font-size', function(d) { return (d.size * 1.2) + 'px'; });
+        })
+        .on('mouseout', function() {
+          d3.select(this)
+            .style('fill', 'var(--text-color)')
+            .transition()
+            .duration(200)
+            .style('font-size', function(d) { return d.size + 'px'; });
+        });
+    }
+  }
+  
+  // Initial render
+  renderTagCloud(tagData);
+  
+  // Re-render on window resize
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      const query = searchInput.value.toLowerCase().trim();
+      const filtered = query ? tagData.filter(tag => tag.name.toLowerCase().includes(query)) : tagData;
+      renderTagCloud(filtered);
+    }, 250);
+  });
+});
+</script>
