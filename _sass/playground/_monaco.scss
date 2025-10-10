@@ -1,0 +1,58 @@
+/**
+ * Playground - Monaco Editor Styling
+ */
+
+#editor, #ilCode, #asmCode {
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--border-color);
+}
+
+/* Highlighted Line Animation */
+.monaco-editor .highlighted-line {
+  background: rgba(255, 255, 0, 0.2) !important;
+  animation: highlightFade 2s ease-out;
+}
+
+.monaco-editor .highlighted-line-glyph {
+  background: rgba(255, 255, 0, 0.4) !important;
+}
+
+@keyframes highlightFade {
+  0% {
+    background: rgba(255, 255, 0, 0.3) !important;
+  }
+  100% {
+    background: rgba(255, 255, 0, 0) !important;
+  }
+}
+
+/* Hide Monaco-specific context menu items, keep only basic edit operations */
+.monaco-menu .monaco-action-bar .action-item[aria-label*="Command"],
+.monaco-menu .monaco-action-bar .action-item[aria-label*="Peek"],
+.monaco-menu .monaco-action-bar .action-item[aria-label*="Format"],
+.monaco-menu .monaco-action-bar .action-item[aria-label*="Refactor"] {
+  display: none !important;
+}
+
+/* Override any theme line-height conflicts */
+.monaco-editor .view-lines {
+  line-height: var(--bs-body-line-height, 1.5) !important;
+}
+
+.monaco-editor .view-line {
+  line-height: inherit !important;
+}
+
+/* Fix Monaco scrollbars */
+.monaco-scrollable-element > .scrollbar > .slider {
+  background: var(--scrollbar-thumb-color, rgba(128, 128, 128, 0.4)) !important;
+}
+
+.monaco-scrollable-element > .scrollbar:hover > .slider {
+  background: var(--scrollbar-thumb-hover-color, rgba(128, 128, 128, 0.6)) !important;
+}
+
+.monaco-editor .margin {
+  background-color: transparent !important;
+}
