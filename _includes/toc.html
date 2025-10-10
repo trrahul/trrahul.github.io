@@ -1,0 +1,13 @@
+{% include toc-status.html %}
+
+{% if enable_toc %}
+  <div class="toc-border-cover z-3"></div>
+  <div id="toc-and-backlinks-container" class="position-sticky ps-0 pe-4">
+    <section id="toc-wrapper" class="invisible pb-4">
+      <h2 class="panel-heading ps-3 pb-2 mb-0">{{- site.data.locales[include.lang].panel.toc -}}</h2>
+      <nav id="toc"></nav>
+    </section>
+    
+    {% include panel-backlinks.html lang=include.lang %}
+  </div>
+{% endif %}
