@@ -1,0 +1,151 @@
+/**
+ * Playground - Analysis Panel
+ * Button styles now centralized in _buttons.scss
+ */
+
+#analysisPane {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Analyzer Controls */
+.analyzer-controls {
+  background: var(--sidebar-bg);
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.analyzer-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.analyzer-header span {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Button styles moved to _buttons.scss */
+/* .analyzer-btn is now .btn-small */
+
+.analyzer-categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.4rem;
+}
+
+.analyzer-category {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.analyzer-category input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  accent-color: var(--link-color);
+}
+
+.analyzer-category label,
+.analyzer-category .category-name {
+  font-size: 0.7rem;
+  cursor: pointer;
+  color: var(--text-color);
+  margin: 0;
+  user-select: none;
+}
+
+.category-badge {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--card-bg);
+  padding: 0.1rem 0.3rem;
+  border-radius: 2px;
+  margin-left: auto;
+}
+
+/* Analysis Summary */
+.analysis-summary {
+  display: flex;
+  gap: 1rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.summary-item .icon {
+  font-size: 0.7rem;
+}
+
+.summary-item .count {
+  font-weight: 600;
+}
+
+.summary-error { color: #e74c3c; }
+.summary-warning { color: #f39c12; }
+.summary-info { color: #3498db; }
+
+/* Analysis Results Container */
+.analysis-results {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 200px;
+}
+
+/* Empty/Error States */
+.analysis-empty {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.analysis-empty p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .analyzer-categories {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.3rem;
+  }
+  
+  .analyzer-category {
+    font-size: 0.75rem;
+  }
+  
+  .category-badge {
+    font-size: 0.55rem;
+  }
+  
+  #analysisPane {
+    height: 100%;
+    overflow: visible;
+  }
+  
+  .analysis-results {
+    min-height: 300px;
+    -webkit-overflow-scrolling: touch;
+  }
+}

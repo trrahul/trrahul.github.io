@@ -1,0 +1,124 @@
+/**
+ * Playground - Button Styles
+ * Uses common controls system from addon/common-controls.scss
+ * GitBook-inspired: clean, text-centric, subtle borders
+ */
+
+/* === ALL BUTTONS USE SAME STYLE === */
+/* Run, Disassemble, Tree controls all look consistent */
+.btn,
+.btn-primary,
+.btn-secondary,
+.run-btn,
+.disassemble-btn,
+.tree-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-color);
+  background: transparent;
+  border: 1px solid var(--btn-border-color, var(--border-color));
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  line-height: 1.4;
+  
+  &:hover:not(:disabled) {
+    color: var(--link-color);
+    background: var(--button-bg, rgba(0, 0, 0, 0.02));
+    border-color: var(--link-color);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  i {
+    font-size: 0.875em;
+    opacity: 0.8;
+  }
+}
+
+/* === SMALL BUTTONS === */
+/* Used for: Analyzer select/deselect all buttons */
+.btn-small,
+.analyzer-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-color);
+  background: transparent;
+  border: 1px solid var(--btn-border-color, var(--border-color));
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  
+  &:hover:not(:disabled) {
+    color: var(--link-color);
+    background: var(--button-bg, rgba(0, 0, 0, 0.02));
+    border-color: var(--link-color);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* === BUTTON GROUPS === */
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .run-btn,
+  .disassemble-btn,
+  .tree-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .btn-small,
+  .analyzer-btn {
+    padding: 0.15rem 0.4rem;
+    font-size: 0.65rem;
+  }
+
+  .button-group {
+    gap: 0.4rem;
+  }
+}
+
+/* === FOCUS STATES (Accessibility) === */
+.btn:focus-visible,
+.btn-primary:focus-visible,
+.run-btn:focus-visible,
+.btn-secondary:focus-visible,
+.disassemble-btn:focus-visible,
+.tree-btn:focus-visible,
+.btn-small:focus-visible,
+.analyzer-btn:focus-visible {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+}

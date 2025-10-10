@@ -1,0 +1,47 @@
+/**
+ * Playground - Base Layout & Container
+ */
+
+/* Make playground page full-width by overriding default constraints */
+body:has(.code-playground-container) {
+  #main-wrapper .container {
+    max-width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  main {
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+  
+  #panel-wrapper {
+    display: none; /* Hide panel on playground page */
+  }
+}
+
+.code-playground-container {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+  height: calc(100vh - 200px);
+  min-height: 800px;
+  max-width: 100%;
+}
+
+.playground-pane {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--card-bg);
+  overflow: hidden;
+  min-height: 300px;
+}
+
+.pane-content {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
