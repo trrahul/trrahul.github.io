@@ -8,16 +8,16 @@ h1 {
 }
 
 [data-mode="light"] {
-  --heading-color: #2c3e50;
+  --heading-color: #444; /* Softer gray instead of dark blue-black */
 }
 
 [data-mode="dark"] {
-  --heading-color: #e8eaed;
+  --heading-color: #e0e0e0; /* Slightly softer white */
 }
 
 [data-mode="dark"] {
   h1, h2, h3, h4, h5, h6 {
-    opacity: 1;
+    opacity: 0.92; /* Consistent across all headings */
   }
   
   .content,
@@ -25,20 +25,16 @@ h1 {
   #archives,
   #categories,
   #tags {
-    opacity: 0.95;
+    opacity: 0.9;
   }
 }
 
 [data-mode="light"] {
   h1, h2, h3, h4, h5, h6 {
-    opacity: 0.85;
+    opacity: 0.92; /* Consistent across all headings */
   }
 }
 
-header.post-header h1 {
-  opacity: 1;
-}
-
-#sidebar h1 {
-  opacity: 1;
+#post-list .card .card-title {
+  opacity: 0.88; /* Even lighter for card titles */
 }

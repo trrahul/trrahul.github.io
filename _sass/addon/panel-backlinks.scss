@@ -1,0 +1,250 @@
+/* Panel Backlinks Styles - Matches TOC aesthetic */
+
+/* Wrapper to make TOC and backlinks stick together */
+#toc-and-backlinks-container {
+  top: 0;
+  transition: top 0.2s ease-in-out;
+  max-height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  
+  // Make TOC heading uppercase to match Connected Notes
+  #toc-wrapper .panel-heading {
+    text-transform: uppercase;
+  }
+}
+
+#backlinks-wrapper {
+  // Don't set position sticky - let it flow after TOC which is in same sticky container
+  margin-top: 2rem; // Spacing below TOC
+  
+  .panel-heading {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.9;
+  }
+
+  .panel-backlinks {
+    font-size: 0.85rem; // Match panel font size
+    line-height: 1.3;
+  }
+
+  .backlinks-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    opacity: 0.7;
+    
+    .backlinks-count {
+      font-weight: 400;
+      opacity: 0.6;
+      font-size: 0.75rem;
+    }
+  }
+
+  .backlinks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .backlink-item {
+    color: var(--text-muted-color);
+    text-decoration: none;
+    display: block;
+    padding: 0.25rem 0;
+    transition: all 0.15s ease;
+    line-height: 1.4;
+    
+    &:hover {
+      color: var(--link-color);
+      padding-left: 0.25rem;
+    }
+  }
+
+  .backlinks-group + .backlinks-group {
+    margin-top: 1.5rem;
+  }
+}
+
+/* Mobile buttons container - two rows layout */
+.mobile-buttons-container {
+  display: none;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+  
+  @media (max-width: 1199px) {
+    display: flex;
+  }
+  
+  @media (min-width: 1200px) {
+    display: none !important;
+  }
+  
+  button {
+    width: auto;
+    max-width: fit-content;
+  }
+}
+
+/* Mobile: Connected Notes button - matches TOC button exactly */
+#backlinks-solo-trigger {
+  color: var(--text-muted-color);
+  border-color: var(--btn-border-color);
+  border-radius: 0.5rem;
+
+  .label {
+    font-size: 1rem;
+    font-family: var(--font-family-heading);
+    font-weight: 400;
+  }
+
+  &:hover {
+    box-shadow: none;
+    background: none;
+  }
+}
+
+/* Mobile: TOC button - ensure font-weight matches */
+#toc-solo-trigger {
+  .label {
+    font-weight: 400;
+  }
+}
+
+/* Mobile: Connected Notes popup - matches TOC popup exactly */
+#backlinks-popup {
+  $slide-in: slide-in 0.3s ease-out;
+  $slide-out: slide-out 0.3s ease-out;
+  $curtain-height: 2rem;
+  $backdrop: blur(5px);
+
+  border-color: var(--toc-popup-border-color);
+  border-width: 1px;
+  border-radius: 0.5rem;
+  color: var(--text-color);
+  background: var(--card-bg);
+  margin-top: 3rem;
+  min-width: 20rem;
+  font-size: 1.05rem;
+
+  @media (min-width: 576px) {
+    max-width: 32rem;
+  }
+
+  &[open] {
+    -webkit-animation: $slide-in;
+    animation: $slide-in;
+  }
+
+  &[closing] {
+    -webkit-animation: $slide-out;
+    animation: $slide-out;
+  }
+
+  @media (min-width: 992px) {
+    left: 260px;
+  }
+
+  .header {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    background-color: inherit;
+    border-bottom: 1px solid var(--main-border-color);
+
+    .label {
+      font-family: var(--font-family-heading);
+    }
+  }
+
+  button {
+    > i {
+      font-size: 1.25rem;
+      vertical-align: middle;
+    }
+
+    &:focus-visible {
+      box-shadow: none;
+    }
+  }
+
+  &::-webkit-backdrop {
+    -webkit-backdrop-filter: $backdrop;
+    backdrop-filter: $backdrop;
+  }
+
+  &::backdrop {
+    -webkit-backdrop-filter: $backdrop;
+    backdrop-filter: $backdrop;
+  }
+
+  &::after {
+    display: flex;
+    content: '';
+    position: relative;
+    background: linear-gradient(transparent, var(--card-bg) 70%);
+    height: $curtain-height;
+  }
+
+  #backlinks-popup-content {
+    overflow: auto;
+    max-height: calc(100vh - 12rem);
+    font-family: var(--font-family-heading);
+    margin-bottom: -$curtain-height;
+    
+    #backlinks-wrapper {
+      margin-top: 0;
+      
+      .panel-heading {
+        display: none; // Hide heading in popup since we have it in the header
+      }
+      
+      .backlinks-section-title {
+        opacity: 0.5; // Fade Incoming/Outgoing labels in popup
+      }
+    }
+  }
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0.7;
+    transform: translateY(-3rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-3rem);
+  }
+}
+
+@media (max-width: 1199px) {
+  /* Show button on mobile */
+  #backlinks-solo-trigger {
+    display: inline-flex;
+  }
+  
+  /* Hide sidebar version on mobile */
+  #toc-and-backlinks-container #backlinks-wrapper {
+    display: none;
+  }
+}
