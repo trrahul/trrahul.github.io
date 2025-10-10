@@ -52,6 +52,7 @@ async function initialize() {
 }
 
 function initializeDOMElements() {
+  State.container = document.getElementById('knowledge-graph-container');
   State.svg = d3.select('#knowledge-graph');
   State.g = State.svg.append('g');
   State.tooltip = d3.select('#graph-tooltip');

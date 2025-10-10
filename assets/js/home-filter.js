@@ -50,9 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
   filterBar.className = 'mb-3';
   filterBar.innerHTML = `
     <div class="d-flex align-items-center gap-2">
-      <label for="home-category-select" class="filter-label text-muted small mb-0">
-        <i class="fas fa-filter fa-fw"></i> Filter by Category:
-      </label>
       <select class="form-select form-select-sm" id="home-category-select" style="max-width: 300px;">
         <option value="all">All Categories (${posts.length} posts)</option>
         ${Array.from(categories.entries())

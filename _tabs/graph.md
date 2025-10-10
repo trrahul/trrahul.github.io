@@ -43,7 +43,7 @@ order: 2
   </div>
 
   <!-- Settings Panel (Collapsible) -->
-  <div id="graph-settings-panel" class="card mb-3" style="display: none;">
+  <div id="graph-settings-panel" class="mb-3" style="display: none;">
     <div class="card-body py-2 px-3">
       <div class="d-flex justify-content-between align-items-center mb-2">
         <h6 class="mb-0 small">Graph Settings</h6>
@@ -150,7 +150,7 @@ order: 2
   </div>
 
   <!-- Knowledge Graph SVG -->
-  <div id="graph-wrapper" class="card">
+  <div id="graph-wrapper">
     <svg id="knowledge-graph" width="100%" height="600"></svg>
     <div id="graph-tooltip" class="graph-tooltip"></div>
   </div>

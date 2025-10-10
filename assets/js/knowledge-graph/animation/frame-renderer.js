@@ -1,5 +1,6 @@
 import { State } from '../state.js';
 import { CONFIG } from '../config.js';
+import { Utils } from '../utils.js';
 
 /**
  * Handles DOM drawing and force simulation setup for individual animation frames.
@@ -35,6 +36,8 @@ export class FrameRenderer {
    */
   render(frame, { baselinePositions, clusterCenters, fallbackCenter, forceSettings }) {
     const debugEnabled = this.logger?.isEnabled?.() ?? false;
+
+    const palette = Utils.resolveGraphPalette(State.container);
 
     const { nodes, links } = frame;
     this.logger?.debug('frame', 'Rendering animation frame', {
@@ -106,9 +109,15 @@ export class FrameRenderer {
       .data(linkCopies)
       .join('line')
       .attr('class', 'graph-link')
-      .attr('stroke', CONFIG.colors.link.default)
+      .attr('stroke', palette.linkDefault)
       .attr('stroke-width', CONFIG.visual.linkStrokeWidth)
       .attr('marker-end', State.showArrows ? 'url(#arrowhead)' : null);
+
+    linkElements
+      .style('opacity', 0)
+      .transition()
+      .duration(CONFIG.visual.linkFadeDuration)
+      .style('opacity', 1);
 
     const entryLayer = State.g.append('g')
       .attr('class', 'entry-lines');
@@ -147,7 +156,7 @@ export class FrameRenderer {
 
         const line = entryLayer.append('line')
           .attr('class', 'entry-line')
-          .attr('stroke', CONFIG.animation.entryLineColor)
+          .attr('stroke', palette.entryLine)
           .attr('stroke-width', CONFIG.animation.entryLineWidth)
           .attr('stroke-linecap', 'round')
           .attr('x1', anchor.x)
@@ -201,8 +210,14 @@ export class FrameRenderer {
         const baseRadius = CONFIG.node.baseSize + (d.connections || 0) * CONFIG.node.sizeMultiplier;
         return Math.min(baseRadius, CONFIG.node.maxSize) * (State.nodeSizeMultiplier || 1);
       })
-      .attr('fill', CONFIG.colors.node.default)
+      .attr('fill', palette.nodeDefault)
       .style('cursor', 'pointer');
+
+    nodeElements
+      .style('opacity', 0)
+      .transition()
+      .duration(CONFIG.visual.nodeFadeDuration)
+      .style('opacity', 1);
 
     const labelElements = State.g.append('g')
       .attr('class', 'labels')
@@ -213,10 +228,10 @@ export class FrameRenderer {
       .text(d => d.title)
       .attr('x', d => d.x)
       .attr('y', d => d.y)
-      .attr('font-size', '10px')
-      .attr('fill', '#333')
+      .attr('font-size', CONFIG.visual.labelFontSize)
+      .attr('fill', palette.labelDefault)
       .attr('text-anchor', 'middle')
-      .attr('dy', -12)
+      .attr('dy', -CONFIG.visual.labelOffset)
       .style('opacity', State.textFadeThreshold || 0.9)
       .style('pointer-events', 'none');
 

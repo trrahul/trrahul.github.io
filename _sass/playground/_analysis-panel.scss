@@ -15,7 +15,7 @@
 .analyzer-controls {
   background: var(--sidebar-bg);
   padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--main-border-color);
   flex-shrink: 0;
 }
 
@@ -47,6 +47,7 @@
   display: flex;
   align-items: center;
   gap: 0.35rem;
+  flex-wrap: nowrap;
 }
 
 .analyzer-category input[type="checkbox"] {
@@ -54,15 +55,16 @@
   height: 14px;
   cursor: pointer;
   accent-color: var(--link-color);
+  flex-shrink: 0;
 }
 
-.analyzer-category label,
 .analyzer-category .category-name {
   font-size: 0.7rem;
   cursor: pointer;
   color: var(--text-color);
   margin: 0;
   user-select: none;
+  flex-grow: 1;
 }
 
 .category-badge {
@@ -72,7 +74,7 @@
   background: var(--card-bg);
   padding: 0.1rem 0.3rem;
   border-radius: 2px;
-  margin-left: auto;
+  flex-shrink: 0;
 }
 
 /* Analysis Summary */
@@ -81,7 +83,7 @@
   gap: 1rem;
   padding: 0.5rem 0.75rem;
   background: var(--card-bg);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--main-border-color);
   font-size: 0.75rem;
   flex-shrink: 0;
 }

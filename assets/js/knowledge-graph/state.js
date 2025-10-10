@@ -31,13 +31,14 @@ export const State = {
     raw: null,
   },
 
-  /** @type {{ simulation: any, zoom: any, categoryColors: any, baseLinks: any, highlightLinks: any }} */
+  /** @type {{ simulation: any, zoom: any, categoryColors: any, baseLinks: any, highlightLinks: any, palette: Record<string, string> | null }} */
   render: {
     simulation: null,
     zoom: null,
     categoryColors: null,
     baseLinks: null,
     highlightLinks: null,
+    palette: null,
   },
 
   /** @type {{ activeCategories: Set<string>, showLabels: boolean, searchQuery: string, showTags: boolean, showAttachments: boolean, existingFilesOnly: boolean, showOrphans: boolean }} */

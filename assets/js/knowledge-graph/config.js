@@ -4,7 +4,7 @@
  */
 
 export const CONFIG = {
-  version: '2025-10-10-v1',
+  version: '2025-10-10-v2',
   
   // Graph dimensions
   dimensions: {
@@ -42,25 +42,25 @@ export const CONFIG = {
     fitDelay: 1500,
   },
   
-  // Obsidian-style colors (purple accent, gray base)
+  // Theme-aware palette sourced from CSS variables (light/dark supported)
   colors: {
     node: {
-      default: '#6b7280',                       // Gray (like Obsidian)
-      dimmed: 'rgba(107, 114, 128, 0.2)',       // Very dimmed
-      highlighted: '#8b5cf6',                   // Purple accent (Obsidian's color)
-      stroke: 'rgba(107, 114, 128, 0.4)',       // Subtle border
-      strokeHighlight: '#8b5cf6',               // Purple on hover
+      default: 'var(--graph-node-color)',
+      dimmed: 'var(--graph-node-color-dimmed)',
+      highlighted: 'var(--graph-node-highlight)',
+      stroke: 'var(--graph-node-stroke)',
+      strokeHighlight: 'var(--graph-node-stroke-highlight)',
     },
     link: {
-      default: 'rgba(107, 114, 128, 0.15)',     // Very subtle gray
-      dimmed: 'rgba(107, 114, 128, 0.03)',      // Almost invisible
-      highlighted: 'rgba(139, 92, 246, 0.5)',   // Purple on hover
-      arrow: 'rgba(107, 114, 128, 0.25)',       // Subtle arrow
+      default: 'var(--graph-link-color)',
+      dimmed: 'var(--graph-link-color-dimmed)',
+      highlighted: 'var(--graph-link-highlight)',
+      arrow: 'var(--graph-link-arrow)',
     },
     label: {
-      default: 'rgba(75, 85, 99, 0.8)',         // Readable gray
-      dimmed: 'rgba(75, 85, 99, 0.2)',          // Dimmed
-      highlighted: 'rgba(55, 65, 81, 1)',       // Darker on hover
+      default: 'var(--graph-label-color)',
+      dimmed: 'var(--graph-label-dimmed)',
+      highlighted: 'var(--graph-label-highlight)',
     },
   },
   
@@ -69,12 +69,16 @@ export const CONFIG = {
     linkStrokeWidth: 0.5,    // Ultra-thin lines
     labelFontSize: '9px',    // Smaller text
     labelOffset: 12,         // Closer to nodes
+    nodeFadeDuration: 350,
+    linkFadeDuration: 400,
+    nodeHoverScale: 1.08,
+    nodeHighlightStrokeWidth: 1.8,
   },
 
   animation: {
     entryDuration: 800,
     entryLineWidth: 1.5,
-    entryLineColor: '#8b5cf6',
+    entryLineColor: 'var(--graph-entry-line-color)',
     freezeNodesAfterEntry: true,    // Lock nodes in place after animation
     entryBaselineJitter: 30,        // When baseline exists, start lines close to final position
   },

@@ -10,20 +10,24 @@ import { ForceSimulation } from './force-simulation.js';
 import { NodeUtils } from './node-utils.js';
 import { TooltipManager } from './tooltip-manager.js';
 import { ZoomController } from './zoom-controller.js';
+import { Utils } from './utils.js';
 
 export const GraphRenderer = {
   render(data) {
     const { nodes, links } = DataLoader.createCopy(data);
 
+    const palette = Utils.resolveGraphPalette(State.container);
+    State.render.palette = palette;
+
     State.g.selectAll('*').remove();
 
-    this.addArrowMarkers();
+    this.addArrowMarkers(palette);
 
-    const link = this.createLinks(links);
+    const link = this.createLinks(links, palette);
 
-    const node = this.createNodes(nodes);
+    const node = this.createNodes(nodes, palette);
 
-    const label = this.createLabels(nodes);
+    const label = this.createLabels(nodes, palette);
 
     const simulation = ForceSimulation.create(nodes, links);
 
@@ -33,16 +37,17 @@ export const GraphRenderer = {
 
     this.setupClickHandler(node, simulation);
 
-    this.setupHoverEffects(node, link, label);
+    this.setupHoverEffects(node, link, label, palette);
 
     ZoomController.fitToGraph();
   },
 
-  addArrowMarkers() {
+  addArrowMarkers(palette) {
     let defs = State.svg.select('defs');
     if (defs.empty()) {
       defs = State.svg.append('defs');
     }
+    defs.selectAll('#arrowhead').remove();
     defs.append('marker')
       .attr('id', 'arrowhead')
       .attr('viewBox', '0 -5 10 10')
@@ -53,25 +58,30 @@ export const GraphRenderer = {
       .attr('orient', 'auto')
       .append('path')
       .attr('d', 'M0,-4L8,0L0,4')
-      .attr('fill', CONFIG.colors.link.arrow);
+      .attr('fill', palette.linkArrow);
   },
 
-  createLinks(links) {
+  createLinks(links, palette) {
     const linkGroup = State.g.append('g');
     const baseLinks = linkGroup.append('g')
       .selectAll('line')
       .data(links)
       .join('line')
       .attr('class', 'graph-link-base')
-      .attr('stroke', CONFIG.colors.link.default)
+      .attr('stroke', palette.linkDefault)
       .attr('stroke-width', CONFIG.visual.linkStrokeWidth)
       .attr('marker-end', 'url(#arrowhead)');
+    baseLinks
+      .style('opacity', 0)
+      .transition()
+      .duration(CONFIG.visual.linkFadeDuration)
+      .style('opacity', 1);
     const highlightLinks = linkGroup.append('g')
       .selectAll('line')
       .data(links)
       .join('line')
       .attr('class', 'graph-link-highlight')
-      .attr('stroke', CONFIG.colors.link.highlighted)
+      .attr('stroke', palette.linkHighlight)
       .attr('stroke-width', CONFIG.visual.linkStrokeWidth)
       .attr('marker-end', 'url(#arrowhead)')
       .style('opacity', 0);
@@ -80,21 +90,32 @@ export const GraphRenderer = {
     return baseLinks;
   },
 
-  createNodes(nodes) {
-    return State.g.append('g')
+  createNodes(nodes, palette) {
+    const sizeMultiplier = State.nodeSizeMultiplier || 1;
+    const getBaseRadius = d => NodeUtils.getRadius(d) * sizeMultiplier;
+
+    const nodeSelection = State.g.append('g')
       .selectAll('circle')
       .data(nodes)
       .join('circle')
       .attr('class', 'graph-node')
-      .attr('r', d => NodeUtils.getRadius(d))
-      .attr('fill', CONFIG.colors.node.default)  // Single color for all nodes
-      .attr('stroke', CONFIG.colors.node.stroke)
+      .attr('r', getBaseRadius)
+      .attr('fill', palette.nodeDefault)
+      .attr('stroke', palette.nodeStroke)
       .attr('stroke-width', CONFIG.node.strokeWidth)
       .style('cursor', 'move')
       .style('transition', 'fill 0.2s ease, stroke 0.2s ease')  // Smooth animation
       .classed('fixed', d => d.fx !== undefined)
       .on('mouseover', (event, d) => TooltipManager.show(event, d))
       .on('mouseout', () => TooltipManager.hide());
+
+    nodeSelection
+      .style('opacity', 0)
+      .transition()
+      .duration(CONFIG.visual.nodeFadeDuration)
+      .style('opacity', 1);
+
+    return nodeSelection;
   },
 
   setupDrag(node, simulation) {
@@ -124,24 +145,37 @@ export const GraphRenderer = {
     });
   },
 
-  createLabels(nodes) {
-    return State.g.append('g')
+  createLabels(nodes, palette) {
+    const sizeMultiplier = State.nodeSizeMultiplier || 1;
+    const labelSelection = State.g.append('g')
       .selectAll('text')
       .data(nodes)
       .join('text')
       .attr('class', 'node-label')
       .attr('text-anchor', 'middle')
-      .attr('dy', d => NodeUtils.getRadius(d) + CONFIG.visual.labelOffset)
+      .attr('dy', d => NodeUtils.getRadius(d) * sizeMultiplier + CONFIG.visual.labelOffset)
       .attr('alignment-baseline', 'hanging')  // Align text from top edge
       .style('font-size', CONFIG.visual.labelFontSize)
       .style('font-weight', '400')
-      .style('fill', CONFIG.colors.label.default)
+      .style('fill', palette.labelDefault)
       .style('pointer-events', 'none')
       .style('opacity', State.showLabels ? 1 : 0)
       .text(d => d.title);
+
+    if (State.showLabels) {
+      labelSelection
+        .style('opacity', 0)
+        .transition()
+        .duration(CONFIG.visual.nodeFadeDuration)
+        .style('opacity', 1);
+    }
+
+    return labelSelection;
   },
 
-  setupHoverEffects(node, link, label) {
+  setupHoverEffects(node, link, label, palette) {
+    const sizeMultiplier = State.nodeSizeMultiplier || 1;
+    const getBaseRadius = d => NodeUtils.getRadius(d) * sizeMultiplier;
     const adjacencyMap = new Map();
     link.each(function(l) {
       const sourceId = l.source.id || l.source;
@@ -164,18 +198,32 @@ export const GraphRenderer = {
         })
         .attr('fill', n => {
           if (n.id === d.id || connectedNodes.has(n.id)) {
-            return CONFIG.colors.node.highlighted;  // Brighter color
+            return palette.nodeHighlight;
           }
-          return CONFIG.colors.node.default;
+          return palette.nodeDefault;
         })
         .attr('stroke', n => {
           if (n.id === d.id || connectedNodes.has(n.id)) {
-            return CONFIG.colors.node.strokeHighlight;
+            return palette.nodeStrokeHighlight;
           }
-          return CONFIG.colors.node.stroke;
-        });
-      
-      State.baseLinks.attr('stroke', CONFIG.colors.link.dimmed);  // Dim all base links
+          return palette.nodeStroke;
+        })
+        .attr('r', n => {
+          const scale = n.id === d.id
+            ? CONFIG.visual.nodeHoverScale
+            : connectedNodes.has(n.id)
+              ? (1 + (CONFIG.visual.nodeHoverScale - 1) / 2)
+              : 1;
+          const scaled = getBaseRadius(n) * scale;
+          return Math.min(scaled, CONFIG.node.maxSize * sizeMultiplier * CONFIG.visual.nodeHoverScale);
+        })
+        .attr('stroke-width', n => (n.id === d.id || connectedNodes.has(n.id)
+          ? CONFIG.visual.nodeHighlightStrokeWidth
+          : CONFIG.node.strokeWidth));
+
+      State.baseLinks
+        .attr('stroke', palette.linkDimmed)
+        .style('opacity', 0.45);
       
       State.highlightLinks.each(function(l) {
         const sourceId = l.source.id || l.source;
@@ -200,19 +248,24 @@ export const GraphRenderer = {
         }
       });
       if (State.showLabels) {
-        label.style('opacity', n => {
-          if (n.id === d.id || connectedNodes.has(n.id)) return 1;
-          return 0.2;
-        });
+        label
+          .style('opacity', n => (n.id === d.id || connectedNodes.has(n.id) ? 1 : 0.2))
+          .style('fill', n => (n.id === d.id || connectedNodes.has(n.id)
+            ? palette.labelHighlight
+            : palette.labelDimmed));
       }
     });
 
     node.on('mouseleave', function() {
       node
         .style('opacity', 1)
-        .attr('fill', CONFIG.colors.node.default)
-        .attr('stroke', CONFIG.colors.node.stroke);
-      State.baseLinks.attr('stroke', CONFIG.colors.link.default);
+        .attr('fill', palette.nodeDefault)
+        .attr('stroke', palette.nodeStroke)
+        .attr('stroke-width', CONFIG.node.strokeWidth)
+        .attr('r', n => getBaseRadius(n));
+      State.baseLinks
+        .attr('stroke', palette.linkDefault)
+        .style('opacity', 1);
       State.highlightLinks
         .interrupt()
         .style('opacity', 0)
@@ -220,7 +273,9 @@ export const GraphRenderer = {
         .style('stroke-dashoffset', 0);
       
       if (State.showLabels) {
-        label.style('opacity', 1);
+        label
+          .style('opacity', 1)
+          .style('fill', palette.labelDefault);
       }
     });
   },

@@ -258,3 +258,66 @@ select.form-control {
   outline: 2px solid var(--link-color);
   outline-offset: 2px;
 }
+
+/* =====================================================
+   DARK THEME REFINEMENTS
+   ===================================================== */
+
+html[data-mode='dark'] {
+  .btn {
+    background-color: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: var(--text-color);
+
+    &:hover:not(:disabled) {
+      background-color: rgba(138, 180, 248, 0.12);
+      border-color: var(--link-color);
+      color: var(--link-color);
+    }
+
+    &:active:not(:disabled) {
+      background-color: rgba(138, 180, 248, 0.18);
+    }
+  }
+
+  .btn-primary {
+    color: #ffffff;
+
+    &:hover:not(:disabled) {
+      opacity: 0.95;
+    }
+  }
+
+  .btn-check:checked + .btn {
+    background-color: rgba(138, 180, 248, 0.2);
+    border-color: var(--link-color);
+    color: var(--link-color);
+  }
+
+  .form-select,
+  select.form-control,
+  .form-control {
+    background-color: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: var(--text-color);
+
+    &:hover {
+      border-color: rgba(138, 180, 248, 0.7);
+    }
+
+    &:focus {
+      border-color: var(--link-color);
+      outline: 2px solid rgba(138, 180, 248, 0.35);
+      outline-offset: 2px;
+    }
+
+    option {
+      background-color: var(--card-bg);
+      color: var(--text-color);
+    }
+  }
+
+  .form-label {
+    color: var(--text-muted-highlight-color);
+  }
+}

@@ -8,7 +8,7 @@
   gap: 0.5rem;
   padding: 0.5rem 1rem;
   background: var(--sidebar-bg);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--main-border-color);
   align-items: center;
   flex-wrap: wrap;
   overflow-x: auto;
@@ -20,7 +20,7 @@
   }
   
   &::-webkit-scrollbar-thumb {
-    background: var(--border-color);
+    background: var(--main-border-color);
     border-radius: 2px;
   }
 }
@@ -79,7 +79,7 @@
 .tree-controls-header {
   background: var(--sidebar-bg);
   padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--main-border-color);
   flex-shrink: 0;
   display: flex;
   align-items: center;
