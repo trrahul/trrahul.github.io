@@ -1,0 +1,130 @@
+/**
+ * Terminal Controls & Status
+ */
+
+.terminal-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(var(--text-color-rgb, 128, 128, 128), 0.15);
+  border-radius: 0;
+  gap: 1.5rem;
+  font-size: 0.8rem;
+  font-family: 'JetBrains Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .control-label {
+    opacity: 0.65;
+    font-weight: 400;
+    font-size: 0.75rem;
+    margin-right: 0.25rem;
+  }
+}
+
+.control-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.6rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 0.75rem;
+  color: var(--text-color);
+  font-weight: 400;
+  opacity: 0.7;
+  font-family: 'JetBrains Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+
+  i {
+    font-size: 0.7rem;
+    opacity: 0.8;
+  }
+
+  .sort-direction {
+    font-size: 0.65rem;
+    opacity: 0.6;
+    transition: all 0.15s ease;
+  }
+
+  &:hover {
+    background: rgba(var(--link-color-rgb, 0, 102, 204), 0.06);
+    border-color: rgba(var(--link-color-rgb, 0, 102, 204), 0.35);
+    color: var(--link-color);
+    opacity: 1;
+
+    i {
+      opacity: 1;
+    }
+
+    .sort-direction {
+      opacity: 0.8;
+    }
+  }
+
+  &.active {
+    background: rgba(var(--link-color-rgb, 0, 102, 204), 0.08);
+    border-color: rgba(var(--link-color-rgb, 0, 102, 204), 0.45);
+    color: var(--link-color);
+    font-weight: 500;
+    opacity: 1;
+
+    i {
+      opacity: 1;
+    }
+
+    .sort-direction {
+      opacity: 1;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+
+    &:hover {
+      background: transparent;
+      border-color: transparent;
+      color: var(--text-color);
+    }
+  }
+}
+
+.terminal-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(var(--text-color-rgb, 128, 128, 128), 0.15);
+  border-radius: 0;
+  font-size: 0.75rem;
+
+  .status-left,
+  .status-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .current-location,
+  .sort-indicator,
+  .post-count {
+    opacity: 0.7;
+
+    strong {
+      color: var(--link-color);
+      font-weight: 500;
+    }
+  }
+}

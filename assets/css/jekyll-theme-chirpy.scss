@@ -15,11 +15,15 @@
 @use 'addon/typography';  // Typography, headings, fonts
 @use 'addon/link-preview';  // Link preview cards
 @use 'addon/panel-backlinks';  // TOC & backlinks panel (right sidebar)
+@use 'addon/terminal-breadcrumbs';  // Terminal-style breadcrumbs for posts
 
 /* Page-specific Styles */
 @use 'addon/page-home';  // Home page: post cards, category filter
 @use 'addon/page-category';  // Category page layout
 @use 'addon/page-tags';  // Tags page layout
 @use 'addon/page-graph';  // Knowledge graph visualization
+
+/* Import JetBrains Mono font for terminal interface */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 

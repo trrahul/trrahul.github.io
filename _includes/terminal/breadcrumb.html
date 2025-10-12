@@ -1,0 +1,49 @@
+{% comment %}
+  Terminal breadcrumb navigation (for post pages)
+  Parameters:
+    - user: username (default: site.social.name or "user")
+    - base_path: base directory label (default: "posts")
+    - categories: array of categories to show
+    - filename: filename to render
+    - base_url: base URL for links (default: "/")
+{% endcomment %}
+{% assign nav_user = include.user | default: site.social.name | default: 'user' %}
+{% assign nav_base = include.base_path | default: 'posts' %}
+{% assign nav_categories = include.categories | default: page.categories %}
+{% if nav_categories == nil %}
+  {% assign nav_categories = '' | split: '' %}
+{% endif %}
+{% assign nav_filename = include.filename | default: page.title | default: '' %}
+{% assign nav_base_url = include.base_url | default: '/' %}
+{% assign category_path = '' %}
+
+<nav class="terminal-post-header" aria-label="Post navigation">
+  <div class="terminal-command-line">
+    <span class="prompt">{{ nav_user }}@blog</span>
+    <span class="separator">:</span>
+    <span class="path">~</span>
+    <span class="symbol">$</span>
+    <span class="command">cd</span>
+    <a href="{{ nav_base_url | relative_url }}" class="path-link">{{ nav_base }}</a>
+    {% if nav_categories.size > 0 %}
+      {% for category in nav_categories %}
+        {% assign category_slug = category | slugify %}
+        {% if forloop.first %}
+          {% assign category_path = category_slug %}
+        {% else %}
+          {% assign category_path = category_path | append: '/' | append: category_slug %}
+        {% endif %}
+        <span class="path-separator">/</span>
+        <a href="{{ nav_base_url | relative_url }}?dir={{ category_path | url_encode }}" class="path-link">{{ category_slug }}</a>
+      {% endfor %}
+    {% endif %}
+  </div>
+  <div class="terminal-command-line">
+    <span class="prompt">{{ nav_user }}@blog</span>
+    <span class="separator">:</span>
+    <span class="path">~/{{ nav_base }}{% if category_path != '' %}/{{ category_path }}{% endif %}</span>
+    <span class="symbol">$</span>
+    <span class="command">render</span>
+    <span class="filename">{{ nav_filename | slugify }}.md</span>
+  </div>
+</nav>

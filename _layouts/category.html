@@ -7,13 +7,18 @@ panel_includes: []
 {% include lang.html %}
 
 <article class="px-1">
+  
+  <!-- Terminal Header -->
+  {% include terminal-header.html 
+    show_prompt=true 
+    path='~/categories' 
+    current_dir=page.title 
+    show_stats=true 
+    item_count=page.posts.size 
+    item_label='posts' 
+  %}
+  
   <div id="page-category">
-    <h1 class="ps-lg-2">
-      <i class="far fa-folder-open fa-fw text-muted"></i>
-      {{ page.title }}
-      <span class="lead text-muted ps-2">{{ page.posts.size }}</span>
-    </h1>
-
     <ul class="content ps-0 category-enhanced-list">
       {% assign posts = page.posts %}
       {% for post in posts %}

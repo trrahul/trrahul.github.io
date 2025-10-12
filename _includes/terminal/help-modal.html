@@ -1,0 +1,57 @@
+{% comment %}
+  Terminal help modal
+  Parameters:
+    - id: modal element ID (default: "terminal-help-modal")
+    - show_navigation: show navigation commands (default: true)
+    - show_sorting: show sorting commands (default: true)
+    - show_filtering: show filtering commands (default: true)
+{% endcomment %}
+{% assign modal_id = include.id | default: 'terminal-help-modal' %}
+{% assign show_nav = include.show_navigation | default: true %}
+{% assign show_sort = include.show_sorting | default: true %}
+{% assign show_filter = include.show_filtering | default: true %}
+
+<div id="{{ modal_id }}" class="terminal-modal" style="display: none;">
+  <div class="terminal-modal-content">
+    <div class="terminal-modal-header">
+      <h3>Terminal Commands</h3>
+      <button class="terminal-modal-close">&times;</button>
+    </div>
+    <div class="terminal-modal-body">
+      {% if show_nav %}
+        <div class="help-section">
+          <h4>Navigation</h4>
+          <code>cd &lt;category&gt;</code> - Navigate to category<br>
+          <code>cd ..</code> - Go back to all categories<br>
+          <code>cd ~</code> - Go to home (all posts)
+        </div>
+      {% endif %}
+      
+      {% if show_sort %}
+        <div class="help-section">
+          <h4>Listing &amp; Sorting</h4>
+          <code>ls</code> - List items<br>
+          <code>ls -lt</code> - Sort by time (newest first)<br>
+          <code>ls -ltr</code> - Sort by time (oldest first)<br>
+          <code>ls -lS</code> - Sort by size<br>
+          <code>ls -la</code> - Expand all details
+        </div>
+      {% endif %}
+      
+      {% if show_filter %}
+        <div class="help-section">
+          <h4>Filtering</h4>
+          <code>grep &lt;term&gt;</code> - Search in titles/content<br>
+          <code>clear</code> - Clear filters
+        </div>
+      {% endif %}
+      
+      <div class="help-section">
+        <h4>Tips</h4>
+        • Use Tab for autocomplete<br>
+        • Press Ctrl+K to focus command bar<br>
+        • Click buttons in control bar for quick actions
+      </div>
+    </div>
+  </div>
+</div>

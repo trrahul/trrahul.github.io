@@ -1,0 +1,127 @@
+/**
+ * Terminal Command Interface for Post Pages
+ * Two-line command structure: cd path + render file
+ */
+
+/* Hide theme's default breadcrumb */
+#breadcrumb,
+.breadcrumb {
+  display: none !important;
+}
+
+/* Hide search box and trigger button */
+#search-trigger,
+#search,
+#search-cancel,
+#search-input {
+  display: none !important;
+}
+
+.terminal-post-header {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  padding-top: 2rem;
+  font-family: 'JetBrains Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  font-weight: 400;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.terminal-command-line {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  padding: 0.4rem 0;
+  gap: 0.35rem;
+  border-bottom: 1px solid transparent;
+  transition: all 0.15s ease;
+  
+  &:first-child {
+    border-bottom: 1px solid rgba(var(--text-color-rgb, 128, 128, 128), 0.2);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Terminal prompt elements */
+.prompt {
+  color: var(--link-color);
+  font-weight: 500;
+  opacity: 1;
+}
+
+.separator {
+  opacity: 0.6;
+  margin: 0 0.15rem;
+}
+
+.path-separator {
+  opacity: 0.5;
+  margin: 0 0.25rem;
+}
+
+.path {
+  color: var(--heading-color);
+  opacity: 0.85;
+}
+
+.symbol {
+  opacity: 0.7;
+  margin-right: 0.5rem;
+}
+
+/* Commands */
+.command {
+  color: var(--text-color);
+  opacity: 0.85;
+  font-weight: 500;
+  font-style: normal;
+  margin-right: 0.35rem;
+}
+
+/* Path links (navigable) */
+.path-link {
+  color: var(--link-color);
+  text-decoration: none;
+  opacity: 0.85;
+  transition: all 0.15s ease;
+  border-bottom: 1px solid transparent;
+  
+  &:hover {
+    opacity: 1;
+    border-bottom-color: rgba(var(--link-color-rgb, 0, 102, 204), 0.4);
+  }
+}
+
+/* Filename (non-navigable, current file) */
+.filename {
+  color: var(--text-color);
+  opacity: 0.75;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .terminal-post-header {
+    font-size: 0.75rem;
+  }
+  
+  .terminal-command-line {
+    padding: 0.35rem 0;
+  }
+  
+  /* Allow wrapping on small screens */
+  .command {
+    flex-basis: 100%;
+    margin-top: 0.25rem;
+  }
+}
+
+/* Post header adjustments */
+article header {
+  h1 {
+    margin-top: 0.5rem;
+  }
+}

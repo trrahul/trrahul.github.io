@@ -90,6 +90,12 @@ export const CONFIG = {
       groupCollapsed: true,
       showPayload: true,
     },
+    dataLoader: {
+      enabled: true,
+      includeTimestamp: true,
+      groupCollapsed: true,
+      showPayload: true,
+    },
   },
   
   // Data source

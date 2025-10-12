@@ -1,0 +1,25 @@
+{% comment %}
+  Shared terminal prompt identity segment.
+  Parameters:
+    - user: username (default: site.social.name or "user")
+    - path: directory path (default: "~")
+    - current_dir: optional current subdirectory label
+    - symbol: prompt symbol (default: "$")
+    - show_symbol: set to false to omit the trailing symbol
+{% endcomment %}
+{% assign base_user = include.user | default: site.social.name | default: 'user' %}
+{% assign base_path = include.path | default: '~' %}
+{% assign base_symbol = include.symbol | default: '$' %}
+{% assign show_symbol = include.show_symbol %}
+
+<span class="terminal-user">{{ base_user }}@blog</span>
+<span class="terminal-separator">:</span>
+<span class="terminal-path">{{ base_path }}</span>
+{% if include.current_dir %}
+  <span class="terminal-current-dir" data-current="{{ include.current_dir }}">{{ include.current_dir }}</span>
+{% else %}
+  <span class="terminal-current-dir" data-current=""></span>
+{% endif %}
+{% if show_symbol != false %}
+  <span class="terminal-prompt-symbol">{{ base_symbol }}</span>
+{% endif %}

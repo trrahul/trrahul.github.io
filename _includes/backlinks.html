@@ -2,282 +2,84 @@
 {% assign has_outgoing = page.outgoing_links and page.outgoing_links.size > 0 %}
 
 {% if has_backlinks or has_outgoing %}
-<!-- Knowledge Graph Links Section -->
-<hr class="knowledge-graph-separator">
-
-<div class="knowledge-graph-section">
-  <div class="knowledge-graph-header">
-    <svg class="knowledge-graph-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <circle cx="12" cy="12" r="3"/>
-      <circle cx="5" cy="5" r="2"/>
-      <circle cx="19" cy="5" r="2"/>
-      <circle cx="5" cy="19" r="2"/>
-      <circle cx="19" cy="19" r="2"/>
-      <line x1="9" y1="11" x2="7" y2="7"/>
-      <line x1="15" y1="11" x2="17" y2="7"/>
-      <line x1="9" y1="13" x2="7" y2="17"/>
-      <line x1="15" y1="13" x2="17" y2="17"/>
-    </svg>
-    <span class="knowledge-graph-title">Connected Notes</span>
-  </div>
-
-  <div class="links-container">
-    {% if has_backlinks %}
-    <div class="links-group">
-      <div class="links-group-header">
-        <span class="links-label">
-          <svg class="links-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2z"/>
-            <path d="M8 1a.5.5 0 0 1 .5.5L8 8l5.5.5a.5.5 0 0 1 0 1L8 9l-.5 6.5a.5.5 0 0 1-1 0L7 9l-6.5-.5a.5.5 0 0 1 0-1L7 8l.5-6.5A.5.5 0 0 1 8 1z" opacity="0.4"/>
-          </svg>
-          Referenced by
-        </span>
-        <span class="links-count">{{ page.backlinks.size }}</span>
-      </div>
-      
-      <div class="links-list">
-        {% for backlink in page.backlinks %}
-        <div class="link-item">
-          <a href="{{ backlink.url | relative_url }}" class="link-item-link no-preview">
-            <div class="link-item-header">
-              <span class="link-arrow">←</span>
-              <span class="link-title">{{ backlink.title }}</span>
-            </div>
-            {% if backlink.context and backlink.context != "" %}
-            <div class="link-section">
-              <svg class="section-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M2 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
-              </svg>
-              <span class="section-name">{{ backlink.context }}</span>
-            </div>
-            {% endif %}
-          </a>
-        </div>
-        {% endfor %}
-      </div>
+<!-- Connected Notes Section - Terminal Style -->
+<div class="terminal-connected-notes">
+  
+  <!-- Incoming connections (backlinks) -->
+  {% if has_backlinks %}
+  <div class="terminal-command-section">
+    <div class="terminal-command-line">
+      <span class="prompt">graph@blog</span><span class="separator">:</span><span class="path">~</span><span class="symbol">$</span> <span class="command">neo4j-shell -c "MATCH (n)-[r]->(m {slug:'{{ page.slug }}'}) RETURN n"</span>
     </div>
-    {% endif %}
-
-    {% if has_outgoing %}
-    <div class="links-group">
-      <div class="links-group-header">
-        <span class="links-label">
-          <svg class="links-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2z"/>
-            <path d="M8 1a.5.5 0 0 1 .5.5L8 8l5.5.5a.5.5 0 0 1 0 1L8 9l-.5 6.5a.5.5 0 0 1-1 0L7 9l-6.5-.5a.5.5 0 0 1 0-1L7 8l.5-6.5A.5.5 0 0 1 8 1z" opacity="0.4"/>
-          </svg>
-          References
-        </span>
-        <span class="links-count">{{ page.outgoing_links.size }}</span>
-      </div>
-      
-      <div class="links-list">
-        {% for link in page.outgoing_links %}
-        <div class="link-item">
-          <a href="{{ link.url | relative_url }}" class="link-item-link no-preview">
-            <div class="link-item-header">
-              <span class="link-arrow">→</span>
-              <span class="link-title">{{ link.title }}</span>
-            </div>
-            {% if link.context and link.context != "" %}
-            <div class="link-section">
-              <svg class="section-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm0 3a.5.5 0 0 1 0-1h6a.5.5 0 0 1 0 1h-6zm0 3a.5.5 0 0 1 0-1h6a.5.5 0 0 1 0 1h-6zm0 3a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11z"/>
-              </svg>
-              <span class="section-name">{{ link.context }}</span>
-            </div>
-            {% endif %}
-          </a>
-        </div>
-        {% endfor %}
-      </div>
+    
+    <div class="terminal-output">
+      {% for backlink in page.backlinks %}
+      <article class="directory-item directory-file flat-view">
+        <a href="{{ backlink.url | relative_url }}" class="file-link no-preview">
+          <div class="directory-icon">
+            <i class="fas fa-arrow-left"></i>
+          </div>
+          <div class="file-info">
+            <div class="file-name">{{ backlink.title | slugify }}.md</div>
+          </div>
+        </a>
+      </article>
+      {% endfor %}
     </div>
-    {% endif %}
   </div>
+  {% endif %}
+
+  <!-- Outgoing connections (references) -->
+  {% if has_outgoing %}
+  <div class="terminal-command-section">
+    <div class="terminal-command-line">
+      <span class="prompt">graph@blog</span><span class="separator">:</span><span class="path">~</span><span class="symbol">$</span> <span class="command">neo4j-shell -c "MATCH (n {slug:'{{ page.slug }}'})-[r]->(m) RETURN m"</span>
+    </div>
+    
+    <div class="terminal-output">
+      {% for link in page.outgoing_links %}
+      <article class="directory-item directory-file flat-view">
+        <a href="{{ link.url | relative_url }}" class="file-link no-preview">
+          <div class="directory-icon">
+            <i class="fas fa-arrow-right"></i>
+          </div>
+          <div class="file-info">
+            <div class="file-name">{{ link.title | slugify }}.md</div>
+          </div>
+        </a>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
 </div>
 
 <style>
-.knowledge-graph-separator {
+/* Terminal Connected Notes - Minimal overrides only */
+.terminal-connected-notes {
   margin: 3rem 0 2rem 0;
-  border: 0;
-  border-top: 1px solid var(--border-color);
 }
 
-.knowledge-graph-section {
-  margin: 0 0 2rem 0;
-  padding: 1.5rem 0 1.5rem 0;
-  border-bottom: 1px solid var(--border-color);
+.terminal-command-section {
+  margin-bottom: 2rem;
 }
 
-.knowledge-graph-header {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--border-color);
+.terminal-command-section:last-child {
+  margin-bottom: 0;
 }
 
-.knowledge-graph-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  color: var(--text-muted-color);
-  opacity: 0.6;
+.terminal-connected-notes .terminal-command-line {
+  margin-bottom: 1rem;
 }
 
-.knowledge-graph-title {
-  font-size: 0.875rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--heading-color);
-  opacity: 0.8;
+/* Arrow color differentiation */
+.terminal-connected-notes .fa-arrow-left {
+  color: var(--link-color);
 }
 
-.links-container {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.links-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.links-group-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(var(--border-color-rgb, 128, 128, 128), 0.3);
-}
-
-.links-label {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  font-weight: 500;
-  font-size: 0.8125rem;
-  letter-spacing: 0.025em;
-  text-transform: uppercase;
-  color: var(--text-muted-color);
-  opacity: 0.85;
-}
-
-.links-icon {
-  width: 0.875rem;
-  height: 0.875rem;
-  opacity: 0.5;
-}
-
-.links-count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 1.375rem;
-  height: 1.375rem;
-  padding: 0 0.375rem;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  border-radius: 0.625rem;
-  background: var(--button-bg);
-  color: var(--text-muted-color);
-  opacity: 0.7;
-  border: 1px solid var(--border-color);
-}
-
-.links-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.link-item {
-  display: flex;
-  flex-direction: column;
-}
-
-.link-item-link {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.75rem 0.875rem;
-  text-decoration: none;
+.terminal-connected-notes .fa-arrow-right {
   color: var(--text-color);
-  transition: all 0.2s ease;
-  font-size: 0.9375rem;
-  border-radius: 0.5rem;
-  width: 100%;
-  line-height: 1.4;
-  border: 1px solid transparent;
-}
-
-.link-item-link:hover {
-  background: var(--button-bg);
-  border-color: var(--border-color);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.link-item-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.link-arrow {
-  font-size: 0.875rem;
-  opacity: 0.35;
-  transition: all 0.2s ease;
-  font-weight: 600;
-}
-
-.link-item-link:hover .link-arrow {
-  opacity: 0.75;
-  transform: translateX(-2px);
-}
-
-/* Different arrow direction for outgoing links */
-.links-group:nth-child(2) .link-item-link:hover .link-arrow {
-  transform: translateX(2px);
-}
-
-.link-title {
-  font-weight: 500;
-  flex: 1;
-}
-
-.link-section {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  margin-left: 1.5rem;
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-  opacity: 0.8;
-}
-
-.section-icon {
-  width: 0.875rem;
-  height: 0.875rem;
-  flex-shrink: 0;
-  opacity: 0.6;
-}
-
-.section-name {
-  font-weight: 400;
-}
-
-/* Dark mode adjustments */
-[data-mode="dark"] .links-count {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-[data-mode="dark"] .link-item-link:hover {
-  background: rgba(255, 255, 255, 0.03);
 }
 </style>
 {% endif %}

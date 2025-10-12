@@ -1,0 +1,20 @@
+{% comment %}
+  Time segment for terminal prompt meta area.
+  Reads global configuration from _data/terminal_prompt.yml.
+{% endcomment %}
+{% assign prompt_config = site.data.terminal_prompt | default: {} %}
+{% assign display_time = include.force_show | default: prompt_config.display.time | default: true %}
+{% if display_time %}
+  {% assign time_config = prompt_config.time | default: {} %}
+  {% assign time_modes = time_config.modes %}
+  {% unless time_modes %}
+    {% assign time_modes = '24h,12h' | split: ',' %}
+  {% endunless %}
+  {% assign time_refresh = time_config.refresh_seconds | default: 30 %}
+  {% assign time_locale = time_config.locale | default: '' %}
+  {% assign time_label = time_config.label | default: 'Toggle time format' %}
+  <button class="terminal-clock" type="button" data-time-modes='{{ time_modes | jsonify }}' data-time-refresh="{{ time_refresh }}"{% unless time_locale == '' %} data-time-locale="{{ time_locale }}"{% endunless %} data-time-label="{{ time_label }}" aria-label="{{ time_label }}" title="{{ time_label }}">
+    <span class="terminal-clock-icon" aria-hidden="true"><i class="far fa-clock"></i></span>
+    <span class="terminal-clock-value" data-mode="{{ time_modes | first | default: '24h' }}" aria-live="polite">--:--</span>
+  </button>
+{% endif %}

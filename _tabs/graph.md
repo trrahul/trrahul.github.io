@@ -4,6 +4,16 @@ icon: fas fa-project-diagram
 order: 2
 ---
 
+<!-- Terminal Header -->
+{% include terminal-header.html 
+  show_prompt=true 
+  path='~/graph' 
+  show_stats=true 
+  item_count=site.posts.size 
+  item_label='nodes' 
+%}
+{% include terminal/debug-log.html selector='#terminal-command-bar' label='graph-page' %}
+
 <div id="knowledge-graph-container">
   <!-- Top Controls: Quick Actions + Settings Toggle -->
   <div class="d-flex align-items-center justify-content-between gap-3 mb-3 flex-wrap">

@@ -1,0 +1,34 @@
+/**
+ * Legacy Category Filter Support
+ */
+
+#home-category-filter {
+  .filter-label {
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .form-select {
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+
+    &:hover {
+      border-color: var(--link-color);
+    }
+
+    &:focus {
+      border-color: var(--link-color);
+      box-shadow: 0 0 0 0.2rem rgba(var(--link-color-rgb), 0.25);
+    }
+  }
+}
+
+.post-preview {
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+
+  &[style*='display: none'] {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+  }
+}

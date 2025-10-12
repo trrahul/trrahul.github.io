@@ -3,9 +3,6 @@ layout: default
 refactor: true
 panel_includes:
   - toc
-tail_includes:
-  - related-posts
-  - post-nav
 ---
 
 {% include lang.html %}
@@ -13,6 +10,16 @@ tail_includes:
 {% include toc-status.html %}
 
 <article class="px-1" data-toc="{{ enable_toc }}">
+  
+  <!-- Terminal command interface -->
+  {% include terminal-header.html 
+    show_breadcrumb=true 
+    show_prompt=false
+    categories=page.categories 
+    filename=page.title 
+  %}
+  {% include terminal/debug-log.html selector='.terminal-post-header' label='post-page' %}
+  
   <header>
     <h1 data-toc-skip>{{ page.title }}</h1>
     {% if page.description %}

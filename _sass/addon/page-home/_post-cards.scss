@@ -1,0 +1,82 @@
+/**
+ * Post Card Enhancements
+ */
+
+#post-list .card-wrapper {
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+#post-list .post-preview {
+  border: 1px solid transparent;
+  transition: all 0.2s ease, opacity 0.35s ease-in-out;
+
+  &:hover {
+    border-color: var(--link-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  &::before {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  &:hover::before {
+    opacity: 0.05;
+  }
+}
+
+#post-list .card .card-title {
+  transition: color 0.15s ease;
+}
+
+#post-list .post-preview:hover .card-title {
+  color: var(--link-color) !important;
+}
+
+#post-list .post-meta {
+  i {
+    opacity: 0.7;
+    transition: opacity 0.15s ease;
+  }
+
+  .categories {
+    font-weight: 500;
+  }
+}
+
+#post-list .post-preview:hover .post-meta i {
+  opacity: 1;
+}
+
+#post-list .pin {
+  color: var(--link-color);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  i {
+    font-size: 0.875em;
+  }
+}
+
+#post-list .preview-img img {
+  transition: transform 0.3s ease;
+}
+
+#post-list .post-preview:hover .preview-img img {
+  transform: scale(1.05);
+}
+
+#post-list .card-text.content p {
+  opacity: 0.9;
+  transition: opacity 0.15s ease;
+}
+
+#post-list .post-preview:hover .card-text.content p {
+  opacity: 1;
+}

@@ -1,0 +1,76 @@
+/**
+ * Quick Jump Chips
+ */
+
+.terminal-quick-jump {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--card-bg);
+  border-left: 1px solid var(--btn-border-color, var(--border-color));
+  border-right: 1px solid var(--btn-border-color, var(--border-color));
+  overflow-x: auto;
+  flex-wrap: wrap;
+
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .quick-jump-label {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    white-space: nowrap;
+    margin-right: 0.25rem;
+    font-weight: 500;
+  }
+}
+
+.category-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  background: transparent;
+  border: 1px solid var(--btn-border-color, var(--border-color));
+  border-radius: 4px;
+  color: var(--text-color);
+  font-size: 0.8rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  font-family: inherit;
+
+  i {
+    font-size: 0.75rem;
+    opacity: 0.8;
+  }
+
+  .chip-count {
+    opacity: 0.7;
+    font-size: 0.75rem;
+    margin-left: 0.15rem;
+
+    &::before {
+      content: '(';
+    }
+
+    &::after {
+      content: ')';
+    }
+  }
+
+  &:hover {
+    color: var(--link-color);
+    border-color: var(--link-color);
+    background: rgba(var(--link-color-rgb, 0, 86, 178), 0.05);
+  }
+
+  &.active {
+    color: var(--link-color);
+    border-color: var(--link-color);
+    background: rgba(var(--link-color-rgb, 0, 86, 178), 0.08);
+    font-weight: 500;
+  }
+}

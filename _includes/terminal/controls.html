@@ -1,0 +1,57 @@
+{% comment %}
+  Terminal control buttons for sorting, filtering, etc.
+  Parameters:
+    - show_sort: include sort controls (default: false)
+    - show_view: include view controls (default: false)
+    - show_reset: include reset button (default: false)
+    - show_filter: include filter controls (default: false)
+{% endcomment %}
+
+<div class="terminal-controls">
+  {% if include.show_sort %}
+    <div class="control-group">
+      <span class="control-label">sort:</span>
+      <button class="control-btn active" data-command="ls -lt" data-sort="time" data-dir="desc" title="Sort by time (newest first)">
+        <i class="fas fa-clock"></i> time <i class="fas fa-arrow-down sort-direction"></i>
+      </button>
+      <button class="control-btn" data-command="ls -lS" data-sort="size" data-dir="desc" title="Sort by size (largest first)">
+        <i class="fas fa-file"></i> size <i class="fas fa-arrow-down sort-direction"></i>
+      </button>
+      <button class="control-btn" data-command="ls -ln" data-sort="name" data-dir="desc" title="Sort by name (A-Z)">
+        <i class="fas fa-sort-alpha-down"></i> name <i class="fas fa-arrow-down sort-direction"></i>
+      </button>
+    </div>
+  {% endif %}
+
+  {% if include.show_view %}
+    <div class="control-group">
+      <span class="control-label">view:</span>
+      <button class="control-btn active" data-view="compact" title="Compact view">
+        <i class="fas fa-list"></i> compact
+      </button>
+      <button class="control-btn" data-view="detailed" title="Detailed view (descriptions)">
+        <i class="fas fa-align-left"></i> detailed
+      </button>
+    </div>
+  {% endif %}
+
+  {% if include.show_filter %}
+    <div class="control-group">
+      <span class="control-label">filter:</span>
+      <button class="control-btn" data-filter="all" title="Show all">
+        <i class="fas fa-asterisk"></i> all
+      </button>
+      <button class="control-btn" data-filter="pinned" title="Pinned only">
+        <i class="fas fa-thumbtack"></i> pinned
+      </button>
+    </div>
+  {% endif %}
+
+  {% if include.show_reset %}
+    <div class="control-group">
+      <button class="control-btn" data-command="clear" title="Reset all">
+        <i class="fas fa-redo"></i> reset
+      </button>
+    </div>
+  {% endif %}
+</div>

@@ -1,0 +1,60 @@
+{% comment %}
+  Debug helper to log layout metrics for terminal components.
+  Parameters:
+    - selector: CSS selector targeting element to inspect (required)
+    - label: Optional label describing the page/context
+{% endcomment %}
+{% assign debug_label = include.label | default: page.url | default: 'unknown-page' %}
+{% assign target_selector = include.selector | default: '#terminal-command-bar' %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var target = document.querySelector('{{ target_selector }}');
+    if (!target) {
+      console.warn('[Terminal Debug] {{ debug_label | escape }}: selector "{{ target_selector | escape }}" not found.');
+      return;
+    }
+
+    var targetRect = target.getBoundingClientRect();
+    var targetStyles = window.getComputedStyle(target);
+    var header = target.matches('.terminal-post-header') ? target : target.querySelector('.terminal-header');
+
+    var logPayload = {
+      selector: '{{ target_selector | escape }}',
+      boundingClientRect: {
+        top: targetRect.top,
+        bottom: targetRect.bottom,
+        height: targetRect.height
+      },
+      metrics: {
+        offsetTop: target.offsetTop,
+        marginTop: targetStyles.marginTop,
+        paddingTop: targetStyles.paddingTop,
+        marginBottom: targetStyles.marginBottom,
+        paddingBottom: targetStyles.paddingBottom
+      }
+    };
+
+    if (header) {
+      var headerRect = header.getBoundingClientRect();
+      var headerStyles = window.getComputedStyle(header);
+      logPayload.header = {
+        selector: header === target ? '.terminal-post-header (self)' : '.terminal-header',
+        boundingClientRect: {
+          top: headerRect.top,
+          bottom: headerRect.bottom,
+          height: headerRect.height
+        },
+        metrics: {
+          offsetTop: header.offsetTop,
+          marginTop: headerStyles.marginTop,
+          paddingTop: headerStyles.paddingTop,
+          marginBottom: headerStyles.marginBottom,
+          paddingBottom: headerStyles.paddingBottom
+        }
+      };
+    }
+
+    console.log('[Terminal Debug] {{ debug_label | escape }}', logPayload);
+  });
+</script>

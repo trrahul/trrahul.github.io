@@ -1,0 +1,13 @@
+display:
+  time: true
+  git: true
+
+time:
+  modes:
+    - 24h
+    - 12h
+  refresh_seconds: 30
+  label: Toggle time format
+
+git:
+  branch_max: 24

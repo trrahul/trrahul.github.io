@@ -7,10 +7,17 @@ panel_includes: []
 <!-- Category Controls Script -->
 <script src="{{ '/assets/js/category-controls.js' | relative_url }}"></script>
 
+<!-- Terminal Header -->
+{% include terminal-header.html 
+  show_prompt=true 
+  path='~/categories' 
+  show_stats=true 
+  item_count=site.categories.size 
+  item_label='categories' 
+%}
+
 <article class="px-1">
   {% include lang.html %}
-
-  <h1 class="dynamic-title">{{ page.title }}</h1>
 
   <!-- Filter and Sort Controls -->
   <div class="category-controls mb-4 p-3 border rounded">

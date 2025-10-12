@@ -1,0 +1,106 @@
+{% assign hierarchy = include.hierarchy %}
+{% assign categories = hierarchy.categories %}
+{% assign posts_index = hierarchy.posts %}
+{% assign path = include.path %}
+{% assign node = categories[path] %}
+{% assign post_limit = include.post_limit | default: 4 %}
+{% if node %}
+  {% assign depth = node.depth | default: 0 %}
+  {% assign directory_classes = 'category-directory' %}
+  {% if depth > 0 %}
+    {% assign directory_classes = directory_classes | append: ' category-directory--nested' %}
+  {% endif %}
+  <div class="{{ directory_classes }}"
+    data-category="{{ node.slug }}"
+    data-category-path="{{ node.path }}"
+    data-parent-path="{{ node.parent_path }}"
+    data-depth="{{ depth }}">
+    <div class="directory-folder">
+      <div class="directory-icon">
+        <i class="fas fa-folder"></i>
+      </div>
+      <div class="directory-name">
+        <span class="folder-name">{{ node.name }}/</span>
+        <span class="folder-meta">
+          {{ node.total_post_count }} {% if node.total_post_count == 1 %}post{% else %}posts{% endif %}
+        </span>
+      </div>
+      <button class="directory-expand" aria-label="Expand category">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <div class="directory-contents" style="display: none;">
+      {% if node.children and node.children.size > 0 %}
+        {% for child_path in node.children %}
+          {% include terminal-category.html path=child_path hierarchy=hierarchy post_limit=post_limit %}
+        {% endfor %}
+      {% endif %}
+
+      {% assign post_ids = node.post_ids | default: [] %}
+      {% for post_id in post_ids limit: post_limit %}
+        {% assign post = posts_index[post_id] %}
+        {% if post %}
+          {% assign categories_slugs = post.category_slugs | join: ',' %}
+          {% assign tags_list = post.tags | default: [] %}
+          {% assign timestamp = post.timestamp | default: 0 %}
+          {% assign word_count = post.word_count | default: 0 %}
+          {% assign read_time = post.read_time | default: 1 %}
+          <article class="directory-item directory-file"
+                   data-categories="{{ categories_slugs }}"
+                   data-date="{{ timestamp }}"
+                   data-size="{{ word_count }}">
+            <a href="{{ post.url | relative_url }}" class="file-link">
+              <div class="directory-icon">
+                {% if post.pinned %}
+                  <i class="fas fa-thumbtack file-pinned"></i>
+                {% else %}
+                  <i class="far fa-file-alt"></i>
+                {% endif %}
+              </div>
+              <div class="file-meta">
+                {% assign post_date = post.date | date: '%b %d' %}
+                <time datetime="{{ post.date | date_to_xmlschema }}">{{ post_date }}</time>
+                <span class="file-time">{{ post.date | date: '%H:%M' }}</span>
+              </div>
+              <div class="file-info">
+                <div class="file-name">{{ post.title }}</div>
+                <div class="file-details" style="display: none;">
+                  <div class="file-read-stats" data-read-stats>
+                    <span class="reading-time">{{ read_time }} min read</span>
+                    <span class="read-stat-divider">·</span>
+                    <span class="word-count">{{ word_count }} words</span>
+                  </div>
+                  {% assign summary = post.summary | default: post.excerpt %}
+                  {% if summary %}
+                  <div class="file-summary" data-summary>
+                    {{ summary }}
+                  </div>
+                  {% endif %}
+                  {% if tags_list and tags_list.size > 0 %}
+                  <div class="file-tags" data-tags>
+                    <i class="fas fa-tags file-tags-icon"></i>
+                    {% for tag in tags_list %}
+                    <span class="file-tag-pill">#{{ tag }}</span>
+                    {% endfor %}
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="file-stats">
+                <span class="file-size">{{ word_count }}w</span>
+              </div>
+            </a>
+          </article>
+        {% endif %}
+      {% endfor %}
+
+      {% if post_ids.size > post_limit %}
+      <div class="directory-item directory-more" role="button" tabindex="0" title="View all posts in this category">
+        <span class="more-icon">+{{ post_ids.size | minus: post_limit }}</span>
+        <span class="more-text">more</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}

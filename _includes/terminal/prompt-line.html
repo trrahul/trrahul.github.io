@@ -1,0 +1,36 @@
+{% comment %}
+  Terminal command prompt line - shows current directory
+  Parameters:
+    - user: username (default: site.social.name or "user")
+    - path: directory path (default: "~")
+    - current_dir: current subdirectory (optional)
+{% endcomment %}
+{% assign prompt_user = include.user | default: site.social.name | default: 'user' %}
+{% assign prompt_path = include.path | default: '~' %}
+{% assign prompt_current = include.current_dir | default: '' %}
+
+<div class="terminal-dir-line">
+  <div class="terminal-dir-display">
+    <span class="terminal-user">{{ prompt_user }}@blog</span>
+    <span class="terminal-separator">:</span>
+    <span class="terminal-path">{{ prompt_path }}</span>
+    {% if prompt_current != '' %}
+      <span class="terminal-current-dir" data-current="{{ prompt_current }}">{{ prompt_current }}</span>
+    {% else %}
+      <span class="terminal-current-dir" data-current=""></span>
+    {% endif %}
+  </div>
+  {% if include.show_stats %}
+    <div class="terminal-stats">
+      <span class="post-count">
+        <span id="visible-count">{{ include.item_count | default: 0 }}</span> 
+        {{ include.item_label | default: 'items' }}
+      </span>
+      {% if include.show_help %}
+        <button class="terminal-help-btn" title="Help">
+          <i class="fas fa-question-circle"></i>
+        </button>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>

@@ -1,0 +1,172 @@
+@use "./variables" as *;
+
+/**
+ * Terminal Command Bar
+ */
+
+/* Ensure consistent top spacing for terminal headers across all pages */
+article.px-1 > .terminal-bar,
+article.px-1 > .terminal-post-header {
+  margin-top: 0;
+  padding-top: 2rem;
+}
+
+.terminal-bar {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  font-family: $terminal-font-stack;
+  font-size: $terminal-font-size;
+  font-weight: 400;
+}
+
+.terminal-header {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(var(--text-color-rgb, 128, 128, 128), 0.2);
+  border-radius: 0;
+  gap: 0.5rem;
+
+  &::after {
+    content: 'Ctrl+K';
+    position: absolute;
+    top: -2rem;
+    right: 1rem;
+    font-size: 0.7rem;
+    opacity: 0.5;
+    font-family: $terminal-font-stack;
+    pointer-events: none;
+  }
+}
+
+.terminal-bar.has-controls .terminal-divider {
+  height: 1px;
+  margin: 0 1rem;
+  border-bottom: 1px solid transparent;
+}
+
+.terminal-dir-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.terminal-dir-display {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.875rem;
+
+  .terminal-user {
+    color: var(--link-color);
+    font-weight: 500;
+  }
+
+  .terminal-separator {
+    opacity: 0.6;
+  }
+
+  .terminal-path {
+    color: var(--heading-color);
+    opacity: 0.85;
+  }
+
+  .terminal-current-dir {
+    color: var(--heading-color);
+    opacity: 0.85;
+    font-weight: 500;
+
+    &:not(:empty)::before {
+      content: '/';
+      opacity: 0.6;
+      margin-right: 0.2rem;
+    }
+  }
+}
+
+.terminal-input-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .terminal-prompt-symbol {
+    opacity: 0.7;
+    font-weight: 400;
+  }
+}
+
+.terminal-stats {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.75rem;
+  opacity: 0.7;
+
+  .current-location {
+    strong {
+      color: var(--link-color);
+      font-weight: 500;
+    }
+  }
+
+  .post-count {
+    opacity: 0.85;
+  }
+
+  .terminal-help-btn {
+    @include terminal-button;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+    opacity: 0.7;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.terminal-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-color);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 400;
+  padding: 0.25rem 0.5rem;
+  margin-left: 0.25rem;
+
+  &::placeholder {
+    color: var(--text-muted-color, var(--text-color));
+    opacity: 0.6;
+  }
+
+  &:focus {
+    background: rgba(var(--link-color-rgb, 0, 102, 204), 0.06);
+    border-radius: 3px;
+  }
+}
+
+.terminal-actions {
+  display: flex;
+  gap: 0.5rem;
+
+  button {
+    @include terminal-button;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    opacity: 0.6;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    i {
+      font-size: 0.8rem;
+    }
+  }
+}

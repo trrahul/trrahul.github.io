@@ -1,0 +1,22 @@
+{% comment %}
+  Loads shared terminal prompt assets (config + JS) once per page.
+{% endcomment %}
+{% assign prompt_config = site.data.terminal_prompt | default: {} %}
+<script>
+(function() {
+  const defaults = {{ prompt_config | jsonify }};
+  if (!window.__TERMINAL_PROMPT_CONFIG) {
+    window.__TERMINAL_PROMPT_CONFIG = defaults;
+  } else {
+    window.__TERMINAL_PROMPT_CONFIG = Object.assign({}, defaults, window.__TERMINAL_PROMPT_CONFIG);
+  }
+  if (!window.__TerminalPromptAssetsLoaded) {
+    window.__TerminalPromptAssetsLoaded = true;
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.defer = true;
+    script.src = '{{ '/assets/js/terminal/prompt.js' | relative_url }}';
+    document.head.appendChild(script);
+  }
+})();
+</script>

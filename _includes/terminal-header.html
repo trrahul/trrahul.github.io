@@ -1,0 +1,97 @@
+{% comment %}
+  Modular terminal-style header for all pages.
+  
+  Parameters:
+    - id: container ID (default: "terminal-command-bar")
+    - user: username (default: site.social.name or "user")
+    - base_path: base directory (default: "posts")
+    - current_dir: current subdirectory (optional)
+    
+  Module Flags (control which components to include):
+    - show_breadcrumb: show post navigation breadcrumb (default: false)
+    - show_prompt: show directory prompt line (default: true)
+    - show_input: show command input (default: false)
+    - show_controls: show control buttons bar (default: false)
+    - show_help_modal: show help modal (default: false)
+    
+  Module-Specific Parameters:
+    - For breadcrumb: categories, filename, base_url
+    - For prompt: item_count, item_label, show_stats, show_help
+    - For input: placeholder
+    - For controls: show_sort, show_view, show_filter, show_reset
+    - For help: show_navigation, show_sorting, show_filtering
+{% endcomment %}
+
+{% assign container_id = include.id | default: 'terminal-command-bar' %}
+{% assign header_user = include.user | default: site.social.name | default: 'user' %}
+{% assign base_path = include.base_path | default: 'posts' %}
+
+{% comment %} Module flags {% endcomment %}
+{% assign show_breadcrumb = include.show_breadcrumb %}
+{% assign show_prompt = include.show_prompt %}
+{% assign show_input = include.show_input %}
+{% assign show_controls = include.show_controls %}
+{% assign show_help_modal = include.show_help_modal %}
+
+{% comment %} Breadcrumb variant (for post pages) {% endcomment %}
+{% if show_breadcrumb %}
+  {% include terminal/breadcrumb.html 
+    user=header_user 
+    base_path=base_path 
+    categories=include.categories 
+    filename=include.filename 
+    base_url=include.base_url 
+  %}
+{% endif %}
+
+{% comment %} Interactive terminal bar (for listing pages) {% endcomment %}
+{% if show_prompt or show_input or show_controls %}
+  {% assign container_classes = 'terminal-bar' %}
+  {% if show_controls %}
+    {% assign container_classes = container_classes | append: ' has-controls' %}
+  {% endif %}
+  <div id="{{ container_id }}" class="{{ container_classes }}">
+    {% if show_prompt or show_input %}
+      <div class="terminal-header">
+        {% if show_prompt %}
+          {% include terminal/prompt-line.html 
+            user=header_user 
+            path=include.path 
+            current_dir=include.current_dir 
+            show_stats=include.show_stats 
+            item_count=include.item_count 
+            item_label=include.item_label 
+            show_help=include.show_help 
+          %}
+        {% endif %}
+        
+        {% if show_input %}
+          {% include terminal/input-line.html 
+            id=include.input_id 
+            placeholder=include.placeholder 
+          %}
+        {% endif %}
+      </div>
+    {% endif %}
+    
+    {% if show_controls %}
+      <div class="terminal-divider" aria-hidden="true"></div>
+      {% include terminal/controls.html 
+        show_sort=include.show_sort 
+        show_view=include.show_view 
+        show_filter=include.show_filter 
+        show_reset=include.show_reset 
+      %}
+    {% endif %}
+  </div>
+{% endif %}
+
+{% comment %} Help modal {% endcomment %}
+{% if show_help_modal %}
+  {% include terminal/help-modal.html 
+    id=include.help_modal_id 
+    show_navigation=include.show_navigation 
+    show_sorting=include.show_sorting 
+    show_filtering=include.show_filtering 
+  %}
+{% endif %}
