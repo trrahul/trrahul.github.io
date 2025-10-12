@@ -158,8 +158,16 @@ panel_includes:
     {% if page.categories.size > 0 %}
       <div class="post-meta mb-3">
         <i class="far fa-folder-open fa-fw me-1"></i>
+        {% assign category_path = '' %}
         {% for category in page.categories %}
-          <a href="{{ site.baseurl }}/categories#{{ category | slugify | url_encode }}">{{ category }}</a>
+          {% assign category_slug = category | slugify %}
+          {% if category_path == '' %}
+            {% assign category_path = category_slug %}
+          {% else %}
+            {% assign category_path = category_path | append: '/' | append: category_slug %}
+          {% endif %}
+          {% assign category_href = '/?dir=' | append: category_path %}
+          <a class="post-category-link" href="{{ category_href | relative_url }}">{{ category }}</a>
           {%- unless forloop.last -%},{%- endunless -%}
         {% endfor %}
       </div>
