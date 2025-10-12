@@ -30,11 +30,8 @@
               {% endif %}
 
             {% elsif page.layout == 'category' or page.layout == 'tag' %}
-              <span>
-                <a href="{{ item | append: '/' | relative_url }}">
-                  {{- site.data.locales[include.lang].tabs[item] | default: page.title -}}
-                </a>
-              </span>
+              <!-- Skip intermediate breadcrumb for category/tag pages since no categories index -->
+              {% continue %}
             {% endif %}
           {% endfor %}
         {% endif %}
