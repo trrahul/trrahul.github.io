@@ -38,12 +38,4 @@
       {% endfor %}
     {% endif %}
   </div>
-  <div class="terminal-command-line">
-    <span class="prompt">{{ nav_user }}@blog</span>
-    <span class="separator">:</span>
-    <span class="path">~/{{ nav_base }}{% if category_path != '' %}/{{ category_path }}{% endif %}</span>
-    <span class="symbol">$</span>
-    <span class="command">render</span>
-    <span class="filename">{{ nav_filename | slugify }}.md</span>
-  </div>
 </nav>

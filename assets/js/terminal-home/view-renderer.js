@@ -11,7 +11,9 @@ const DEBUG = CONFIG.debug?.viewRenderer || {};
 const debugLog = (label, payload) => {
   if (!DEBUG.enabled) return;
 
-  const timestamp = DEBUG.includeTimestamp ? `[${new Date().toISOString()}] ` : '';
+  const timestamp = DEBUG.includeTimestamp
+    ? `[${new Date().toISOString()}] `
+    : '';
   const message = `${timestamp}TerminalHome/ViewRenderer :: ${label}`;
 
   if (payload !== undefined && DEBUG.showPayload) {
@@ -52,13 +54,17 @@ export class ViewRenderer {
       return;
     }
 
-    const emptyMessageNode = this.directoryListElement.querySelector('[data-directory-empty]');
+    const emptyMessageNode = this.directoryListElement.querySelector(
+      '[data-directory-empty]'
+    );
     if (emptyMessageNode) {
       this.emptyDirectoryMessage = emptyMessageNode.outerHTML;
     }
 
-    const directoryNodes = Array.from(this.directoryListElement.querySelectorAll('.category-directory'));
-    directoryNodes.forEach(node => {
+    const directoryNodes = Array.from(
+      this.directoryListElement.querySelectorAll('.category-directory')
+    );
+    directoryNodes.forEach((node) => {
       const categoryPath = node.dataset.categoryPath;
       if (!categoryPath) {
         debugLog('initializeDirectoryBlueprints:missingPath', { node });
@@ -71,11 +77,12 @@ export class ViewRenderer {
     });
 
     debugLog('initializeDirectoryBlueprints:complete', {
-      blueprintCount: this.directoryBlueprints.size
+      blueprintCount: this.directoryBlueprints.size,
     });
 
     this.directoryListElement.innerHTML = '';
-    this.state.elements.categoryDirs = this.directoryListElement.querySelectorAll('.category-directory');
+    this.state.elements.categoryDirs =
+      this.directoryListElement.querySelectorAll('.category-directory');
   }
 
   refreshForPath(path) {
@@ -105,7 +112,9 @@ export class ViewRenderer {
     debugLog('showDirectoryView', { path });
     const categoriesToShow = this.getCategoriesForPath(path);
     debugLog('showDirectoryView:categories', { categoriesToShow });
-    this.updateDirectoryVisibility(categoriesToShow, { showEmptyMessage: true });
+    this.updateDirectoryVisibility(categoriesToShow, {
+      showEmptyMessage: true,
+    });
 
     const flatList = this.state.getElement('flatList');
     if (flatList) {
@@ -138,7 +147,9 @@ export class ViewRenderer {
     debugLog('showMixedView', { path });
     const flatList = this.state.getElement('flatList');
     const categoriesToShow = this.getCategoriesForPath(path);
-    this.updateDirectoryVisibility(categoriesToShow, { showEmptyMessage: true });
+    this.updateDirectoryVisibility(categoriesToShow, {
+      showEmptyMessage: true,
+    });
 
     if (flatList) {
       flatList.style.display = 'block';
@@ -169,7 +180,7 @@ export class ViewRenderer {
     debugLog('updateDirectoryVisibility:start', {
       currentPath,
       categoriesToShow,
-      showEmptyMessage
+      showEmptyMessage,
     });
 
     this.directoryListElement.innerHTML = '';
@@ -178,15 +189,18 @@ export class ViewRenderer {
       if (showEmptyMessage && this.emptyDirectoryMessage) {
         this.directoryListElement.innerHTML = this.emptyDirectoryMessage;
       }
-      this.state.elements.categoryDirs = this.directoryListElement.querySelectorAll('.category-directory');
+      this.state.elements.categoryDirs =
+        this.directoryListElement.querySelectorAll('.category-directory');
       return;
     }
 
     const fragment = document.createDocumentFragment();
-    categoriesToShow.forEach(categoryPath => {
+    categoriesToShow.forEach((categoryPath) => {
       const blueprint = this.directoryBlueprints.get(categoryPath);
       if (!blueprint) {
-        debugLog('updateDirectoryVisibility:missingBlueprint', { categoryPath });
+        debugLog('updateDirectoryVisibility:missingBlueprint', {
+          categoryPath,
+        });
         return;
       }
 
@@ -196,8 +210,12 @@ export class ViewRenderer {
     });
 
     this.directoryListElement.appendChild(fragment);
-    this.state.elements.categoryDirs = this.directoryListElement.querySelectorAll('.category-directory');
-    this.sortManager.sortCategoryDirectories(this.state.sorting.type, this.state.sorting.reverse);
+    this.state.elements.categoryDirs =
+      this.directoryListElement.querySelectorAll('.category-directory');
+    this.sortManager.sortCategoryDirectories(
+      this.state.sorting.type,
+      this.state.sorting.reverse
+    );
   }
 
   prepareDirectoryNode(node, currentPath) {
@@ -231,15 +249,16 @@ export class ViewRenderer {
     if (!flatList) return 0;
 
     const { scope = 'direct' } = options;
-    const hierarchyPosts = scope === 'all'
-      ? this.categoryHierarchy.getAllPosts(path)
-      : this.categoryHierarchy.getPosts(path);
+    const hierarchyPosts =
+      scope === 'all'
+        ? this.categoryHierarchy.getAllPosts(path)
+        : this.categoryHierarchy.getPosts(path);
 
-    const postUrls = new Set(hierarchyPosts.map(p => p.url));
+    const postUrls = new Set(hierarchyPosts.map((p) => p.url));
     const posts = flatList.querySelectorAll('.directory-file');
     let visibleCount = 0;
 
-    posts.forEach(post => {
+    posts.forEach((post) => {
       const link = post.querySelector('a.file-link');
       if (!link) return;
 
@@ -257,7 +276,7 @@ export class ViewRenderer {
     debugLog('markAllPostsHidden');
     const flatList = this.state.getElement('flatList');
     if (!flatList) return;
-    flatList.querySelectorAll('.directory-file').forEach(post => {
+    flatList.querySelectorAll('.directory-file').forEach((post) => {
       post.style.display = 'none';
       post.dataset.visible = 'false';
     });
@@ -265,7 +284,7 @@ export class ViewRenderer {
 
   toggleDetailedView(show) {
     debugLog('toggleDetailedView', { show });
-    document.querySelectorAll('.file-details').forEach(detail => {
+    document.querySelectorAll('.file-details').forEach((detail) => {
       detail.style.display = show ? 'flex' : 'none';
     });
 
@@ -274,14 +293,16 @@ export class ViewRenderer {
   }
 
   updateCurrentDir() {
-    debugLog('updateCurrentDir', { currentPath: this.state.navigation.currentPath });
+    debugLog('updateCurrentDir', {
+      currentPath: this.state.navigation.currentPath,
+    });
     const currentDir = this.state.getElement('currentDir');
     const { currentPath } = this.state.navigation;
 
     if (!currentDir) return;
     if (currentPath) {
       const breadcrumbs = this.categoryHierarchy.getBreadcrumbs(currentPath);
-      const displayPath = breadcrumbs.map(b => b.name).join(' / ');
+      const displayPath = breadcrumbs.map((b) => b.name).join(' / ');
       Utils.safeSetText(currentDir, displayPath);
     } else {
       Utils.safeSetText(currentDir, '');
@@ -289,14 +310,16 @@ export class ViewRenderer {
   }
 
   updateStatusBar() {
-    debugLog('updateStatusBar', { currentPath: this.state.navigation.currentPath });
+    debugLog('updateStatusBar', {
+      currentPath: this.state.navigation.currentPath,
+    });
     const statusLocation = this.state.getElement('statusLocation');
     const { currentPath } = this.state.navigation;
 
     if (!statusLocation) return;
     if (currentPath) {
       const breadcrumbs = this.categoryHierarchy.getBreadcrumbs(currentPath);
-      const displayPath = `${breadcrumbs.map(b => b.slug).join('/')}/`;
+      const displayPath = `${breadcrumbs.map((b) => b.slug).join('/')}/`;
       Utils.safeSetText(statusLocation, displayPath);
     } else {
       Utils.safeSetText(statusLocation, '~');
@@ -304,7 +327,9 @@ export class ViewRenderer {
   }
 
   updateDirectoryHeader() {
-    debugLog('updateDirectoryHeader', { currentPath: this.state.navigation.currentPath });
+    debugLog('updateDirectoryHeader', {
+      currentPath: this.state.navigation.currentPath,
+    });
     const pathSegment = this.state.getElement('pathSegment');
     const directoryIcon = this.state.getElement('directoryIcon');
     const { currentPath } = this.state.navigation;
@@ -325,7 +350,9 @@ export class ViewRenderer {
     const visibleCount = this.state.getElement('visibleCount');
     const directoryItemCount = this.state.getElement('directoryItemCount');
 
-    const count = this.searchController ? this.searchController.getVisibleCount() : 0;
+    const count = this.searchController
+      ? this.searchController.getVisibleCount()
+      : 0;
     if (visibleCount) {
       Utils.safeSetText(visibleCount, count.toString());
     }
@@ -333,9 +360,12 @@ export class ViewRenderer {
     if (directoryItemCount) {
       const categoryDirs = this.state.getElement('categoryDirs');
       const flatList = this.state.getElement('flatList');
-      const flatListVisible = flatList && getComputedStyle(flatList).display === 'block';
+      const flatListVisible =
+        flatList && getComputedStyle(flatList).display === 'block';
       const visibleDirectories = categoryDirs
-        ? Array.from(categoryDirs).filter(dir => getComputedStyle(dir).display !== 'none')
+        ? Array.from(categoryDirs).filter(
+            (dir) => getComputedStyle(dir).display !== 'none'
+          )
         : [];
 
       const total = flatListVisible
@@ -348,11 +378,11 @@ export class ViewRenderer {
 
   expandAllCategories() {
     debugLog('expandAllCategories');
-    document.querySelectorAll('.directory-contents').forEach(contents => {
+    document.querySelectorAll('.directory-contents').forEach((contents) => {
       contents.style.display = 'block';
     });
 
-    document.querySelectorAll('.directory-folder').forEach(folder => {
+    document.querySelectorAll('.directory-folder').forEach((folder) => {
       folder.classList.add('expanded');
     });
 
@@ -362,11 +392,11 @@ export class ViewRenderer {
 
   collapseAllCategories() {
     debugLog('collapseAllCategories');
-    document.querySelectorAll('.directory-contents').forEach(contents => {
+    document.querySelectorAll('.directory-contents').forEach((contents) => {
       contents.style.display = 'none';
     });
 
-    document.querySelectorAll('.directory-folder').forEach(folder => {
+    document.querySelectorAll('.directory-folder').forEach((folder) => {
       folder.classList.remove('expanded');
     });
 
@@ -376,7 +406,9 @@ export class ViewRenderer {
   }
 
   toggleCategoryExpansion(folder) {
-    debugLog('toggleCategoryExpansion', { path: folder.closest('.category-directory')?.dataset?.categoryPath });
+    debugLog('toggleCategoryExpansion', {
+      path: folder.closest('.category-directory')?.dataset?.categoryPath,
+    });
     const categoryDir = folder.closest('.category-directory');
     if (!categoryDir) return;
 
@@ -388,13 +420,13 @@ export class ViewRenderer {
     if (isExpanding) {
       contents.style.display = 'block';
       folder.classList.add('expanded');
-      
+
       // Disable nested directory expansion
       this.disableNestedDirectories(categoryDir);
     } else {
       contents.style.display = 'none';
       folder.classList.remove('expanded');
-      
+
       // Re-enable nested directories
       this.enableNestedDirectories(categoryDir);
     }
@@ -405,37 +437,52 @@ export class ViewRenderer {
   }
 
   disableNestedDirectories(parentCategoryDir) {
-    const nestedDirs = parentCategoryDir.querySelectorAll('.category-directory--nested');
-    nestedDirs.forEach(nestedDir => {
+    const nestedDirs = parentCategoryDir.querySelectorAll(
+      '.category-directory--nested'
+    );
+    nestedDirs.forEach((nestedDir) => {
       const folder = nestedDir.querySelector('.directory-folder');
       const expandButton = nestedDir.querySelector('.directory-expand');
-      
+      const contents = nestedDir.querySelector('.directory-contents');
+
       if (folder) {
         folder.classList.add('disabled');
         folder.style.pointerEvents = 'none';
         folder.style.opacity = '0.5';
+        folder.classList.remove('expanded');
       }
-      
+
       if (expandButton) {
         expandButton.style.display = 'none';
+      }
+
+      if (contents) {
+        contents.style.display = 'none';
       }
     });
   }
 
   enableNestedDirectories(parentCategoryDir) {
-    const nestedDirs = parentCategoryDir.querySelectorAll('.category-directory--nested');
-    nestedDirs.forEach(nestedDir => {
+    const nestedDirs = parentCategoryDir.querySelectorAll(
+      '.category-directory--nested'
+    );
+    nestedDirs.forEach((nestedDir) => {
       const folder = nestedDir.querySelector('.directory-folder');
       const expandButton = nestedDir.querySelector('.directory-expand');
-      
+      const contents = nestedDir.querySelector('.directory-contents');
+
       if (folder) {
         folder.classList.remove('disabled');
         folder.style.pointerEvents = '';
         folder.style.opacity = '';
       }
-      
+
       if (expandButton) {
         expandButton.style.display = '';
+      }
+
+      if (contents) {
+        contents.style.display = 'none';
       }
     });
   }
@@ -468,20 +515,32 @@ export class ViewRenderer {
   applyDetailedViewOptions(show) {
     const options = CONFIG.detailedView || {};
 
-    this.toggleDetailSection('[data-read-stats]', show && options.showReadStats, 'flex');
-    this.toggleDetailSection('[data-summary]', show && options.showSummary, 'block');
-    this.toggleDetailSection('[data-tags]', show && options.showTagPills, 'flex');
+    this.toggleDetailSection(
+      '[data-read-stats]',
+      show && options.showReadStats,
+      'flex'
+    );
+    this.toggleDetailSection(
+      '[data-summary]',
+      show && options.showSummary,
+      'block'
+    );
+    this.toggleDetailSection(
+      '[data-tags]',
+      show && options.showTagPills,
+      'flex'
+    );
   }
 
   toggleDetailSection(selector, shouldShow, displayValue) {
     debugLog('toggleDetailSection', { selector, shouldShow, displayValue });
-    document.querySelectorAll(selector).forEach(el => {
+    document.querySelectorAll(selector).forEach((el) => {
       el.style.display = shouldShow ? displayValue : 'none';
     });
   }
 
   toggleWordCount(showDetailed) {
-    document.querySelectorAll('.file-size').forEach(node => {
+    document.querySelectorAll('.file-size').forEach((node) => {
       node.style.display = showDetailed ? 'none' : '';
 
       const stats = node.closest('.file-stats');

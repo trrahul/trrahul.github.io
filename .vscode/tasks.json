@@ -1,26 +1,100 @@
 {
   "version": "2.0.0",
+  "options": {
+    "shell": {
+      "executable": "pwsh.exe",
+      "args": ["-NoProfile", "-Command"]
+    },
+    "env": {
+      "PATH": "C:\\Ruby34-x64\\bin;${env:PATH}"
+    }
+  },
   "tasks": [
+    // DEFAULT: Start Azure Function and Jekyll together
     {
-      "label": "Run Jekyll Server",
-      "type": "shell",
-      "command": "./tools/run.sh",
+      "label": "Dev: Start All",
+      "dependsOn": ["Azure: Start Function", "Jekyll: Serve"],
+      "dependsOrder": "parallel",
       "group": {
         "kind": "build",
         "isDefault": true
       },
+      "problemMatcher": []
+    },
+    
+    // AZURE FUNCTION
+    {
+      "label": "Azure: Start Function",
+      "type": "shell",
+      "command": "cd Azure/code-execution-api; .\\start-function.ps1",
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^.*$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*Azure Functions Core Tools.*$",
+          "endsPattern": "^.*Worker process started and initialized.*$"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "azure"
+      }
+    },
+    
+    // JEKYLL
+    {
+      "label": "Jekyll: Serve",
+      "type": "shell",
+      "command": "bundle exec jekyll serve --livereload",
+      "isBackground": true,
       "problemMatcher": [],
-      "detail": "Runs the Jekyll server with live reload."
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "jekyll"
+      }
     },
     {
-      "label": "Build Jekyll Site",
+      "label": "Jekyll: Clean & Serve",
       "type": "shell",
-      "command": "./tools/test.sh",
-      "group": {
-        "kind": "build"
-      },
+      "command": ".\\jekyll-clean-serve.ps1",
+      "isBackground": true,
       "problemMatcher": [],
-      "detail": "Build the Jekyll site for production."
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Jekyll: Build (Production)",
+      "type": "shell",
+      "command": "set JEKYLL_ENV=production && bundle exec jekyll build",
+      "problemMatcher": []
+    },
+    
+    // BLAZOR PLAYGROUND
+    {
+      "label": "Blazor: Build & Deploy",
+      "type": "shell",
+      "command": ".\\build-playground.ps1",
+      "problemMatcher": []
+    },
+    
+    // CONTENT MANAGEMENT
+    {
+      "label": "Content: Create New Post",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-Command",
+        "$title = Read-Host 'Enter post title'; $slug = $title.ToLower() -replace '[^a-z0-9\\s-]','' -replace '\\s+','-'; $date = Get-Date -Format 'yyyy-MM-dd'; $datetime = Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz'; $filename = \"_posts/$date-$slug.md\"; $content = @\"\n---\nlayout: post\ntitle: $title\ndate: $datetime\ncategories: []\ntags: []\n---\n\n\"@; New-Item -Path $filename -ItemType File -Value $content -Force; code $filename"
+      ],
+      "problemMatcher": []
     }
   ]
 }

@@ -4,14 +4,14 @@
 {% if has_backlinks or has_outgoing %}
 <!-- Connected Notes Section - Terminal Style -->
 <div class="terminal-connected-notes">
-  
+
   <!-- Incoming connections (backlinks) -->
   {% if has_backlinks %}
   <div class="terminal-command-section">
     <div class="terminal-command-line">
-      <span class="prompt">graph@blog</span><span class="separator">:</span><span class="path">~</span><span class="symbol">$</span> <span class="command">neo4j-shell -c "MATCH (n)-[r]->(m {slug:'{{ page.slug }}'}) RETURN n"</span>
+      <span class="prompt">graph@blog</span><span class="separator">:</span><span class="path">~</span><span class="symbol">$</span> <span class="command">ls incoming/</span>
     </div>
-    
+
     <div class="terminal-output">
       {% for backlink in page.backlinks %}
       <article class="directory-item directory-file flat-view">
@@ -20,7 +20,7 @@
             <i class="fas fa-arrow-left"></i>
           </div>
           <div class="file-info">
-            <div class="file-name">{{ backlink.title | slugify }}.md</div>
+            <div class="file-name">{{ backlink.title }}</div>
           </div>
         </a>
       </article>
@@ -33,9 +33,9 @@
   {% if has_outgoing %}
   <div class="terminal-command-section">
     <div class="terminal-command-line">
-      <span class="prompt">graph@blog</span><span class="separator">:</span><span class="path">~</span><span class="symbol">$</span> <span class="command">neo4j-shell -c "MATCH (n {slug:'{{ page.slug }}'})-[r]->(m) RETURN m"</span>
+      <span class="prompt">graph@blog</span><span class="separator">:</span><span class="path">~</span><span class="symbol">$</span> <span class="command">ls outgoing/</span>
     </div>
-    
+
     <div class="terminal-output">
       {% for link in page.outgoing_links %}
       <article class="directory-item directory-file flat-view">
@@ -44,7 +44,7 @@
             <i class="fas fa-arrow-right"></i>
           </div>
           <div class="file-info">
-            <div class="file-name">{{ link.title | slugify }}.md</div>
+            <div class="file-name">{{ link.title }}</div>
           </div>
         </a>
       </article>
@@ -80,6 +80,14 @@
 
 .terminal-connected-notes .fa-arrow-right {
   color: var(--text-color);
+}
+
+.terminal-connected-notes .directory-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  margin-top: 0;
 }
 </style>
 {% endif %}
