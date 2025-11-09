@@ -88,7 +88,7 @@ A **place** is a symbolic name for a memory location that can be read or written
 
 The analysis operates on a representation called a **Place**—a memory location that can be read or written. A place consists of a base symbol (variable, parameter, field) and an optional access path representing nested field accesses.
 
-{% github_code https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Models/Place.cs 6-36 csharp %}
+**See:** [Place.cs (lines 6-36)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Models/Place.cs#L6-L36) in the SharpFocus repository.
 
 This representation allows tracking dependencies at fine granularity. When `order.Status` is modified, the analysis knows this affects `order` but not `order.Total`.
 
@@ -101,7 +101,7 @@ Examples:
 
 The core data structure is a mapping from places to dependency sets:
 
-{% github_code https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Models/FlowDomain.cs 6-50 csharp %}
+**See:** [FlowDomain.cs (lines 6-50)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Models/FlowDomain.cs#L6-L50) in the SharpFocus repository.
 
 A `Location` identifies a specific point in the control flow graph—typically a basic block and statement index.
 
@@ -116,7 +116,7 @@ This lattice structure enables fixpoint computation, explained in the next secti
 
 Computing dependencies requires propagating information through the control flow graph until reaching a stable state—a fixpoint where no new dependencies emerge.
 
-{% github_code https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Engine/DataflowEngine.cs 26-65 csharp %}
+**See:** [DataflowEngine.cs (lines 26-65)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Engine/DataflowEngine.cs#L26-L65) for the fixpoint algorithm implementation.
 
 The algorithm follows this structure:
 
@@ -206,7 +206,7 @@ SharpFocus implements a basic alias analysis that tracks:
 3. **Reference parameters**: `ref` and `out` parameters create explicit aliases
 4. **Field projection**: If `x` and `y` alias, then `x.Field` and `y.Field` also alias
 
-{% github_code https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Analyzers/BasicAliasAnalyzer.cs 38-96 csharp %}
+**See:** [BasicAliasAnalyzer.cs (lines 38-96)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Analyzers/BasicAliasAnalyzer.cs#L38-L96) for the alias tracking implementation.
 
 When analyzing an assignment `x = y`, the transfer function queries the alias analyzer to propagate dependencies through all aliases.
 
@@ -225,7 +225,7 @@ Not all operations are simple assignments. C# provides numerous ways to modify s
 
 Roslyn's control flow graph lowers many of these to simple assignments. For instance, `x++` becomes `x = x + 1` in the CFG. This simplifies analysis at the cost of losing information about the original syntax.
 
-{% github_code https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Analyzers/RoslynMutationDetector.cs 68-115 csharp %}
+**See:** [RoslynMutationDetector.cs (lines 68-115)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Analyzers/RoslynMutationDetector.cs#L68-L115) for mutation detection logic.
 
 For a compound assignment `x += y`, the detector records:
 - Target: `x`

@@ -57,7 +57,7 @@ The decision criteria:
 
 #### Implementing the Transfer Function
 
-{% github_code https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Engine/DataflowTransferFunction.cs 55-130 csharp %}
+**See:** [DataflowTransferFunction.cs (lines 55-130)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Engine/DataflowTransferFunction.cs#L55-L130) for the complete transfer function implementation.
 
 #### Control Dependencies in the Transfer Function
 
@@ -72,7 +72,7 @@ if (user.IsAdmin)              // L1
 
 The assignment at L2 only executes if `user.IsAdmin` is true. Therefore, `grant` depends on both the assignment itself and the condition.
 
-{% github_code https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Analyzers/ControlFlowDependencyAnalyzer.cs 50-90 csharp %}
+**See:** [ControlFlowDependencyAnalyzer.cs (lines 50-90)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Analyzers/ControlFlowDependencyAnalyzer.cs#L50-L90) for control dependency computation.
 
 This ensures that backward slices include the conditions that determine whether a statement executes.
 
