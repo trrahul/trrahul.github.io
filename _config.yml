@@ -59,7 +59,7 @@ webmaster_verifications:
 # Web Analytics Settings
 analytics:
   google:
-    id: # fill in your Google Analytics ID
+    id: G-0V4242KVH1 # fill in your Google Analytics ID (e.g., G-XXXXXXXXXX)
   goatcounter:
     id: # fill in your GoatCounter ID
   umami:
@@ -217,6 +217,7 @@ exclude:
   - "package*.json"
   - playground-app
   - Azure
+  - temp_reference_for_codebase_Access
 
 # Keep these files in _site during regeneration
 keep_files:
