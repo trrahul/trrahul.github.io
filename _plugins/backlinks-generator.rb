@@ -72,7 +72,10 @@ module Jekyll
           next if link.include?('mailto:')
           next if link.match?(/\.(png|jpg|jpeg|gif|svg|pdf|zip)$/i)
 
-          # Normalize the link
+          # Extract fragment identifier before normalization
+          fragment = link.include?('#') ? '#' + link.split('#').last : ''
+
+          # Normalize the link (this removes the fragment)
           normalized_link = normalize_link(link, site.baseurl)
 
           # Find the target document (try both original case and lowercase)
@@ -94,12 +97,12 @@ module Jekyll
 
             backlinks[target_doc.url] << backlink_info unless backlinks[target_doc.url].any? { |b| b['url'] == backlink_info['url'] }
 
-            # Also track outgoing links from this document
+            # Also track outgoing links from this document - preserve fragment
             outgoing_info = {
-              'url' => target_doc.url,
+              'url' => target_doc.url + fragment,
               'title' => target_doc.data['title'] || target_doc.basename,
               'excerpt' => get_excerpt(target_doc),
-              'context' => link_info[:context]
+              'context' => fragment.empty? ? nil : fragment.sub('#', '').gsub('-', ' ').capitalize
             }
 
             outgoing_links[doc.url] << outgoing_info unless outgoing_links[doc.url].any? { |o| o['url'] == outgoing_info['url'] }

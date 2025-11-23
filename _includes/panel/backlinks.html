@@ -4,19 +4,39 @@
 {% if has_backlinks or has_outgoing %}
 <section id="backlinks-wrapper" class="position-sticky ps-0 pe-4">
   <h2 class="panel-heading ps-3 mb-3">Connected Notes</h2>
-  
+
   <div class="panel-backlinks ps-3">
     {% if has_backlinks %}
     <div class="backlinks-group mb-3">
       <div class="backlinks-label mb-1">
         <i class="fas fa-arrow-left fa-fw"></i>
-        {{ page.backlinks.size }}
+        Incoming ({{ page.backlinks.size }})
       </div>
       <nav class="backlinks-list">
-        {% for backlink in page.backlinks %}
-        <a href="{{ backlink.url | relative_url }}" class="backlink-item">
-          {{ backlink.title }}
-        </a>
+        {% assign grouped_backlinks = page.backlinks | group_by: "title" %}
+        {% for group in grouped_backlinks %}
+          {% if group.items.size == 1 %}
+            <a href="{{ group.items[0].url | relative_url }}" class="backlink-item">
+              {{ group.name }}
+            </a>
+          {% else %}
+            <div class="backlink-group-item">
+              <div class="backlink-group-title">{{ group.name }}</div>
+              <div class="backlink-sections">
+                {% for item in group.items %}
+                  {% if item.context %}
+                    <a href="{{ item.url | relative_url }}" class="backlink-section">
+                      → {{ item.context }}
+                    </a>
+                  {% else %}
+                    <a href="{{ item.url | relative_url }}" class="backlink-section">
+                      → (section)
+                    </a>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
         {% endfor %}
       </nav>
     </div>
@@ -26,17 +46,67 @@
     <div class="backlinks-group">
       <div class="backlinks-label mb-1">
         <i class="fas fa-arrow-right fa-fw"></i>
-        {{ page.outgoing_links.size }}
+        Outgoing ({{ page.outgoing_links.size }})
       </div>
       <nav class="backlinks-list">
-        {% for outlink in page.outgoing_links %}
-        <a href="{{ outlink.url | relative_url }}" class="backlink-item">
-          {{ outlink.title }}
-        </a>
+        {% assign grouped_outgoing = page.outgoing_links | group_by: "title" %}
+        {% for group in grouped_outgoing %}
+          {% if group.items.size == 1 %}
+            <a href="{{ group.items[0].url | relative_url }}" class="backlink-item">
+              {{ group.name }}
+            </a>
+          {% else %}
+            <div class="backlink-group-item">
+              <div class="backlink-group-title">{{ group.name }}</div>
+              <div class="backlink-sections">
+                {% for item in group.items %}
+                  {% if item.context %}
+                    <a href="{{ item.url | relative_url }}" class="backlink-section">
+                      → {{ item.context }}
+                    </a>
+                  {% else %}
+                    <a href="{{ item.url | relative_url }}" class="backlink-section">
+                      → (section)
+                    </a>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
         {% endfor %}
       </nav>
     </div>
     {% endif %}
   </div>
 </section>
+
+<style>
+.backlink-group-item {
+  margin-bottom: 0.75rem;
+}
+
+.backlink-group-title {
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: 0.25rem;
+}
+
+.backlink-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-left: 1rem;
+}
+
+.backlink-section {
+  font-size: 0.9em;
+  color: var(--text-muted-color);
+  text-decoration: none;
+  display: block;
+}
+
+.backlink-section:hover {
+  color: var(--link-color);
+}
+</style>
 {% endif %}

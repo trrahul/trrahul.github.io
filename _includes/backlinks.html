@@ -9,23 +9,56 @@
   {% if has_backlinks %}
   <div class="terminal-command-section">
     <div class="terminal-command-line">
-      <span class="prompt">graph@blog</span><span class="separator">:</span><span class="path">~</span><span class="symbol">$</span> <span class="command">ls incoming/</span>
+      <span class="prompt">$</span> <span class="command">ls incoming/</span>
     </div>
 
     <div class="terminal-output">
-      {% for backlink in page.backlinks %}
-      <article class="directory-item directory-file flat-view">
-        <a href="{{ backlink.url | relative_url }}" class="file-link no-preview">
-          <div class="directory-icon">
-            <i class="fas fa-arrow-left"></i>
+      {% assign grouped_backlinks = page.backlinks | group_by: "title" %}
+      {% for group in grouped_backlinks %}
+        {% if group.items.size == 1 %}
+          <article class="directory-item directory-file flat-view">
+            <a href="{{ group.items[0].url | relative_url }}" class="file-link no-preview">
+              <div class="directory-icon">
+                <i class="fas fa-arrow-left"></i>
+              </div>
+              <div class="file-info">
+                <div class="file-name">{{ group.name }}</div>
+              </div>
+            </a>
+          </article>
+        {% else %}
+          <div class="directory-group">
+            <article class="directory-item directory-file flat-view">
+              <a href="{{ group.items[0].url | split: '#' | first | relative_url }}" class="file-link no-preview">
+                <div class="directory-icon">
+                  <i class="fas fa-arrow-left"></i>
+                </div>
+                <div class="file-info">
+                  <div class="file-name">{{ group.name }}</div>
+                </div>
+              </a>
+            </article>
+            <div class="directory-group-sections">
+              {% for item in group.items %}
+                {% if item.context %}
+                  <article class="directory-item directory-file flat-view">
+                    <a href="{{ item.url | relative_url }}" class="file-link no-preview">
+                      <div class="directory-icon">
+                        <span class="section-icon">←</span>
+                      </div>
+                      <div class="file-info">
+                        <div class="file-name">{{ item.context }}</div>
+                      </div>
+                    </a>
+                  </article>
+                {% endif %}
+              {% endfor %}
+            </div>
           </div>
-          <div class="file-info">
-            <div class="file-name">{{ backlink.title }}</div>
-          </div>
-        </a>
-      </article>
+        {% endif %}
       {% endfor %}
     </div>
+    <div class="terminal-cursor">_</div>
   </div>
   {% endif %}
 
@@ -33,23 +66,56 @@
   {% if has_outgoing %}
   <div class="terminal-command-section">
     <div class="terminal-command-line">
-      <span class="prompt">graph@blog</span><span class="separator">:</span><span class="path">~</span><span class="symbol">$</span> <span class="command">ls outgoing/</span>
+      <span class="prompt">$</span> <span class="command">ls outgoing/</span>
     </div>
 
     <div class="terminal-output">
-      {% for link in page.outgoing_links %}
-      <article class="directory-item directory-file flat-view">
-        <a href="{{ link.url | relative_url }}" class="file-link no-preview">
-          <div class="directory-icon">
-            <i class="fas fa-arrow-right"></i>
+      {% assign grouped_outgoing = page.outgoing_links | group_by: "title" %}
+      {% for group in grouped_outgoing %}
+        {% if group.items.size == 1 %}
+          <article class="directory-item directory-file flat-view">
+            <a href="{{ group.items[0].url | relative_url }}" class="file-link no-preview">
+              <div class="directory-icon">
+                <i class="fas fa-arrow-right"></i>
+              </div>
+              <div class="file-info">
+                <div class="file-name">{{ group.name }}</div>
+              </div>
+            </a>
+          </article>
+        {% else %}
+          <div class="directory-group">
+            <article class="directory-item directory-file flat-view">
+              <a href="{{ group.items[0].url | split: '#' | first | relative_url }}" class="file-link no-preview">
+                <div class="directory-icon">
+                  <i class="fas fa-arrow-right"></i>
+                </div>
+                <div class="file-info">
+                  <div class="file-name">{{ group.name }}</div>
+                </div>
+              </a>
+            </article>
+            <div class="directory-group-sections">
+              {% for item in group.items %}
+                {% if item.context %}
+                  <article class="directory-item directory-file flat-view">
+                    <a href="{{ item.url | relative_url }}" class="file-link no-preview">
+                      <div class="directory-icon">
+                        <span class="section-icon">→</span>
+                      </div>
+                      <div class="file-info">
+                        <div class="file-name">{{ item.context }}</div>
+                      </div>
+                    </a>
+                  </article>
+                {% endif %}
+              {% endfor %}
+            </div>
           </div>
-          <div class="file-info">
-            <div class="file-name">{{ link.title }}</div>
-          </div>
-        </a>
-      </article>
+        {% endif %}
       {% endfor %}
     </div>
+    <div class="terminal-cursor">_</div>
   </div>
   {% endif %}
 
@@ -59,6 +125,8 @@
 /* Terminal Connected Notes - Minimal overrides only */
 .terminal-connected-notes {
   margin: 3rem 0 2rem 0;
+  padding-top: 2rem;
+  border-top: 1px solid var(--main-border-color);
 }
 
 .terminal-command-section {
@@ -88,6 +156,46 @@
   justify-content: center;
   align-self: center;
   margin-top: 0;
+}
+
+/* Grouped display */
+.directory-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.directory-group-sections {
+  display: flex;
+  flex-direction: column;
+  padding-left: 2.5rem;
+}
+
+.directory-group-sections .directory-icon {
+  min-width: 1.5rem;
+}
+
+.directory-group-sections .section-icon {
+  color: var(--text-muted-color);
+  font-size: 0.9em;
+}
+
+/* Blinking cursor */
+.terminal-cursor {
+  color: var(--text-muted-color);
+  font-family: monospace;
+  font-size: 0.9em;
+  margin-top: 0.5rem;
+  opacity: 0.7;
+  animation: blink 1.2s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 0.7;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
 }
 </style>
 {% endif %}
