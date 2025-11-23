@@ -11,6 +11,7 @@
 /* append your custom style below */
 
 /* Site-wide Components */
+@use 'addon/sidebar-colors'; // Terminal sidebar color overrides (must be first)
 @use 'addon/common-controls'; // Buttons, checkboxes, dropdowns, forms
 @use 'addon/typography'; // Typography, headings, fonts
 @use 'addon/link-preview'; // Link preview cards
@@ -18,6 +19,7 @@
 @use 'addon/panel-backlinks'; // TOC & backlinks panel (right sidebar)
 @use 'addon/terminal-breadcrumbs'; // Terminal-style breadcrumbs for posts
 @use 'addon/github-code-embed'; // GitHub code embed with syntax highlighting
+@use 'addon/sidebar'; // Terminal-style sidebar navigation
 
 /* Page-specific Styles */
 @use 'addon/page-home'; // Home page: post cards, category filter

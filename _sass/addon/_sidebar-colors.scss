@@ -1,0 +1,156 @@
+// Terminal sidebar color overrides
+// These colors override the default Chirpy theme colors for the sidebar
+// Applied at the html level to match theme structure
+
+/* Custom terminal sidebar color overrides */
+html {
+  @media (prefers-color-scheme: light) {
+    &:not([data-mode]),
+    &[data-mode='light'] {
+      /* Terminal "Clean Terminal" theme colors */
+      --sidebar-bg: #f5f7fa;
+      --sidebar-border-color: rgba(0, 0, 0, 0.08);
+      --sidebar-muted-color: #94a3b8;
+      --sidebar-active-color: #2563eb;
+      --sidebar-hover-bg: rgba(37, 99, 235, 0.08);
+
+      /* Avatar */
+      --avatar-border-color: rgba(0, 0, 0, 0.1);
+      --sidebar-status-color: #3b82f6;
+      --sidebar-status-border: #fff;
+      --sidebar-status-glow: rgba(59, 130, 246, 0.3);
+
+      /* Site identity */
+      --sidebar-title-color: #1a202c;
+      --sidebar-title-hover-color: #2563eb;
+      --sidebar-title-shadow: none;
+      --sidebar-subtitle-color: #64748b;
+
+      /* Custom navigation variables */
+      --sidebar-nav-color: #64748b;
+      --sidebar-nav-hover-color: #1a202c;
+      --sidebar-nav-hover-bg: rgba(0, 0, 0, 0.03);
+      --sidebar-nav-active-color: #2563eb;
+      --sidebar-nav-active-bg: rgba(59, 130, 246, 0.05);
+      --sidebar-nav-active-beam: #2563eb;
+      --sidebar-nav-active-beam-shadow: none;
+
+      /* Footer */
+      --sidebar-footer-border: rgba(0, 0, 0, 0.06);
+      --sidebar-muted-footer-color: #94a3b8;
+    }
+
+    &[data-mode='dark'] {
+      /* Terminal "Tears in Rain" theme colors */
+      --sidebar-bg: #0f111a;
+      --sidebar-border-color: rgba(255, 255, 255, 0.08);
+      --sidebar-muted-color: #565f89;
+      --sidebar-active-color: #7aa2f7;
+      --sidebar-hover-bg: rgba(122, 162, 247, 0.08);
+
+      /* Avatar */
+      --avatar-border-color: rgba(255, 255, 255, 0.2);
+      --sidebar-status-color: #7aa2f7;
+      --sidebar-status-border: #0f111a;
+      --sidebar-status-glow: rgba(122, 162, 247, 0.4);
+
+      /* Site identity */
+      --sidebar-title-color: #c0caf5;
+      --sidebar-title-hover-color: #ffffff;
+      --sidebar-title-shadow: 0 0 15px rgba(192, 202, 245, 0.1);
+      --sidebar-subtitle-color: #565f89;
+
+      /* Custom navigation variables */
+      --sidebar-nav-color: #787c99;
+      --sidebar-nav-hover-color: #c0caf5;
+      --sidebar-nav-hover-bg: rgba(255, 255, 255, 0.03);
+      --sidebar-nav-active-color: #fff;
+      --sidebar-nav-active-bg: linear-gradient(
+        90deg,
+        rgba(122, 162, 247, 0.08),
+        transparent
+      );
+      --sidebar-nav-active-beam: #7aa2f7;
+      --sidebar-nav-active-beam-shadow: 0 0 10px rgba(122, 162, 247, 0.4);
+
+      /* Footer */
+      --sidebar-footer-border: rgba(255, 255, 255, 0.06);
+      --sidebar-muted-footer-color: #565f89;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    &:not([data-mode]),
+    &[data-mode='dark'] {
+      /* Terminal "Tears in Rain" theme colors */
+      --sidebar-bg: #0f111a;
+      --sidebar-border-color: rgba(255, 255, 255, 0.08);
+      --sidebar-muted-color: #565f89;
+      --sidebar-active-color: #7aa2f7;
+      --sidebar-hover-bg: rgba(122, 162, 247, 0.08);
+
+      /* Avatar */
+      --avatar-border-color: rgba(255, 255, 255, 0.2);
+      --sidebar-status-color: #7aa2f7;
+      --sidebar-status-border: #0f111a;
+      --sidebar-status-glow: rgba(122, 162, 247, 0.4);
+
+      /* Site identity */
+      --sidebar-title-color: #c0caf5;
+      --sidebar-title-hover-color: #ffffff;
+      --sidebar-title-shadow: 0 0 15px rgba(192, 202, 245, 0.1);
+      --sidebar-subtitle-color: #565f89;
+
+      /* Custom navigation variables */
+      --sidebar-nav-color: #787c99;
+      --sidebar-nav-hover-color: #c0caf5;
+      --sidebar-nav-hover-bg: rgba(255, 255, 255, 0.03);
+      --sidebar-nav-active-color: #fff;
+      --sidebar-nav-active-bg: linear-gradient(
+        90deg,
+        rgba(122, 162, 247, 0.08),
+        transparent
+      );
+      --sidebar-nav-active-beam: #7aa2f7;
+      --sidebar-nav-active-beam-shadow: 0 0 10px rgba(122, 162, 247, 0.4);
+
+      /* Footer */
+      --sidebar-footer-border: rgba(255, 255, 255, 0.06);
+      --sidebar-muted-footer-color: #565f89;
+    }
+
+    &[data-mode='light'] {
+      /* Terminal "Clean Terminal" theme colors */
+      --sidebar-bg: #f5f7fa;
+      --sidebar-border-color: rgba(0, 0, 0, 0.08);
+      --sidebar-muted-color: #94a3b8;
+      --sidebar-active-color: #2563eb;
+      --sidebar-hover-bg: rgba(37, 99, 235, 0.08);
+
+      /* Avatar */
+      --avatar-border-color: rgba(0, 0, 0, 0.1);
+      --sidebar-status-color: #3b82f6;
+      --sidebar-status-border: #fff;
+      --sidebar-status-glow: rgba(59, 130, 246, 0.3);
+
+      /* Site identity */
+      --sidebar-title-color: #1a202c;
+      --sidebar-title-hover-color: #2563eb;
+      --sidebar-title-shadow: none;
+      --sidebar-subtitle-color: #64748b;
+
+      /* Custom navigation variables */
+      --sidebar-nav-color: #64748b;
+      --sidebar-nav-hover-color: #1a202c;
+      --sidebar-nav-hover-bg: rgba(0, 0, 0, 0.03);
+      --sidebar-nav-active-color: #2563eb;
+      --sidebar-nav-active-bg: rgba(59, 130, 246, 0.05);
+      --sidebar-nav-active-beam: #2563eb;
+      --sidebar-nav-active-beam-shadow: none;
+
+      /* Footer */
+      --sidebar-footer-border: rgba(0, 0, 0, 0.06);
+      --sidebar-muted-footer-color: #94a3b8;
+    }
+  }
+}

@@ -1,0 +1,133 @@
+<!-- The Sidebar - Terminal Style -->
+
+<aside aria-label="Sidebar" id="sidebar" class="sidebar">
+  <div class="profile-section">
+    <div class="avatar-container">
+      {%- if site.avatar != empty and site.avatar -%}
+        {%- capture avatar_url -%}
+          {% include media-url.html src=site.avatar %}
+        {%- endcapture -%}
+        <img src="{{- avatar_url -}}" class="avatar" alt="avatar" onerror="this.style.display='none'">
+      {%- endif -%}
+    </div>
+    <div class="site-identity">
+      <h1>{{ site.title }}</h1>
+      <p>{{ site.tagline }}</p>
+    </div>
+  </div>
+
+  <nav class="nav-section" aria-label="Main Navigation">
+    <div class="nav-header">System</div>
+
+    <!-- Home -->
+    <a href="{{ '/' | relative_url }}" class="nav-item{% if page.layout == 'home' %} active{% endif %}">
+      <span class="nav-icon">~</span>
+      <span>{{ site.data.locales[include.lang].tabs.home | default: "Home" }}</span>
+    </a>
+
+    <!-- Dynamic tabs from _tabs folder -->
+    {% for tab in site.tabs %}
+      {% capture tab_name %}{{ tab.url | split: '/' }}{% endcapture %}
+      {% assign tab_title = site.data.locales[include.lang].tabs.[tab_name] | default: tab.title %}
+      {% assign tab_icon = tab.icon | default: "fa-file" %}
+
+      {% if tab_title == "Tags" or tab_name == "tags" %}
+        <a href="{{ tab.url | relative_url }}" class="nav-item{% if tab.url == page.url %} active{% endif %}">
+          <span class="nav-icon">#</span>
+          <span>{{ tab_title }}</span>
+        </a>
+      {% elsif tab_title == "Archives" or tab_name == "archives" %}
+        <a href="{{ tab.url | relative_url }}" class="nav-item{% if tab.url == page.url %} active{% endif %}">
+          <span class="nav-icon">/</span>
+          <span>{{ tab_title }}</span>
+        </a>
+      {% elsif tab_title == "About" or tab_name == "about" %}
+        <!-- About goes in Information section, skip here -->
+      {% else %}
+        <a href="{{ tab.url | relative_url }}" class="nav-item{% if tab.url == page.url %} active{% endif %}">
+          <span class="nav-icon"><i class="{{ tab_icon }}"></i></span>
+          <span>{{ tab_title }}</span>
+        </a>
+      {% endif %}
+    {% endfor %}
+
+    <div style="height: 1rem;"></div>
+
+    <div class="nav-header">Information</div>
+
+    <!-- About -->
+    {% for tab in site.tabs %}
+      {% capture tab_name %}{{ tab.url | split: '/' }}{% endcapture %}
+      {% assign tab_title = site.data.locales[include.lang].tabs.[tab_name] | default: tab.title %}
+
+      {% if tab_title == "About" or tab_name == "about" %}
+        <a href="{{ tab.url | relative_url }}" class="nav-item{% if tab.url == page.url %} active{% endif %}">
+          <span class="nav-icon">@</span>
+          <span>{{ tab_title }}</span>
+        </a>
+      {% endif %}
+    {% endfor %}
+  </nav>
+
+  <div class="footer-section">
+    {% unless site.theme_mode %}
+      <button type="button" class="theme-toggle-btn" aria-label="Switch Mode" id="mode-toggle">
+        <span>$ theme --toggle</span>
+      </button>
+    {% endunless %}
+
+    {% if site.data.contact.size > 0 %}
+      <div class="social-links">
+        {% for entry in site.data.contact %}
+          {%- assign url = null -%}
+
+          {% case entry.type %}
+            {% when 'github', 'twitter' %}
+              {%- unless site[entry.type].username -%}
+                {%- continue -%}
+              {%- endunless -%}
+              {%- capture url -%}
+                https://{{ entry.type }}.com/{{ site[entry.type].username }}
+              {%- endcapture -%}
+            {% when 'email' %}
+              {%- unless site.social.email -%}
+                {%- continue -%}
+              {%- endunless -%}
+              {%- assign email = site.social.email | split: '@' -%}
+              {%- capture url -%}
+                javascript:location.href = 'mailto:' + ['{{ email[0] }}','{{ email[1] }}'].join('@')
+              {%- endcapture -%}
+            {% when 'rss' %}
+              {% assign url = '/feed.xml' | relative_url %}
+            {% else %}
+              {% assign url = entry.url %}
+          {% endcase %}
+
+          {% if url %}
+            <a
+              href="{{ url }}"
+              aria-label="{{ entry.type }}"
+              class="social-link"
+              {% assign link_types = '' %}
+
+              {% unless entry.noblank %}
+                target="_blank"
+                {% assign link_types = 'noopener noreferrer' %}
+              {% endunless %}
+
+              {% if entry.type == 'mastodon' %}
+                {% assign link_types = link_types | append: ' me' | strip %}
+              {% endif %}
+
+              {% unless link_types == empty %}
+                rel="{{ link_types }}"
+              {% endunless %}
+            >
+              <i class="{{ entry.icon }}"></i>
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</aside>
