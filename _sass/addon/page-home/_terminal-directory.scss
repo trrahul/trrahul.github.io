@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 0;
+  padding: 0.5rem 1rem; // Add horizontal padding to match terminal header
   margin-bottom: 0.75rem;
   background: transparent;
   border: none;
@@ -270,7 +270,7 @@
 
     &:hover {
       background: rgba(var(--text-color-rgb, 128, 128, 128), 0.05);
-      
+
       .file-name {
         color: var(--link-color);
       }
@@ -293,7 +293,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 0.1rem;
+    margin-top: 0.2rem; // Better alignment with file name text
     align-self: flex-start;
 
     i {

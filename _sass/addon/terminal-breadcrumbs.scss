@@ -105,17 +105,50 @@
 /* Responsive */
 @media (max-width: 768px) {
   .terminal-post-header {
-    font-size: 0.75rem;
+    font-size: 0.7rem; // Smaller font for mobile
+    padding-left: 0.75rem; // Match other sections
+    padding-right: 0.75rem;
+    padding-top: 1.5rem; // Reduce top padding
+    margin-bottom: 1.5rem; // Reduce bottom margin
   }
   
   .terminal-command-line {
-    padding: 0.35rem 0;
+    padding: 0.25rem 0; // Reduce padding
+    gap: 0.25rem; // Reduce gap between elements
+    line-height: 1.4; // Tighter line height
+    
+    &:first-child {
+      padding-bottom: 0.4rem;
+      margin-bottom: 0.4rem;
+    }
   }
   
-  /* Allow wrapping on small screens */
+  /* Make prompt more compact */
+  .prompt {
+    font-size: 0.7rem;
+  }
+  
+  .separator {
+    margin: 0 0.1rem; // Reduce spacing
+  }
+  
+  .path-separator {
+    margin: 0 0.15rem; // Reduce spacing
+  }
+  
+  .symbol {
+    margin-right: 0.3rem; // Reduce spacing
+  }
+  
+  /* Allow command to wrap to new line for better readability */
   .command {
-    flex-basis: 100%;
-    margin-top: 0.25rem;
+    flex-basis: auto; // Don't force 100% width
+    margin-right: 0.25rem;
+  }
+  
+  /* Make links more compact */
+  .path-link {
+    word-break: break-word; // Allow breaking long paths
   }
 }
 
