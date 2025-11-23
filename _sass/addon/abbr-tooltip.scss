@@ -1,0 +1,113 @@
+/**
+ * Abbreviation Tooltip Styles
+ * Styled to match the link preview tooltip aesthetic
+ * Note: JavaScript is required to move title attribute to data-title to prevent browser tooltip
+ */
+
+/* Base abbreviation styling */
+abbr[data-title] {
+  position: relative;
+  text-decoration: none;
+  border-bottom: 1px dotted var(--link-color);
+  cursor: help;
+  font-weight: 500;
+
+  &:hover {
+    border-bottom-style: solid;
+    color: var(--link-color);
+  }
+}
+
+/* Tooltip container using ::after pseudo-element */
+abbr[data-title]::after {
+  content: attr(data-title);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 12px);
+  transform: translateX(-50%) translateY(-8px) scale(0.96);
+  z-index: 9999;
+
+  /* Visual styling matching link-preview-tooltip */
+  max-width: 320px;
+  min-width: 200px;
+  padding: 0.625rem 0.875rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.12),
+    0 10px 20px -8px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(12px);
+
+  /* Text styling */
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-muted-color);
+  text-align: left;
+  white-space: normal;
+
+  /* Hide by default */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Arrow pointer using ::before */
+abbr[data-title]::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 6px);
+  transform: translateX(-50%) rotate(45deg);
+  z-index: 9998;
+
+  width: 12px;
+  height: 12px;
+  background: var(--card-bg);
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+
+  /* Hide by default */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Show tooltip on hover */
+abbr[data-title]:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0) scale(1);
+}
+
+abbr[data-title]:hover::before {
+  opacity: 1;
+}
+
+/* Dark mode adjustments */
+[data-mode='dark'] {
+  abbr[data-title]::after {
+    background: rgba(var(--card-bg-rgb, 30, 30, 30), 0.95);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.6),
+      0 12px 24px -10px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  abbr[data-title]::before {
+    background: rgba(var(--card-bg-rgb, 30, 30, 30), 0.95);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Mobile: simpler tooltip without arrow */
+@media (max-width: 768px) {
+  abbr[data-title]::after {
+    max-width: 260px;
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  abbr[data-title]::before {
+    display: none;
+  }
+}

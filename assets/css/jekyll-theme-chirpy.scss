@@ -14,6 +14,7 @@
 @use 'addon/common-controls'; // Buttons, checkboxes, dropdowns, forms
 @use 'addon/typography'; // Typography, headings, fonts
 @use 'addon/link-preview'; // Link preview cards
+@use 'addon/abbr-tooltip'; // Abbreviation tooltips
 @use 'addon/panel-backlinks'; // TOC & backlinks panel (right sidebar)
 @use 'addon/terminal-breadcrumbs'; // Terminal-style breadcrumbs for posts
 @use 'addon/github-code-embed'; // GitHub code embed with syntax highlighting

@@ -10,16 +10,16 @@ panel_includes:
 {% include toc-status.html %}
 
 <article class="px-1" data-toc="{{ enable_toc }}">
-  
+
   <!-- Terminal command interface -->
-  {% include terminal-header.html 
-    show_breadcrumb=true 
+  {% include terminal-header.html
+    show_breadcrumb=true
     show_prompt=false
-    categories=page.categories 
-    filename=page.title 
+    categories=page.categories
+    filename=page.title
   %}
   {% include terminal/debug-log.html selector='.terminal-post-header' label='post-page' %}
-  
+
   <header>
     <h1 data-toc-skip>{{ page.title }}</h1>
     {% if page.description %}
@@ -215,5 +215,7 @@ panel_includes:
 
 <!-- Link Preview Script -->
 <script src="{{ '/assets/js/link-preview.js' | relative_url }}"></script>
+<!-- Abbreviation Tooltip Script -->
+<script src="{{ '/assets/js/abbr-tooltip.js' | relative_url }}"></script>
 <!-- Connected Notes Mobile Popup -->
 <script defer src="{{ '/assets/js/backlinks-mobile.js' | relative_url }}"></script>

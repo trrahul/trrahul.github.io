@@ -2,7 +2,7 @@
 layout: post
 title: The Kindle reviews were right about Frankenstein being difficult to read
 date: 2025-11-23 12:12 +0530
-categories: [Literature]
+categories: [Epistemology]
 tags: [literature, book, classics, epistemology]
 ---
 
