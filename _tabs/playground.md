@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Code Playground
+title: C# Playground
 icon: fas fa-code
 order: 5
 ---
