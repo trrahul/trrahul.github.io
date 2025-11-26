@@ -74,8 +74,10 @@ export const MonacoManager = {
 
   /**
    * Setup theme change observer
+   * Watches both data-mode attribute and system preference changes
    */
   setupThemeObserver() {
+    // Watch for data-mode attribute changes (user toggles theme on site)
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'data-mode') {
@@ -88,6 +90,25 @@ export const MonacoManager = {
       attributes: true,
       attributeFilter: ['data-mode'],
     });
+
+    // Watch for system preference changes (iOS/Android dark mode toggle)
+    if (window.matchMedia) {
+      const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handleSystemThemeChange = () => {
+        // Only apply if data-mode is not explicitly set
+        const dataMode = document.documentElement.getAttribute('data-mode');
+        if (!dataMode || dataMode === '') {
+          monaco.editor.setTheme(Utils.getCurrentTheme());
+        }
+      };
+
+      // Use addEventListener for modern browsers, addListener for older Safari
+      if (darkModeQuery.addEventListener) {
+        darkModeQuery.addEventListener('change', handleSystemThemeChange);
+      } else if (darkModeQuery.addListener) {
+        darkModeQuery.addListener(handleSystemThemeChange);
+      }
+    }
   },
 
   /**
@@ -106,8 +127,21 @@ export const MonacoManager = {
       require(['vs/editor/editor.main'], () => {
         // Create editors
         StateHelpers.setEditor('main', this.createMainEditor('editor', onRun));
-        StateHelpers.setEditor('il', this.createOutputEditor('ilCode', 'Click "Disassemble" to see IL code...'));
-        StateHelpers.setEditor('asm', this.createOutputEditor('asmCode', 'Click "Disassemble" to see lowered C# code...', 'on'));
+        StateHelpers.setEditor(
+          'il',
+          this.createOutputEditor(
+            'ilCode',
+            'Click "Disassemble" to see IL code...'
+          )
+        );
+        StateHelpers.setEditor(
+          'asm',
+          this.createOutputEditor(
+            'asmCode',
+            'Click "Disassemble" to see lowered C# code...',
+            'on'
+          )
+        );
 
         // Setup theme observer
         this.setupThemeObserver();

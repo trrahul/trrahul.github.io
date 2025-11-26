@@ -44,7 +44,7 @@
 }
 
 .analyzer-category {
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
   align-items: center;
   gap: 0.35rem;
@@ -52,7 +52,7 @@
 }
 
 .analyzer-category input[type='checkbox'] {
-  order: 0;
+  order: 1;
   width: 14px;
   height: 14px;
   cursor: pointer;
@@ -62,18 +62,18 @@
 }
 
 .analyzer-category .category-name {
-  order: 1;
+  order: 2;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.65rem;
   cursor: pointer;
   color: var(--playground-text-dim, var(--text-color));
   margin: 0;
   user-select: none;
-  flex-grow: 1;
+  white-space: nowrap;
 }
 
 .category-badge {
-  order: 2;
+  order: 3;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.55rem;
   font-weight: 600;
