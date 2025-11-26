@@ -1,5 +1,6 @@
 /**
  * Playground - Base Layout & Container
+ * Terminal-inspired aesthetic
  */
 
 /* Make playground page full-width by overriding default constraints */
@@ -9,12 +10,12 @@ body:has(.code-playground-container) {
     padding-left: 1rem;
     padding-right: 1rem;
   }
-  
+
   main {
     max-width: 100% !important;
     flex: 0 0 100% !important;
   }
-  
+
   #panel-wrapper {
     display: none; /* Hide panel on playground page */
   }
@@ -33,15 +34,24 @@ body:has(.code-playground-container) {
 .code-playground-container .playground-pane {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--main-border-color);
-  border-radius: 6px;
-  background: var(--card-bg, white);
+  border: 1px solid var(--playground-border-subtle, var(--main-border-color));
+  border-radius: 8px;
+  background: var(--playground-panel-bg, var(--card-bg, white));
   overflow: hidden;
   min-height: 300px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus-within {
+    border-color: var(--playground-border, var(--link-color));
+    box-shadow: 0 0 20px var(--playground-accent-glow, rgba(0, 123, 255, 0.15));
+  }
 }
 
 .pane-content {
   flex: 1;
   overflow: hidden;
   position: relative;
+  background: var(--playground-bg, var(--code-bg));
 }

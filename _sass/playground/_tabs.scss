@@ -1,64 +1,86 @@
 /**
  * Playground - Output Tabs
- * Button styles now centralized in _buttons.scss
+ * Terminal-style tabs with active beam effect
  */
 
 .output-tabs {
   display: flex;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: var(--sidebar-bg);
-  border-bottom: 1px solid var(--main-border-color);
-  align-items: center;
-  flex-wrap: wrap;
+  gap: 0;
+  padding: 0;
+  background: var(--playground-header-bg, var(--sidebar-bg));
+  border-bottom: 1px solid
+    var(--playground-border-subtle, var(--main-border-color));
+  align-items: stretch;
+  flex-wrap: nowrap;
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: thin;
-  
+
   &::-webkit-scrollbar {
     height: 4px;
   }
-  
+
   &::-webkit-scrollbar-thumb {
-    background: var(--main-border-color);
+    background: var(--playground-border, var(--main-border-color));
     border-radius: 2px;
   }
 }
 
 .output-tab {
-  padding: 0.5rem 1rem;
+  position: relative;
+  padding: 0.6rem 1rem;
   background: transparent;
   border: none;
-  border-bottom: 2px solid transparent;
-  color: var(--text-muted);
+  color: var(--playground-text-muted, var(--text-muted));
   cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
   font-weight: 500;
-  font-size: 0.875rem;
-  transition: all 0.2s;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  transition: all 0.2s ease;
   white-space: nowrap;
   flex-shrink: 0;
-}
 
-.output-tab:hover {
-  color: var(--text-color);
-}
+  &:hover {
+    color: var(--playground-text, var(--text-color));
+    background: var(--playground-accent-soft, rgba(122, 162, 247, 0.05));
+  }
 
-.output-tab.active {
-  color: var(--link-color);
-  border-bottom-color: var(--link-color);
+  &.active {
+    color: var(--playground-accent, var(--link-color));
+
+    // Active beam (like sidebar navigation)
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--playground-accent, var(--link-color));
+      box-shadow: 0 0 10px
+        var(--playground-accent-glow, rgba(122, 162, 247, 0.4));
+    }
+  }
 }
 
 .tab-content {
   display: none;
-  height: calc(100% - 3.5rem);
+  height: calc(100% - 3rem);
   overflow: auto;
+  background: var(--playground-bg, var(--code-bg));
 }
 
 .tab-content.active {
   display: block;
 }
 
-#executionTab, #ilTab, #asmTab, #syntaxTreeTab, #analysisTab {
+#executionTab,
+#ilTab,
+#asmTab,
+#syntaxTreeTab,
+#analysisTab {
   height: 100%;
 }
 
@@ -66,20 +88,21 @@
   padding: 1rem;
   height: 100%;
   overflow: auto;
-  background: var(--code-bg);
-  color: var(--code-color);
-  font-family: 'Consolas', 'Monaco', monospace;
-  font-size: 14px;
-  line-height: 1.5;
+  background: var(--playground-code-bg, var(--code-bg));
+  color: var(--playground-text, var(--code-color));
+  font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+  font-size: 13px;
+  line-height: 1.6;
   white-space: pre-wrap;
   word-wrap: break-word;
 }
 
-/* Tree controls header - matches analysis panel header style */
+/* Tree controls header - terminal style */
 .tree-controls-header {
-  background: var(--sidebar-bg);
+  background: var(--playground-header-bg, var(--sidebar-bg));
   padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid var(--main-border-color);
+  border-bottom: 1px solid
+    var(--playground-border-subtle, var(--main-border-color));
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -90,20 +113,16 @@
 /* Mobile responsive adjustments */
 @media (max-width: 768px) {
   .output-tabs {
-    padding: 0.5rem;
-    gap: 0.25rem;
+    padding: 0;
   }
-  
+
   .output-tab {
-    padding: 0.4rem 0.75rem;
-    font-size: 0.8125rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.7rem;
   }
-  
+
   .tree-controls-header {
     padding: 0.5rem;
     justify-content: center;
   }
 }
-
-/* Button styles in _buttons.scss */
-/* .tree-btn uses unified button style */

@@ -1,6 +1,6 @@
 /**
  * Playground - Analysis Panel
- * Button styles now centralized in _buttons.scss
+ * Terminal-inspired styling
  */
 
 #analysisPane {
@@ -9,13 +9,15 @@
   padding: 0;
   height: 100%;
   overflow: hidden;
+  background: var(--playground-bg, var(--code-bg));
 }
 
 /* Analyzer Controls */
 .analyzer-controls {
-  background: var(--sidebar-bg);
+  background: var(--playground-header-bg, var(--sidebar-bg));
   padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid var(--main-border-color);
+  border-bottom: 1px solid
+    var(--playground-border-subtle, var(--main-border-color));
   flex-shrink: 0;
 }
 
@@ -27,15 +29,13 @@
 }
 
 .analyzer-header span {
-  font-size: 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--playground-text-muted, var(--text-muted));
+  font-weight: 500;
 }
-
-/* Button styles moved to _buttons.scss */
-/* .analyzer-btn is now .btn-small */
 
 .analyzer-categories {
   display: grid;
@@ -45,36 +45,45 @@
 
 .analyzer-category {
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 0.35rem;
   flex-wrap: nowrap;
 }
 
-.analyzer-category input[type="checkbox"] {
+.analyzer-category input[type='checkbox'] {
+  order: 0;
   width: 14px;
   height: 14px;
   cursor: pointer;
-  accent-color: var(--link-color);
+  accent-color: var(--playground-accent, var(--link-color));
   flex-shrink: 0;
+  margin: 0;
 }
 
 .analyzer-category .category-name {
-  font-size: 0.7rem;
+  order: 1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
   cursor: pointer;
-  color: var(--text-color);
+  color: var(--playground-text-dim, var(--text-color));
   margin: 0;
   user-select: none;
   flex-grow: 1;
 }
 
 .category-badge {
-  font-size: 0.6rem;
+  order: 2;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
   font-weight: 600;
-  color: var(--text-muted);
-  background: var(--card-bg);
+  color: var(--playground-text-muted, var(--text-muted));
+  background: var(--playground-accent-soft, rgba(122, 162, 247, 0.1));
   padding: 0.1rem 0.3rem;
   border-radius: 2px;
   flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 /* Analysis Summary */
@@ -82,9 +91,11 @@
   display: flex;
   gap: 1rem;
   padding: 0.5rem 0.75rem;
-  background: var(--card-bg);
-  border-bottom: 1px solid var(--main-border-color);
-  font-size: 0.75rem;
+  background: var(--playground-panel-bg, var(--card-bg));
+  border-bottom: 1px solid
+    var(--playground-border-subtle, var(--main-border-color));
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
   flex-shrink: 0;
 }
 
@@ -102,9 +113,15 @@
   font-weight: 600;
 }
 
-.summary-error { color: #e74c3c; }
-.summary-warning { color: #f39c12; }
-.summary-info { color: #3498db; }
+.summary-error {
+  color: var(--playground-error, #f7768e);
+}
+.summary-warning {
+  color: var(--playground-warning, #e0af68);
+}
+.summary-info {
+  color: var(--playground-info, #7aa2f7);
+}
 
 /* Analysis Results Container */
 .analysis-results {
@@ -112,18 +129,20 @@
   overflow-y: auto;
   overflow-x: hidden;
   min-height: 200px;
+  background: var(--playground-bg, var(--code-bg));
 }
 
 /* Empty/Error States */
 .analysis-empty {
   padding: 2rem;
   text-align: center;
-  color: var(--text-muted);
+  color: var(--playground-text-muted, var(--text-muted));
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .analysis-empty p {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
 }
 
 /* Mobile responsive */
@@ -132,20 +151,20 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 0.3rem;
   }
-  
+
   .analyzer-category {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
   }
-  
+
   .category-badge {
-    font-size: 0.55rem;
+    font-size: 0.5rem;
   }
-  
+
   #analysisPane {
     height: 100%;
     overflow: visible;
   }
-  
+
   .analysis-results {
     min-height: 300px;
     -webkit-overflow-scrolling: touch;

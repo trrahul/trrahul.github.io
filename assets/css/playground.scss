@@ -3,15 +3,16 @@
 
 /**
  * Code Playground - Main Stylesheet
- * Uses Sass @import to combine modular CSS files
+ * Terminal-inspired aesthetic matching the blog's design system
  * Jekyll automatically processes this into a single CSS file
  */
 
-@use "playground/base";
-@use "playground/buttons";  // Centralized button styles
-@use "playground/header";
-@use "playground/monaco";
-@use "playground/tabs";
-@use "playground/analysis-panel";
-@use "playground/analysis-items";
-@use "playground/syntax-tree";
+@use 'playground/terminal-theme'; // Theme variables (must be first)
+@use 'playground/base';
+@use 'playground/buttons';
+@use 'playground/header';
+@use 'playground/monaco';
+@use 'playground/tabs';
+@use 'playground/analysis-panel';
+@use 'playground/analysis-items';
+@use 'playground/syntax-tree';

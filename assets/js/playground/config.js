@@ -6,9 +6,11 @@
 export const CONFIG = {
   version: '2025-10-09-v1-MODULAR',
   api: {
-    baseUrl: (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-      ? 'http://localhost:7071/api'
-      : 'https://YOUR_AZURE_FUNCTION_URL/api', // TODO: Replace with production URL
+    baseUrl:
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:7071/api'
+        : 'https://csharpplayground-f6eugbe5dcgehbbc.eastus-01.azurewebsites.net/api',
   },
   monaco: {
     cdnPath: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs',

@@ -1,58 +1,91 @@
 /**
  * Playground - Monaco Editor Styling
+ * Terminal-inspired with accent-colored highlights
  */
 
-#editor, #ilCode, #asmCode {
+#editor,
+#ilCode,
+#asmCode {
   width: 100%;
   height: 100%;
   border: none;
+  background: var(--playground-code-bg, var(--code-bg)) !important;
 }
 
-/* Highlighted Line Animation */
+/* Highlighted Line Animation - Use accent color */
 .monaco-editor .highlighted-line {
-  background: rgba(255, 255, 0, 0.2) !important;
+  background: var(
+    --playground-accent-soft,
+    rgba(122, 162, 247, 0.15)
+  ) !important;
   animation: highlightFade 2s ease-out;
 }
 
 .monaco-editor .highlighted-line-glyph {
-  background: rgba(255, 255, 0, 0.4) !important;
+  background: var(
+    --playground-accent-soft,
+    rgba(122, 162, 247, 0.25)
+  ) !important;
 }
 
 @keyframes highlightFade {
   0% {
-    background: rgba(255, 255, 0, 0.3) !important;
+    background: rgba(122, 162, 247, 0.25) !important;
   }
   100% {
-    background: rgba(255, 255, 0, 0) !important;
+    background: rgba(122, 162, 247, 0) !important;
   }
 }
 
 /* Hide Monaco-specific context menu items, keep only basic edit operations */
-.monaco-menu .monaco-action-bar .action-item[aria-label*="Command"],
-.monaco-menu .monaco-action-bar .action-item[aria-label*="Peek"],
-.monaco-menu .monaco-action-bar .action-item[aria-label*="Format"],
-.monaco-menu .monaco-action-bar .action-item[aria-label*="Refactor"] {
+.monaco-menu .monaco-action-bar .action-item[aria-label*='Command'],
+.monaco-menu .monaco-action-bar .action-item[aria-label*='Peek'],
+.monaco-menu .monaco-action-bar .action-item[aria-label*='Format'],
+.monaco-menu .monaco-action-bar .action-item[aria-label*='Refactor'] {
   display: none !important;
 }
 
 /* Override any theme line-height conflicts */
 .monaco-editor .view-lines {
-  line-height: var(--bs-body-line-height, 1.5) !important;
+  line-height: 1.6 !important;
 }
 
 .monaco-editor .view-line {
   line-height: inherit !important;
 }
 
-/* Fix Monaco scrollbars */
+/* Custom scrollbars - terminal style */
 .monaco-scrollable-element > .scrollbar > .slider {
-  background: var(--scrollbar-thumb-color, rgba(128, 128, 128, 0.4)) !important;
+  background: var(--playground-border, rgba(122, 162, 247, 0.3)) !important;
+  border-radius: 3px;
 }
 
 .monaco-scrollable-element > .scrollbar:hover > .slider {
-  background: var(--scrollbar-thumb-hover-color, rgba(128, 128, 128, 0.6)) !important;
+  background: var(--playground-accent, rgba(122, 162, 247, 0.5)) !important;
 }
 
 .monaco-editor .margin {
   background-color: transparent !important;
+}
+
+/* Selection highlight */
+.monaco-editor .selected-text {
+  background-color: var(
+    --playground-accent-soft,
+    rgba(122, 162, 247, 0.2)
+  ) !important;
+}
+
+/* Cursor color */
+.monaco-editor .cursor {
+  background-color: var(--playground-accent, #7aa2f7) !important;
+  border-color: var(--playground-accent, #7aa2f7) !important;
+}
+
+/* Current line highlight */
+.monaco-editor .view-overlays .current-line {
+  border-color: var(
+    --playground-border-subtle,
+    rgba(255, 255, 255, 0.06)
+  ) !important;
 }

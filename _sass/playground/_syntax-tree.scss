@@ -1,6 +1,6 @@
 /**
- * Playground - Syntax Tree (Minimal with VS Code icons)
- * Clean, readable, professional
+ * Playground - Syntax Tree
+ * Terminal-style tree view with VS Code icons
  */
 
 /* === CONTAINER === */
@@ -8,8 +8,9 @@
   padding: 1rem;
   height: 100%;
   overflow: auto;
-  background: var(--card-bg);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  background: var(--playground-bg, var(--card-bg));
+  font-family: 'JetBrains Mono', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
@@ -18,12 +19,12 @@
   .tree-error {
     padding: 2rem;
     text-align: center;
-    color: var(--text-muted-color);
-    font-size: 0.875rem;
+    color: var(--playground-text-muted, var(--text-muted-color));
+    font-size: 0.8rem;
   }
 
   .tree-error {
-    color: #e74c3c;
+    color: var(--playground-error, #f7768e);
   }
 }
 
@@ -52,26 +53,27 @@
   align-items: center;
   padding: 0.2rem 0.4rem;
   cursor: pointer;
-  transition: background-color 0.15s ease;
-  color: var(--text-color);
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+  color: var(--playground-text, var(--text-color));
   user-select: none;
-  border-radius: 0.25rem;
-  
+  border-radius: 4px;
+
   &:hover {
-    background-color: var(--button-bg);
+    background-color: var(--playground-accent-soft, rgba(122, 162, 247, 0.08));
   }
-  
+
   &:active {
-    background-color: var(--btn-border-color);
+    background-color: var(--playground-accent-soft, rgba(122, 162, 247, 0.12));
   }
 }
 
 /* Selected state for active node */
 .tree-content.selected {
-  background-color: rgba(var(--link-color-rgb, 0, 86, 178), 0.1);
-  
+  background-color: var(--playground-accent-soft, rgba(122, 162, 247, 0.15));
+  box-shadow: inset 3px 0 0 var(--playground-accent, #7aa2f7);
+
   .tree-label {
-    color: var(--link-color);
+    color: var(--playground-accent, var(--link-color));
   }
 }
 
@@ -82,12 +84,12 @@
   justify-content: center;
   width: 1rem;
   font-size: 1rem;
-  color: var(--text-muted-color);
+  color: var(--playground-text-muted, var(--text-muted-color));
   user-select: none;
   margin-right: 0.35rem;
   flex-shrink: 0;
   transition: transform 0.15s ease;
-  
+
   &.expanded {
     transform: rotate(90deg);
   }
@@ -109,40 +111,40 @@
   flex-shrink: 0;
 }
 
-/* Icon colors - subtle, no backgrounds for minimal look */
+/* Icon colors - terminal palette */
 .tree-icon.icon-declaration {
-  color: var(--link-color);
+  color: var(--playground-accent, #7aa2f7);
 }
 
 .tree-icon.icon-statement {
-  color: #ff6b9d;
+  color: var(--playground-error, #f7768e);
 }
 
 .tree-icon.icon-expression {
-  color: #ff9f43;
+  color: var(--playground-warning, #e0af68);
 }
 
 .tree-icon.icon-directive {
-  color: #a55eea;
+  color: #bb9af7; // Purple for directives
 }
 
 .tree-icon.icon-default {
-  color: var(--text-muted-color);
+  color: var(--playground-text-muted, var(--text-muted-color));
 }
 
 /* === NODE LABEL === */
 .tree-label {
-  font-size: 0.875rem;
-  color: var(--text-color);
+  font-size: 0.8rem;
+  color: var(--playground-text, var(--text-color));
   flex: 1;
 }
 
 /* === VALUES === */
 .tree-value {
-  color: #27ae60;
+  color: var(--playground-success, #9ece6a);
   font-style: normal;
-  font-family: 'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
-  font-size: 0.8rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
   font-weight: 400;
   margin-left: 0.25rem;
   opacity: 0.9;
@@ -153,29 +155,29 @@
   #syntaxTreeContainer {
     padding: 0.75rem;
   }
-  
+
   .tree-content {
     padding: 0.125rem 0.25rem;
   }
-  
+
   .tree-children {
     padding-left: 1rem;
   }
-  
+
   .tree-icon {
     width: 1rem;
     font-size: 0.75rem;
     margin-right: 0.3rem;
   }
-  
+
   .tree-label {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
-  
+
   .tree-value {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
   }
-  
+
   .tree-chevron {
     font-size: 0.75rem;
   }

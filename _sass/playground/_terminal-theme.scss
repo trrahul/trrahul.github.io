@@ -1,0 +1,131 @@
+/**
+ * Playground - Terminal Theme Integration
+ * Matches the "Tears in Rain" / GitLab-inspired aesthetic
+ * Consistent with sidebar-colors.scss
+ */
+
+/* =========================================
+   TERMINAL-STYLE CSS VARIABLES
+   ========================================= */
+
+/* Dark theme - "Tears in Rain" */
+html[data-mode='dark'] .code-playground-container {
+  --playground-bg: #0f111a;
+  --playground-panel-bg: #1a1b26;
+  --playground-header-bg: rgba(15, 17, 26, 0.95);
+  --playground-border: rgba(122, 162, 247, 0.15);
+  --playground-border-subtle: rgba(255, 255, 255, 0.06);
+  --playground-accent: #7aa2f7;
+  --playground-accent-glow: rgba(122, 162, 247, 0.3);
+  --playground-accent-soft: rgba(122, 162, 247, 0.1);
+  --playground-text: #c0caf5;
+  --playground-text-muted: #565f89;
+  --playground-text-dim: #787c99;
+  --playground-success: #9ece6a;
+  --playground-error: #f7768e;
+  --playground-warning: #e0af68;
+  --playground-info: #7aa2f7;
+  --playground-code-bg: #0f111a;
+}
+
+/* Light theme - "Clean Terminal" */
+html[data-mode='light'] .code-playground-container {
+  --playground-bg: #f5f7fa;
+  --playground-panel-bg: #ffffff;
+  --playground-header-bg: rgba(245, 247, 250, 0.95);
+  --playground-border: rgba(37, 99, 235, 0.15);
+  --playground-border-subtle: rgba(0, 0, 0, 0.06);
+  --playground-accent: #2563eb;
+  --playground-accent-glow: rgba(37, 99, 235, 0.2);
+  --playground-accent-soft: rgba(37, 99, 235, 0.08);
+  --playground-text: #1a202c;
+  --playground-text-muted: #64748b;
+  --playground-text-dim: #94a3b8;
+  --playground-success: #22c55e;
+  --playground-error: #ef4444;
+  --playground-warning: #f59e0b;
+  --playground-info: #3b82f6;
+  --playground-code-bg: #f8fafc;
+}
+
+/* Default dark theme for system preference */
+@media (prefers-color-scheme: dark) {
+  html:not([data-mode]) .code-playground-container {
+    --playground-bg: #0f111a;
+    --playground-panel-bg: #1a1b26;
+    --playground-header-bg: rgba(15, 17, 26, 0.95);
+    --playground-border: rgba(122, 162, 247, 0.15);
+    --playground-border-subtle: rgba(255, 255, 255, 0.06);
+    --playground-accent: #7aa2f7;
+    --playground-accent-glow: rgba(122, 162, 247, 0.3);
+    --playground-accent-soft: rgba(122, 162, 247, 0.1);
+    --playground-text: #c0caf5;
+    --playground-text-muted: #565f89;
+    --playground-text-dim: #787c99;
+    --playground-success: #9ece6a;
+    --playground-error: #f7768e;
+    --playground-warning: #e0af68;
+    --playground-info: #7aa2f7;
+    --playground-code-bg: #0f111a;
+  }
+}
+
+/* Default light theme for system preference */
+@media (prefers-color-scheme: light) {
+  html:not([data-mode]) .code-playground-container {
+    --playground-bg: #f5f7fa;
+    --playground-panel-bg: #ffffff;
+    --playground-header-bg: rgba(245, 247, 250, 0.95);
+    --playground-border: rgba(37, 99, 235, 0.15);
+    --playground-border-subtle: rgba(0, 0, 0, 0.06);
+    --playground-accent: #2563eb;
+    --playground-accent-glow: rgba(37, 99, 235, 0.2);
+    --playground-accent-soft: rgba(37, 99, 235, 0.08);
+    --playground-text: #1a202c;
+    --playground-text-muted: #64748b;
+    --playground-text-dim: #94a3b8;
+    --playground-success: #22c55e;
+    --playground-error: #ef4444;
+    --playground-warning: #f59e0b;
+    --playground-info: #3b82f6;
+    --playground-code-bg: #f8fafc;
+  }
+}
+
+/* =========================================
+   GLOBAL PLAYGROUND TYPOGRAPHY
+   ========================================= */
+
+.code-playground-container {
+  font-family: 'JetBrains Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =========================================
+   CUSTOM SCROLLBARS
+   ========================================= */
+
+.code-playground-container {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--playground-border);
+    border-radius: 3px;
+
+    &:hover {
+      background: var(--playground-accent);
+    }
+  }
+
+  // Firefox
+  scrollbar-width: thin;
+  scrollbar-color: var(--playground-border) transparent;
+}

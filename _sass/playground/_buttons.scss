@@ -1,11 +1,9 @@
 /**
  * Playground - Button Styles
- * Uses common controls system from addon/common-controls.scss
- * GitBook-inspired: clean, text-centric, subtle borders
+ * Terminal-inspired: monospace, uppercase, subtle glow effects
  */
 
-/* === ALL BUTTONS USE SAME STYLE === */
-/* Run, Disassemble, Tree controls all look consistent */
+/* === ALL BUTTONS - TERMINAL STYLE === */
 .btn,
 .btn-primary,
 .btn-secondary,
@@ -15,22 +13,26 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
+  padding: 0.4rem 0.8rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
   font-weight: 500;
-  color: var(--text-color);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--playground-text, var(--text-color));
   background: transparent;
-  border: 1px solid var(--btn-border-color, var(--border-color));
-  border-radius: 0.25rem;
+  border: 1px solid
+    var(--playground-border, var(--btn-border-color, var(--border-color)));
+  border-radius: 4px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
   text-decoration: none;
   line-height: 1.4;
-  
+
   &:hover:not(:disabled) {
-    color: var(--link-color);
-    background: var(--button-bg, rgba(0, 0, 0, 0.02));
-    border-color: var(--link-color);
+    color: var(--playground-accent, var(--link-color));
+    border-color: var(--playground-accent, var(--link-color));
+    box-shadow: 0 0 10px var(--playground-accent-glow, rgba(0, 123, 255, 0.2));
   }
 
   &:active:not(:disabled) {
@@ -48,29 +50,45 @@
   }
 }
 
+/* === PRIMARY ACTION (Run) - Accent styled === */
+.run-btn {
+  background: var(--playground-accent-soft, rgba(0, 123, 255, 0.1));
+  border-color: var(--playground-accent, var(--link-color));
+  color: var(--playground-accent, var(--link-color));
+
+  &:hover:not(:disabled) {
+    background: rgba(122, 162, 247, 0.2);
+    box-shadow: 0 0 15px var(--playground-accent-glow, rgba(122, 162, 247, 0.3));
+  }
+}
+
 /* === SMALL BUTTONS === */
-/* Used for: Analyzer select/deselect all buttons */
 .btn-small,
 .analyzer-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
   padding: 0.2rem 0.5rem;
-  font-size: 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: var(--text-color);
+  letter-spacing: 0.5px;
+  color: var(--playground-text-muted, var(--text-muted));
   background: transparent;
-  border: 1px solid var(--btn-border-color, var(--border-color));
-  border-radius: 0.25rem;
+  border: 1px solid
+    var(
+      --playground-border-subtle,
+      var(--btn-border-color, var(--border-color))
+    );
+  border-radius: 3px;
   cursor: pointer;
-  transition: all 0.15s ease;
-  
+  transition: all 0.2s ease;
+
   &:hover:not(:disabled) {
-    color: var(--link-color);
-    background: var(--button-bg, rgba(0, 0, 0, 0.02));
-    border-color: var(--link-color);
+    color: var(--playground-accent, var(--link-color));
+    border-color: var(--playground-accent, var(--link-color));
+    box-shadow: 0 0 8px var(--playground-accent-glow, rgba(0, 123, 255, 0.15));
   }
 
   &:disabled {
@@ -95,14 +113,14 @@
   .run-btn,
   .disassemble-btn,
   .tree-btn {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.8rem;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.7rem;
   }
 
   .btn-small,
   .analyzer-btn {
     padding: 0.15rem 0.4rem;
-    font-size: 0.65rem;
+    font-size: 0.6rem;
   }
 
   .button-group {
@@ -119,6 +137,6 @@
 .tree-btn:focus-visible,
 .btn-small:focus-visible,
 .analyzer-btn:focus-visible {
-  outline: 2px solid var(--link-color);
+  outline: 2px solid var(--playground-accent, var(--link-color));
   outline-offset: 2px;
 }
