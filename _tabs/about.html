@@ -1,0 +1,175 @@
+---
+layout: page
+icon: fas fa-info-circle
+order: 5
+title: About
+---
+
+<!-- Terminal Header -->
+{% include terminal-header.html
+  show_prompt=true
+  path='~/about'
+%}
+
+<style>
+.about-page {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.about-content {
+  margin-top: 2rem;
+}
+
+.about-content h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 1rem 0;
+  color: var(--heading-color);
+}
+
+.about-content h3:first-child {
+  margin-top: 0;
+}
+
+.about-content p {
+  line-height: 1.7;
+  margin: 0.75rem 0;
+}
+
+.about-content {
+  color: var(--text-color);
+  line-height: 1.8;
+}
+
+.about-content p {
+  margin-bottom: 1.5rem;
+}
+
+.about-content h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: var(--heading-color);
+}
+
+.about-content h3:first-child {
+  margin-top: 0;
+}
+
+.about-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.about-link-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--link-color);
+  text-decoration: none;
+  padding: 0.5rem 0;
+  transition: all 0.2s;
+  font-family: 'Courier New', monospace;
+  font-size: 0.95em;
+}
+
+.about-link-item:hover {
+  padding-left: 0.5rem;
+  color: var(--link-color);
+  opacity: 0.8;
+}
+
+.about-link-item i {
+  font-size: 1.2em;
+  width: 1.5rem;
+  text-align: center;
+}
+
+.about-link-item::before {
+  content: '→';
+  color: var(--text-muted-color);
+  font-size: 0.9em;
+}
+
+.about-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 1rem 0;
+}
+
+.about-list li {
+  padding: 0.25rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.about-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0.5rem;
+  color: var(--text-muted-color);
+}
+
+.about-features {
+  margin: 1.5rem 0;
+}
+
+.about-feature-item {
+  padding: 0.5rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.about-feature-item::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--link-color);
+  font-size: 0.9em;
+}
+
+.about-colophon {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--main-border-color);
+  font-size: 0.9em;
+  color: var(--text-muted-color);
+}
+
+.about-colophon a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+.about-colophon a:hover {
+  text-decoration: underline;
+}
+</style>
+
+<div class="about-page">
+  <div class="about-content">
+    <h3>What This Is</h3>
+    <p>Linked notes on things I want to remember. Most posts are written for "future me", but I try to keep them readable for anyone.</p>
+
+    <h3>What You'll Find Here</h3>
+    <div class="about-features">
+      <div class="about-feature-item">Literature notes</div>
+      <div class="about-feature-item">Programming notes and experiments</div>
+    </div>
+
+    <h3>Connect</h3>
+    <div class="about-links">
+      <a href="https://github.com/trrahul" target="_blank" rel="noopener noreferrer" class="about-link-item">
+        <i class="fab fa-github"></i>
+        <span>github.com/trrahul</span>
+      </a>
+      <a href="https://www.linkedin.com/in/rahul-tr-83017246" target="_blank" rel="noopener noreferrer" class="about-link-item">
+        <i class="fab fa-linkedin"></i>
+        <span>linkedin.com/in/rahul-t-r</span>
+      </a>
+    </div>
+  </div>
+</div>

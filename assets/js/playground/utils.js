@@ -19,7 +19,7 @@ export const Utils = {
    */
   getCurrentTheme() {
     const dataMode = document.documentElement.getAttribute('data-mode');
-    
+
     // If data-mode is explicitly set, use it
     if (dataMode === 'dark') {
       return 'vs-dark';
@@ -27,12 +27,15 @@ export const Utils = {
     if (dataMode === 'light') {
       return 'vs';
     }
-    
+
     // Fall back to system preference (important for iOS/mobile)
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    if (
+      window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches
+    ) {
       return 'vs-dark';
     }
-    
+
     return 'vs';
   },
 

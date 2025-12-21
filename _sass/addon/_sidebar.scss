@@ -239,6 +239,27 @@
   }
 }
 
+#mask {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  opacity: 0;
+  display: none;
+  transition: opacity 0.2s ease;
+
+  body[sidebar-display] & {
+    display: block;
+    opacity: 1;
+  }
+
+  @media (min-width: 992px) {
+    display: none !important;
+  }
+}
+
 @media (max-width: 576px) {
   #sidebar {
     width: 260px;

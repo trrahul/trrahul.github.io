@@ -43,9 +43,35 @@
         </a>
       {% elsif tab_title == "About" or tab_name == "about" %}
         <!-- About goes in Information section, skip here -->
+      {% elsif tab_title == "SharpFocus" or tab_name == "sharpfocus" %}
+        <!-- SharpFocus goes in Apps section, skip here -->
+      {% elsif tab_title == "Playground" or tab_name == "playground" %}
+        <!-- Playground goes in Apps section, skip here -->
       {% else %}
         <a href="{{ tab.url | relative_url }}" class="nav-item{% if tab.url == page.url %} active{% endif %}">
           <span class="nav-icon"><i class="{{ tab_icon }}"></i></span>
+          <span>{{ tab_title }}</span>
+        </a>
+      {% endif %}
+    {% endfor %}
+
+    <div style="height: 1rem;"></div>
+
+    <div class="nav-header">Apps</div>
+
+    <!-- SharpFocus and Playground -->
+    {% for tab in site.tabs %}
+      {% capture tab_name %}{{ tab.url | split: '/' }}{% endcapture %}
+      {% assign tab_title = site.data.locales[include.lang].tabs.[tab_name] | default: tab.title %}
+
+      {% if tab_title == "SharpFocus" or tab_name == "sharpfocus" %}
+        <a href="{{ tab.url | relative_url }}" class="nav-item{% if tab.url == page.url %} active{% endif %}">
+          <span class="nav-icon"><i class="fa-solid fa-lightbulb"></i></span>
+          <span>{{ tab_title }}</span>
+        </a>
+      {% elsif tab_title == "Playground" or tab_name == "playground" %}
+        <a href="{{ tab.url | relative_url }}" class="nav-item{% if tab.url == page.url %} active{% endif %}">
+          <span class="nav-icon"><i class="fa-solid fa-flask"></i></span>
           <span>{{ tab_title }}</span>
         </a>
       {% endif %}
