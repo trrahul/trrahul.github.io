@@ -218,6 +218,11 @@ exclude:
   - playground-app
   - Azure
   - temp_reference_for_codebase_Access
+  - Applications
+  - "*.sln"
+  - "*.csproj"
+  - obj
+  - bin
 
 # Keep these files in _site during regeneration
 keep_files:

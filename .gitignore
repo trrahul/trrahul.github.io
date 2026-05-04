@@ -1,7 +1,6 @@
 # Bundler cache
 .bundle
 vendor
-Gemfile.lock
 
 # Jekyll cache
 .jekyll-cache
@@ -28,5 +27,4 @@ assets/js/dist
 playground-app/*
 temp_reference_for_codebase_Access/*
 Azure
-Applications/CodePlayground/
-Applications/RustOwnershipVisualizer/
+Applications/
