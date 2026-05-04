@@ -52,13 +52,13 @@
   {% endif %}
   <div id="{{ container_id }}" class="{{ container_classes }}">
     {% if show_prompt or show_input %}
-      <div class="terminal-header">
+      <div class="terminal-header cmd-bar-v3">
         {% if show_prompt %}
           {% include terminal/prompt-line.html 
             user=header_user 
             path=include.path 
             current_dir=include.current_dir 
-            show_stats=include.show_stats 
+            show_stats=false 
             item_count=include.item_count 
             item_label=include.item_label 
             show_help=include.show_help 
@@ -70,6 +70,22 @@
             id=include.input_id 
             placeholder=include.placeholder 
           %}
+        {% endif %}
+
+        {% comment %} V3: Stats Logic moved here for single-line layout {% endcomment %}
+        {% if include.show_stats %}
+          <div class="terminal-stats">
+            <span class="post-count">
+              <span id="visible-count">{{ include.item_count | default: 0 }}</span> 
+              {{ include.item_label | default: 'items' }}
+            </span>
+            <span class="kbd-hint">Ctrl+K</span>
+            {% if include.show_help %}
+              <button class="terminal-help-btn" title="Help">
+                <i class="fas fa-question-circle"></i>
+              </button>
+            {% endif %}
+          </div>
         {% endif %}
       </div>
     {% endif %}

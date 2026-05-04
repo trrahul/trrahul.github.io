@@ -55,14 +55,14 @@ export class ViewRenderer {
     }
 
     const emptyMessageNode = this.directoryListElement.querySelector(
-      '[data-directory-empty]'
+      '[data-directory-empty]',
     );
     if (emptyMessageNode) {
       this.emptyDirectoryMessage = emptyMessageNode.outerHTML;
     }
 
     const directoryNodes = Array.from(
-      this.directoryListElement.querySelectorAll('.category-directory')
+      this.directoryListElement.querySelectorAll('.category-directory'),
     );
     directoryNodes.forEach((node) => {
       const categoryPath = node.dataset.categoryPath;
@@ -122,8 +122,7 @@ export class ViewRenderer {
       this.markAllPostsHidden();
     }
 
-    const anyExpanded = document.querySelector('.directory-folder.expanded');
-    this.sortManager.updateSortButtonsState(Boolean(anyExpanded));
+    this.sortManager.updateSortButtonsState(true);
 
     this.updateVisibleCount();
   }
@@ -214,7 +213,7 @@ export class ViewRenderer {
       this.directoryListElement.querySelectorAll('.category-directory');
     this.sortManager.sortCategoryDirectories(
       this.state.sorting.type,
-      this.state.sorting.reverse
+      this.state.sorting.reverse,
     );
   }
 
@@ -364,7 +363,7 @@ export class ViewRenderer {
         flatList && getComputedStyle(flatList).display === 'block';
       const visibleDirectories = categoryDirs
         ? Array.from(categoryDirs).filter(
-            (dir) => getComputedStyle(dir).display !== 'none'
+            (dir) => getComputedStyle(dir).display !== 'none',
           )
         : [];
 
@@ -400,8 +399,7 @@ export class ViewRenderer {
       folder.classList.remove('expanded');
     });
 
-    const anyExpanded = document.querySelector('.directory-folder.expanded');
-    this.sortManager.updateSortButtonsState(Boolean(anyExpanded));
+    this.sortManager.updateSortButtonsState(true);
     this.updateVisibleCount();
   }
 
@@ -431,14 +429,13 @@ export class ViewRenderer {
       this.enableNestedDirectories(categoryDir);
     }
 
-    const anyExpanded = document.querySelector('.directory-folder.expanded');
-    this.sortManager.updateSortButtonsState(Boolean(anyExpanded));
+    this.sortManager.updateSortButtonsState(true);
     this.updateVisibleCount();
   }
 
   disableNestedDirectories(parentCategoryDir) {
     const nestedDirs = parentCategoryDir.querySelectorAll(
-      '.category-directory--nested'
+      '.category-directory--nested',
     );
     nestedDirs.forEach((nestedDir) => {
       const folder = nestedDir.querySelector('.directory-folder');
@@ -464,7 +461,7 @@ export class ViewRenderer {
 
   enableNestedDirectories(parentCategoryDir) {
     const nestedDirs = parentCategoryDir.querySelectorAll(
-      '.category-directory--nested'
+      '.category-directory--nested',
     );
     nestedDirs.forEach((nestedDir) => {
       const folder = nestedDir.querySelector('.directory-folder');
@@ -492,19 +489,20 @@ export class ViewRenderer {
     const contents = moreButton.closest('.directory-contents');
     if (!contents) return;
 
-    // Get all hidden posts in this category (those rendered but hidden)
     const categoryDir = moreButton.closest('.category-directory');
     if (!categoryDir) return;
 
-    // Remove the "more" button
     moreButton.remove();
 
-    // In a server-rendered context, we need to show a message or navigate
-    // Since posts are limited at build time, we can navigate to the category page
-    const categoryPath = categoryDir.dataset.categoryPath;
-    if (categoryPath) {
-      const categoryUrl = `/categories/${categoryPath.split('/').pop()}/`;
-      window.location.href = categoryUrl;
+    // Chirpy generates one page per category at /categories/<leaf-slug>/, so
+    // navigate by leaf slug. (Slug collisions across nested categories are a
+    // theme-level limitation and would need a category-page renaming fix.)
+    const categoryDataset = categoryDir.dataset;
+    const slug =
+      categoryDataset.category ||
+      (categoryDataset.categoryPath || '').split('/').pop();
+    if (slug) {
+      window.location.href = `/categories/${slug}/`;
     }
   }
 
@@ -518,17 +516,17 @@ export class ViewRenderer {
     this.toggleDetailSection(
       '[data-read-stats]',
       show && options.showReadStats,
-      'flex'
+      'flex',
     );
     this.toggleDetailSection(
       '[data-summary]',
       show && options.showSummary,
-      'block'
+      'block',
     );
     this.toggleDetailSection(
       '[data-tags]',
       show && options.showTagPills,
-      'flex'
+      'flex',
     );
   }
 

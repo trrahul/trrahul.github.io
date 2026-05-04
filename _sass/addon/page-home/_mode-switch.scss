@@ -1,0 +1,44 @@
+/**
+ * Home page mode-switch link (blog -> terminal/notes view)
+ */
+
+.home-mode-switch {
+  .mode-toggle-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: 'JetBrains Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+    font-size: 0.78rem;
+    color: var(--text-muted-color);
+    text-decoration: none;
+    padding: 0.35rem 0.7rem;
+    border: 1px solid var(--card-border-color, var(--main-border-color));
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    transition:
+      color 0.15s ease,
+      border-color 0.15s ease,
+      background-color 0.15s ease;
+
+    i {
+      font-size: 0.75rem;
+      opacity: 0.8;
+    }
+
+    &:hover {
+      color: var(--link-color);
+      border-color: var(--link-color);
+      background: rgba(var(--link-color-rgb, 122, 162, 247), 0.05);
+    }
+
+    &[data-mode='notes'] {
+      color: var(--link-color);
+      border-color: var(--link-color);
+    }
+  }
+}
+
+.home-mode[hidden] {
+  display: none !important;
+}

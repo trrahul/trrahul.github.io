@@ -21,7 +21,7 @@ export const CommandParser = {
       command: cmd,
       args,
       raw: trimmed,
-      isValid: this.isValidCommand(cmd)
+      isValid: this.isValidCommand(cmd),
     };
   },
 
@@ -41,39 +41,39 @@ export const CommandParser = {
       sort: 'time',
       reverse: false,
       detailed: false,
-      expandAll: false
+      expandAll: false,
     };
 
-    args.forEach(arg => {
+    args.forEach((arg) => {
       if (arg.startsWith('-')) {
         const flagStr = arg.substring(1);
-        
+
         // Sort by time (default)
         if (flagStr.includes('t')) {
           flags.sort = 'time';
         }
-        
+
         // Reverse order
         if (flagStr.includes('r')) {
           flags.reverse = true;
         }
-        
+
         // Sort by size
         if (flagStr.includes('S')) {
           flags.sort = 'size';
         }
-        
+
         // Sort by name
         if (flagStr.includes('n')) {
           flags.sort = 'name';
         }
-        
+
         // Show all details
         if (flagStr.includes('a')) {
           flags.detailed = true;
           flags.expandAll = true;
         }
-        
+
         // Long listing
         if (flagStr.includes('l')) {
           flags.detailed = true;
@@ -89,13 +89,12 @@ export const CommandParser = {
    */
   parseCdPath(args) {
     if (!args || args.length === 0) return '';
-    
+
     const path = args[0];
-    
+
     // Handle special paths
-    if (path === '..' || path === '../') return '..';
     if (path === '~' || path === './') return '';
-    
+
     return path;
-  }
+  },
 };

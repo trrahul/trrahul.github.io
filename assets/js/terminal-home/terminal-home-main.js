@@ -38,18 +38,25 @@ async function loadHierarchyData() {
 async function loadSearchIndex() {
   try {
     const url = CategoryHierarchy.getSearchIndexUrl();
-    const response = await fetch(url, { cache: 'force-cache' });
+    const response = await fetch(url, { cache: 'default' });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
     const postCount = Array.isArray(data.posts) ? data.posts.length : 0;
-    const segmentCount = typeof data.segment_count === 'number' ? data.segment_count : 'unknown';
-    console.log('[Terminal Home] Loaded search index:', { posts: postCount, segments: segmentCount });
+    const segmentCount =
+      typeof data.segment_count === 'number' ? data.segment_count : 'unknown';
+    console.log('[Terminal Home] Loaded search index:', {
+      posts: postCount,
+      segments: segmentCount,
+    });
     return data;
   } catch (error) {
-    console.warn('[Terminal Home] Search index unavailable, falling back to basic search:', error);
+    console.warn(
+      '[Terminal Home] Search index unavailable, falling back to basic search:',
+      error,
+    );
     return null;
   }
 }
@@ -69,8 +76,16 @@ async function initialize() {
     }
 
     const sortManager = new SortManager(state);
-    const viewRenderer = new ViewRenderer(state, CategoryHierarchy, sortManager);
-    const searchController = new SearchController(state, CategoryHierarchy, viewRenderer);
+    const viewRenderer = new ViewRenderer(
+      state,
+      CategoryHierarchy,
+      sortManager,
+    );
+    const searchController = new SearchController(
+      state,
+      CategoryHierarchy,
+      viewRenderer,
+    );
     viewRenderer.attachSearchController(searchController);
     searchController.init(CONFIG.ui.debounceDelay);
 
@@ -85,14 +100,15 @@ async function initialize() {
       navigationManager,
       sortManager,
       searchController,
-      viewRenderer
+      viewRenderer,
     });
     const eventManager = new EventManager({
       state,
       commandExecutor,
       navigationManager,
       sortManager,
-      viewRenderer
+      viewRenderer,
+      searchController,
     });
 
     const initialPath = navigationManager.checkURLParams();
@@ -103,12 +119,8 @@ async function initialize() {
     eventManager.bindAll();
     viewRenderer.collapseAllCategories();
 
-    if (state.navigation.currentPath) {
-      commandExecutor.updateViews();
-    } else {
-      viewRenderer.showDirectoryView('');
-      viewRenderer.updateVisibleCount();
-    }
+    // Always run a full view update on first paint so header/breadcrumb/status are populated.
+    commandExecutor.updateViews();
 
     sortManager.sortPosts();
     sortManager.updateSortIndicators();
@@ -120,7 +132,7 @@ async function initialize() {
       sortManager,
       commandExecutor,
       searchController,
-      eventManager
+      eventManager,
     };
   } catch (error) {
     console.error('Failed to initialize terminal home:', error);
@@ -128,8 +140,10 @@ async function initialize() {
     const container = document.getElementById('terminal-command-bar');
     if (container) {
       const errorDiv = document.createElement('div');
-      errorDiv.style.cssText = 'padding: 1rem; color: #ef4444; text-align: center;';
-      errorDiv.textContent = 'Failed to load terminal interface. Please refresh the page.';
+      errorDiv.style.cssText =
+        'padding: 1rem; color: #ef4444; text-align: center;';
+      errorDiv.textContent =
+        'Failed to load terminal interface. Please refresh the page.';
       container.appendChild(errorDiv);
     }
   }

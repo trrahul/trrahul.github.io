@@ -11,7 +11,7 @@ export class CommandExecutor {
     navigationManager,
     sortManager,
     searchController,
-    viewRenderer
+    viewRenderer,
   }) {
     this.state = state;
     this.navigationManager = navigationManager;
@@ -52,16 +52,7 @@ export class CommandExecutor {
 
   executeCD(args) {
     const path = CommandParser.parseCdPath(args);
-
-    if (path === '..') {
-      this.navigationManager.goBack();
-    } else if (path.startsWith('..')) {
-      const levels = (path.match(/\.\./g) || []).length;
-      this.navigationManager.goBack(levels);
-    } else {
-      this.navigationManager.navigateRelative(path);
-    }
-
+    this.navigationManager.navigateRelative(path);
     this.updateViews();
   }
 
@@ -80,19 +71,29 @@ export class CommandExecutor {
   }
 
   executeGrep(args) {
-    const term = args.join(' ');
+    let term = args.join(' ').trim();
+    // Strip surrounding matching quotes: "foo bar" or 'foo bar'
+    if (term.length >= 2) {
+      const first = term[0];
+      const last = term[term.length - 1];
+      if ((first === '"' || first === "'") && first === last) {
+        term = term.slice(1, -1);
+      }
+    }
     this.searchController.applySearch(term);
     this.viewRenderer.updateVisibleCount();
   }
 
   executeClear() {
-    this.state.reset({
-      path: '',
-      segments: [],
-      sort: 'time',
-      sortReverse: false,
-      searchTerm: '',
-      viewDetailed: false
+    this.state.batch(() => {
+      this.state.reset({
+        path: '',
+        segments: [],
+        sort: 'time',
+        sortReverse: false,
+        searchTerm: '',
+        viewDetailed: false,
+      });
     });
 
     this.searchController.clearFilters();
@@ -106,7 +107,7 @@ export class CommandExecutor {
 
     const input = this.state.getElement('input');
     if (input) {
-      input.value = 'ls ./';
+      input.value = '';
     }
   }
 
@@ -134,11 +135,13 @@ export class CommandExecutor {
   }
 
   updateControlButtons() {
-    document.querySelectorAll('.control-btn').forEach(btn => {
+    document.querySelectorAll('.control-btn').forEach((btn) => {
       btn.classList.remove('active');
     });
 
-    const defaultSortBtn = document.querySelector('.control-btn[data-sort="time"]');
+    const defaultSortBtn = document.querySelector(
+      '.control-btn[data-sort="time"]',
+    );
     if (defaultSortBtn) {
       defaultSortBtn.classList.add('active');
       defaultSortBtn.dataset.dir = 'desc';
@@ -149,7 +152,7 @@ export class CommandExecutor {
       }
     }
 
-    document.querySelectorAll('.control-btn[data-sort]').forEach(btn => {
+    document.querySelectorAll('.control-btn[data-sort]').forEach((btn) => {
       if (!btn.classList.contains('active')) {
         const arrow = btn.querySelector('.sort-direction');
         if (arrow) {
@@ -159,7 +162,9 @@ export class CommandExecutor {
       }
     });
 
-    const compactBtn = document.querySelector('.control-btn[data-view="compact"]');
+    const compactBtn = document.querySelector(
+      '.control-btn[data-view="compact"]',
+    );
     if (compactBtn) {
       compactBtn.classList.add('active');
     }

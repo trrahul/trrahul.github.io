@@ -2,12 +2,13 @@
  * Home Page Styles - Terminal Interface
  */
 
-@forward "variables";
-@forward "terminal-bar";
-@forward "quick-jump";
-@forward "terminal-controls";
-@forward "modals";
-@forward "terminal-directory";
-@forward "post-cards";
-@forward "legacy";
-@forward "responsive";
+@forward 'variables';
+@forward 'terminal-bar';
+@forward 'quick-jump';
+@forward 'terminal-controls';
+@forward 'modals';
+@forward 'terminal-directory';
+@forward 'post-cards';
+@forward 'mode-switch';
+@forward 'legacy';
+@forward 'responsive';

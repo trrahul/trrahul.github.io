@@ -4,12 +4,20 @@
  */
 
 export class EventManager {
-  constructor({ state, commandExecutor, navigationManager, sortManager, viewRenderer }) {
+  constructor({
+    state,
+    commandExecutor,
+    navigationManager,
+    sortManager,
+    viewRenderer,
+    searchController,
+  }) {
     this.state = state;
     this.commandExecutor = commandExecutor;
     this.navigationManager = navigationManager;
     this.sortManager = sortManager;
     this.viewRenderer = viewRenderer;
+    this.searchController = searchController;
     this.handlers = {};
   }
 
@@ -20,6 +28,7 @@ export class EventManager {
     this.bindRootHeader();
     this.bindHelpModal();
     this.bindKeyboardShortcuts();
+    this.bindHistory();
   }
 
   bindCommandInput() {
@@ -28,6 +37,7 @@ export class EventManager {
 
     this.handlers.commandInput = (event) => {
       if (event.key === 'Enter') {
+        event.preventDefault();
         const command = input.value.trim();
         if (command) {
           this.commandExecutor.execute(command);
@@ -35,12 +45,44 @@ export class EventManager {
       }
     };
 
-    input.addEventListener('keypress', this.handlers.commandInput);
+    input.addEventListener('keydown', this.handlers.commandInput);
+
+    // Live search: when the user types text that doesn't look like a command,
+    // treat it as an incremental grep query.
+    if (this.searchController) {
+      this.handlers.commandLiveInput = () => {
+        const value = input.value;
+        const trimmed = value.trim();
+        if (!trimmed) {
+          this.searchController.applySearch('');
+          return;
+        }
+        const first = trimmed.split(/\s+/)[0].toLowerCase();
+        const looksLikeCommand = [
+          'cd',
+          'ls',
+          'grep',
+          'clear',
+          'help',
+          '?',
+        ].includes(first);
+        if (looksLikeCommand) {
+          // Wait for Enter to execute commands; don't run live.
+          return;
+        }
+        if (this.searchController.applySearchDebounced) {
+          this.searchController.applySearchDebounced(trimmed);
+        } else {
+          this.searchController.applySearch(trimmed);
+        }
+      };
+      input.addEventListener('input', this.handlers.commandLiveInput);
+    }
   }
 
   bindControlButtons() {
     const sortButtons = document.querySelectorAll('.control-btn[data-sort]');
-    sortButtons.forEach(btn => {
+    sortButtons.forEach((btn) => {
       const handler = () => {
         const sort = btn.dataset.sort;
         const currentDir = btn.dataset.dir;
@@ -62,20 +104,22 @@ export class EventManager {
     });
 
     const viewButtons = document.querySelectorAll('.control-btn[data-view]');
-    viewButtons.forEach(btn => {
+    viewButtons.forEach((btn) => {
       const handler = () => {
         const detailed = btn.dataset.view === 'detailed';
         this.state.setDetailedView(detailed);
         this.viewRenderer.toggleDetailedView(detailed);
 
-        viewButtons.forEach(button => button.classList.remove('active'));
+        viewButtons.forEach((button) => button.classList.remove('active'));
         btn.classList.add('active');
       };
 
       btn.addEventListener('click', handler);
     });
 
-    const resetBtn = document.querySelector('.control-btn[data-command="clear"]');
+    const resetBtn = document.querySelector(
+      '.control-btn[data-command="clear"]',
+    );
     if (resetBtn) {
       this.handlers.resetBtn = () => {
         this.commandExecutor.executeClear();
@@ -113,7 +157,8 @@ export class EventManager {
         return;
       }
 
-      const categoryPath = categoryDir.dataset.categoryPath || categoryDir.dataset.category;
+      const categoryPath =
+        categoryDir.dataset.categoryPath || categoryDir.dataset.category;
       if (!categoryPath) {
         return;
       }
@@ -179,18 +224,48 @@ export class EventManager {
   bindKeyboardShortcuts() {
     this.handlers.keyboard = (event) => {
       const input = this.state.getElement('input');
-      if (!input) return;
+      const helpModal = this.state.getElement('helpModal');
+      const helpOpen = helpModal && helpModal.style.display === 'flex';
+      const inputFocused = input && input.matches(':focus');
 
-      if (event.key === '?' && !input.matches(':focus')) {
+      // Ctrl/Cmd+K -> focus the terminal input
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+        if (input) {
+          event.preventDefault();
+          input.focus();
+          input.select();
+        }
+        return;
+      }
+
+      if (event.key === '?' && !inputFocused) {
+        const target = event.target;
+        const isEditable =
+          target &&
+          (target.isContentEditable ||
+            ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName));
+        if (isEditable) return;
         event.preventDefault();
         this.commandExecutor.executeHelp();
+        return;
       }
 
       if (event.key === 'Escape') {
-        const helpModal = this.state.getElement('helpModal');
-        if (helpModal && helpModal.style.display !== 'none') {
+        if (helpOpen) {
           this.hideHelp();
-        } else if (this.state.navigation.currentPath) {
+          return;
+        }
+        if (inputFocused && input.value) {
+          // Clear the prompt before navigating up.
+          input.value = '';
+          this.searchController?.applySearch('');
+          return;
+        }
+        if (inputFocused) {
+          input.blur();
+          return;
+        }
+        if (this.state.navigation.currentPath) {
           this.navigationManager.goBack();
           this.commandExecutor.updateViews();
         }
@@ -198,6 +273,18 @@ export class EventManager {
     };
 
     document.addEventListener('keydown', this.handlers.keyboard);
+  }
+
+  bindHistory() {
+    this.handlers.popstate = () => {
+      const params = new URLSearchParams(window.location.search);
+      const dir = params.get('dir') || '';
+      const applied = this.navigationManager.applyPathFromHistory(dir);
+      if (applied) {
+        this.commandExecutor.updateViews();
+      }
+    };
+    window.addEventListener('popstate', this.handlers.popstate);
   }
 
   hideHelp() {
@@ -210,10 +297,15 @@ export class EventManager {
   destroy() {
     const input = this.state.getElement('input');
     if (this.handlers.commandInput && input) {
-      input.removeEventListener('keypress', this.handlers.commandInput);
+      input.removeEventListener('keydown', this.handlers.commandInput);
+    }
+    if (this.handlers.commandLiveInput && input) {
+      input.removeEventListener('input', this.handlers.commandLiveInput);
     }
 
-    const resetBtn = document.querySelector('.control-btn[data-command="clear"]');
+    const resetBtn = document.querySelector(
+      '.control-btn[data-command="clear"]',
+    );
     if (this.handlers.resetBtn && resetBtn) {
       resetBtn.removeEventListener('click', this.handlers.resetBtn);
     }
@@ -243,11 +335,18 @@ export class EventManager {
       directoryView.removeEventListener('click', this.handlers.directoryClick);
     }
     if (this.handlers.directoryKeydown && directoryView) {
-      directoryView.removeEventListener('keydown', this.handlers.directoryKeydown);
+      directoryView.removeEventListener(
+        'keydown',
+        this.handlers.directoryKeydown,
+      );
     }
 
     if (this.handlers.keyboard) {
       document.removeEventListener('keydown', this.handlers.keyboard);
+    }
+
+    if (this.handlers.popstate) {
+      window.removeEventListener('popstate', this.handlers.popstate);
     }
 
     this.handlers = {};

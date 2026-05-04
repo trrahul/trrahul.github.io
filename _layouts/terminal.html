@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title | default: site.title }}</title>
+
+  <!-- Preload critical assets -->
+  <link rel="preload" href="/assets/terminal/{{ page.js_file }}" as="script" crossorigin>
+  <link rel="preload" href="/assets/terminal/{{ page.css_file }}" as="style">
+
+  <!-- Terminal styles -->
+  <link rel="stylesheet" crossorigin href="/assets/terminal/{{ page.css_file }}">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+
+    #app {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <!-- Terminal application -->
+  <script type="module" crossorigin src="/assets/terminal/{{ page.js_file }}"></script>
+</body>
+</html>

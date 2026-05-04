@@ -19,6 +19,7 @@
 @use 'addon/panel-backlinks'; // TOC & backlinks panel (right sidebar)
 @use 'addon/terminal-breadcrumbs'; // Terminal-style breadcrumbs for posts
 @use 'addon/github-code-embed'; // GitHub code embed with syntax highlighting
+@use 'addon/topbar-overrides'; // Topbar spacing/title alignment tweaks
 @use 'addon/sidebar'; // Terminal-style sidebar navigation
 
 /* Page-specific Styles */

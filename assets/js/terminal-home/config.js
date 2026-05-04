@@ -10,14 +10,14 @@ export const CONFIG = {
     ls: 'List posts',
     grep: 'Search posts',
     clear: 'Clear filters',
-    help: 'Show help'
+    help: 'Show help',
   },
 
   // Sort types
   sortTypes: {
     time: 'Date modified',
     size: 'Word count',
-    name: 'Alphabetical'
+    name: 'Alphabetical',
   },
 
   // Default values
@@ -26,27 +26,26 @@ export const CONFIG = {
     sortReverse: false,
     category: '',
     searchTerm: '',
-    viewDetailed: false
+    viewDetailed: false,
   },
 
   // UI settings
   ui: {
     animationDuration: 200,
-    debounceDelay: 300
+    debounceDelay: 300,
   },
 
   // Detailed view display options
   detailedView: {
     showSummary: true,
     showReadStats: true,
-    showTagPills: true
+    showTagPills: true,
   },
 
   // Selectors
   selectors: {
     input: '#terminal-input',
     currentDir: '.terminal-current-dir',
-    statusLocation: '#current-path',
     visibleCount: '#visible-count',
     categoryDirs: '.category-directory',
     directoryList: '#directory-list',
@@ -58,7 +57,7 @@ export const CONFIG = {
     directoryIcon: '#directory-icon',
     directoryItemCount: '#directory-item-count',
     searchEmptyState: '#search-empty-state',
-    searchEmptyMessage: '#search-empty-message'
+    searchEmptyMessage: '#search-empty-message',
   },
 
   debug: {
@@ -66,13 +65,13 @@ export const CONFIG = {
       enabled: true,
       includeTimestamp: true,
       groupCollapsed: true,
-      showPayload: true
+      showPayload: true,
     },
     viewRenderer: {
       enabled: true,
       includeTimestamp: true,
       groupCollapsed: true,
-      showPayload: true
-    }
-  }
+      showPayload: true,
+    },
+  },
 };

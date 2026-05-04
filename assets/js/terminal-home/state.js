@@ -8,20 +8,20 @@ export class StateStore {
     this.navigation = {
       currentPath: '',
       previousPath: '',
-      pathSegments: []
+      pathSegments: [],
     };
 
     this.sorting = {
       type: 'time',
-      reverse: false
+      reverse: false,
     };
 
     this.filtering = {
-      searchTerm: ''
+      searchTerm: '',
     };
 
     this.display = {
-      viewDetailed: false
+      viewDetailed: false,
     };
 
     this.elements = {};
@@ -36,10 +36,9 @@ export class StateStore {
     this.elements = {
       input: document.querySelector(selectors.input),
       currentDir: document.querySelector(selectors.currentDir),
-      statusLocation: document.querySelector(selectors.statusLocation),
       visibleCount: document.querySelector(selectors.visibleCount),
       categoryDirs: document.querySelectorAll(selectors.categoryDirs),
-  directoryList: document.querySelector(selectors.directoryList),
+      directoryList: document.querySelector(selectors.directoryList),
       flatList: document.querySelector(selectors.flatList),
       helpModal: document.querySelector(selectors.helpModal),
       directoryView: document.querySelector(selectors.directoryView),
@@ -48,13 +47,13 @@ export class StateStore {
       directoryIcon: document.querySelector(selectors.directoryIcon),
       directoryItemCount: document.querySelector(selectors.directoryItemCount),
       searchEmptyState: document.querySelector(selectors.searchEmptyState),
-      searchEmptyMessage: document.querySelector(selectors.searchEmptyMessage)
+      searchEmptyMessage: document.querySelector(selectors.searchEmptyMessage),
     };
 
     const missing = [];
     if (!this.elements.input) missing.push('input');
-  if (!this.elements.categoryDirs) missing.push('categoryDirs');
-  if (!this.elements.directoryList) missing.push('directoryList');
+    if (!this.elements.categoryDirs) missing.push('categoryDirs');
+    if (!this.elements.directoryList) missing.push('directoryList');
     if (!this.elements.directoryItemCount) missing.push('directoryItemCount');
 
     if (missing.length > 0) {
@@ -158,17 +157,39 @@ export class StateStore {
       sort: this.sorting.type,
       reverse: this.sorting.reverse,
       search: this.filtering.searchTerm,
-      detailed: this.display.viewDetailed
+      detailed: this.display.viewDetailed,
     };
   }
 
   notify() {
-    this.callbacks.forEach(listener => {
+    if (this._batching) {
+      this._batchDirty = true;
+      return;
+    }
+    this.callbacks.forEach((listener) => {
       try {
         listener(this.getSnapshot());
       } catch (error) {
         console.error('Terminal Home: state listener failed', error);
       }
     });
+  }
+
+  /**
+   * Coalesce multiple state mutations into a single notify call.
+   * @param {Function} mutator
+   */
+  batch(mutator) {
+    this._batching = true;
+    this._batchDirty = false;
+    try {
+      mutator();
+    } finally {
+      this._batching = false;
+      if (this._batchDirty) {
+        this._batchDirty = false;
+        this.notify();
+      }
+    }
   }
 }
