@@ -1,0 +1,703 @@
+---
+layout: mellilex
+title: MelliLex
+permalink: /mellilex/
+---
+
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #09090b;
+    --bg-card: #111113;
+    --bg-raised: #18181b;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --text: #fafafa;
+    --text-mid: #a1a1aa;
+    --text-muted: #71717a;
+    --accent: #6366f1;
+    --accent-glow: rgba(99, 102, 241, 0.25);
+    --accent-border: rgba(99, 102, 241, 0.4);
+    --green: #22c55e;
+    --yellow: #eab308;
+    --font: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-serif: 'Lora', Georgia, serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ---- Hero ---- */
+  .hero {
+    padding: 7rem 1.5rem 5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ---- Dictionary entry header ---- */
+  .entry-block {
+    max-width: 540px;
+    margin: 0 auto 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.14);
+  }
+
+  .entry-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #818cf8;
+    margin-bottom: 1.25rem;
+  }
+
+  .entry-name {
+    font-family: var(--font-serif);
+    font-size: 5rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, #fff 0%, #a1a1aa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .entry-ipa {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+  }
+
+  .entry-pos {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--text-mid);
+    margin-bottom: 1rem;
+  }
+
+  .entry-tagline {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 4rem;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.5rem;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 0.15s, box-shadow 0.15s;
+    box-shadow: 0 0 0 0 var(--accent-glow);
+  }
+
+  .btn-primary:hover {
+    opacity: 0.9;
+    box-shadow: 0 0 24px var(--accent-glow);
+    text-decoration: none;
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.5rem;
+    border: 1px solid var(--border-strong);
+    color: var(--text-mid);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 400;
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--accent-border);
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  /* ---- Platform note ---- */
+  .platform-note {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  /* ---- Hero screenshot ---- */
+  .hero-screenshot {
+    position: relative;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+
+  .hero-screenshot::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 12px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(99,102,241,0.5), rgba(99,102,241,0.05) 60%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  .hero-screenshot img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+
+  /* ---- Container ---- */
+  .container { max-width: 960px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ---- Section ---- */
+  section { padding: 5rem 0; }
+
+  .section-tag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #818cf8;
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .section-desc {
+    font-size: 1rem;
+    color: var(--text-mid);
+    max-width: 560px;
+    line-height: 1.7;
+  }
+
+  /* ---- Divider ---- */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 1.5rem;
+  }
+
+  /* ---- Feature cards ---- */
+  .feature-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 3rem;
+  }
+
+  .feature-card {
+    background: var(--bg-card);
+    padding: 1.75rem;
+  }
+
+  .fc-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: rgba(99,102,241,0.12);
+    border: 1px solid var(--accent-border);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.25rem;
+    font-size: 0.9rem;
+    color: #818cf8;
+  }
+
+  .fc-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  .fc-desc {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+  }
+
+  /* ---- Two-column highlight ---- */
+  .highlight-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    margin-top: 3rem;
+  }
+
+  .highlight-row.flip { direction: rtl; }
+  .highlight-row.flip > * { direction: ltr; }
+
+  .highlight-img img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .highlight-copy .hl-tag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #818cf8;
+    margin-bottom: 0.75rem;
+  }
+
+  .highlight-copy h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+  }
+
+  .highlight-copy p {
+    font-size: 0.925rem;
+    color: var(--text-mid);
+    line-height: 1.75;
+  }
+
+  .hl-points {
+    list-style: none;
+    margin-top: 1.25rem;
+  }
+
+  .hl-points li {
+    font-size: 0.875rem;
+    color: var(--text-mid);
+    padding: 0.35rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .hl-points li::before {
+    content: '→';
+    color: #818cf8;
+    flex-shrink: 0;
+    margin-top: 0.05em;
+  }
+
+  /* ---- Provider section ---- */
+  .provider-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+
+  .provider-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    transition: border-color 0.15s;
+  }
+
+  .provider-card:hover { border-color: var(--accent-border); }
+
+  .pc-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.3rem;
+  }
+
+  .pc-model {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .pc-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  .tag-rec { background: rgba(99,102,241,0.15); color: #818cf8; }
+  .tag-offline { background: rgba(34,197,94,0.12); color: #4ade80; }
+  .tag-neutral { background: rgba(255,255,255,0.06); color: var(--text-muted); }
+
+  /* ---- Download / CTA ---- */
+  .cta-section {
+    padding: 5rem 1.5rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-section h2 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, #fff 0%, #a1a1aa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .cta-section p {
+    font-size: 1.05rem;
+    color: var(--text-mid);
+    margin-bottom: 2.5rem;
+  }
+
+  .cta-meta {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    flex-wrap: wrap;
+  }
+
+  .cta-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .cta-meta-item i { color: var(--green); }
+
+  /* ---- Footer ---- */
+  .page-footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ---- Light theme ---- */
+  html[data-theme="light"] {
+    --bg: #ffffff;
+    --bg-card: #f4f4f5;
+    --bg-raised: #f9fafb;
+    --border: rgba(0,0,0,0.08);
+    --border-strong: rgba(0,0,0,0.15);
+    --text: #09090b;
+    --text-mid: #3f3f46;
+    --text-muted: #6b7280;
+  }
+
+  html[data-theme="light"] body {
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  html[data-theme="light"] .hero::before,
+  html[data-theme="light"] .cta-section::before {
+    background: radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%);
+  }
+
+  html[data-theme="light"] .entry-name,
+  html[data-theme="light"] .cta-section h2 {
+    background: linear-gradient(135deg, #09090b 0%, #52525b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  html[data-theme="light"] .entry-block {
+    border-bottom-color: rgba(0,0,0,0.12);
+  }
+
+  html[data-theme="light"] .hero-screenshot::before {
+    background: linear-gradient(135deg, rgba(99,102,241,0.35), rgba(99,102,241,0.03) 60%);
+  }
+
+  html[data-theme="light"] .btn-ghost { color: #3f3f46; }
+  html[data-theme="light"] .btn-ghost:hover { color: #09090b; }
+
+  @media (max-width: 760px) {
+    .entry-name { font-size: 3rem; }
+    .feature-cards { grid-template-columns: 1fr; }
+    .highlight-row, .highlight-row.flip { grid-template-columns: 1fr; direction: ltr; }
+    .provider-grid { grid-template-columns: 1fr 1fr; }
+    .section-title { font-size: 1.7rem; }
+  }
+
+  @media (max-width: 480px) {
+    .provider-grid { grid-template-columns: 1fr; }
+    .entry-name { font-size: 2.5rem; }
+    .cta-section h2 { font-size: 2rem; }
+  }
+</style>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="entry-block">
+    <div class="entry-label">v0.9 &nbsp;·&nbsp; Windows Desktop</div>
+    <h1 class="entry-name">MelliLex</h1>
+    <div class="entry-ipa">/ ˈmɛli.lɛks /</div>
+    <div class="entry-pos">noun &mdash; software</div>
+    <p class="entry-tagline">An AI-powered word and phrase explorer for Windows.<br>Ctrl+right-click any word, anywhere, and understand it completely.</p>
+  </div>
+  <div class="hero-actions">
+    <a class="btn-primary" href="https://github.com/trrahul/MelliLex/releases">
+      <i class="fas fa-download"></i>
+      Download for Windows
+    </a>
+    <a class="btn-ghost" href="https://github.com/trrahul/MelliLex">
+      <i class="fab fa-github"></i>
+      View on GitHub
+    </a>
+  </div>
+  <div class="platform-note">
+    <i class="fab fa-windows"></i>
+    Windows 10 / 11 &nbsp;·&nbsp; Free &nbsp;·&nbsp; MIT License
+  </div>
+  <div style="height: 3rem;"></div>
+  <div class="hero-screenshot">
+    <img
+      src="https://raw.githubusercontent.com/trrahul/MelliLex/main/img/screenshot1.png"
+      alt="MelliLex word lookup interface"
+    />
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Features -->
+<section>
+  <div class="container">
+    <div class="section-tag">Everything you need</div>
+    <h2 class="section-title">Look up anything.<br>Understand everything.</h2>
+    <p class="section-desc">
+      MelliLex goes beyond a definition. Every lookup gives you meanings, pronunciation, formality, usage domains, memory tips, and example sentences — all from one keystroke.
+    </p>
+
+    <div class="feature-cards">
+      <div class="feature-card">
+        <div class="fc-icon"><i class="fas fa-mouse-pointer"></i></div>
+        <div class="fc-title">Ctrl + Right-click</div>
+        <div class="fc-desc">Global hotkey that works in any application — browser, PDF reader, ebook, email client. No copy-paste needed.</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon"><i class="fas fa-camera"></i></div>
+        <div class="fc-title">OCR capture</div>
+        <div class="fc-desc">Automatically switches to OCR for non-selectable text — Kindle, Adobe Acrobat, Foxit, SumatraPDF.</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon"><i class="fas fa-quote-right"></i></div>
+        <div class="fc-title">Phrase support</div>
+        <div class="fc-desc">Full idiom analysis with literal meaning, origin story, register, and usage context.</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon"><i class="fas fa-compass"></i></div>
+        <div class="fc-title">Explore mode</div>
+        <div class="fc-desc">Dive deeper with formality analysis, domain examples, common mistakes, and practice exercises.</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon"><i class="fas fa-spell-check"></i></div>
+        <div class="fc-title">Spell check</div>
+        <div class="fc-desc">SymSpell-powered corrections before every lookup, so typos never return wrong results.</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon"><i class="fas fa-download"></i></div>
+        <div class="fc-title">Export</div>
+        <div class="fc-desc">Save results to Markdown, plain text, or directly to Capacities as a structured word note.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Global lookup highlight -->
+<section>
+  <div class="container">
+    <div class="highlight-row">
+      <div class="highlight-img">
+        <img src="https://raw.githubusercontent.com/trrahul/MelliLex/main/img/global-lookup.png" alt="Global lookup settings" />
+      </div>
+      <div class="highlight-copy">
+        <div class="hl-tag">Global lookup</div>
+        <h3>Works in every app on your system</h3>
+        <p>MelliLex registers a system-wide hook. Ctrl+right-click any word, in any window, and the result is on screen in seconds.</p>
+        <ul class="hl-points">
+          <li>No need to switch to a browser or dictionary app</li>
+          <li>Automatic OCR fallback for PDFs and ebooks</li>
+          <li>Runs quietly in the system tray — zero friction</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Explore mode highlight -->
+<section>
+  <div class="container">
+    <div class="highlight-row flip">
+      <div class="highlight-img">
+        <img src="https://raw.githubusercontent.com/trrahul/MelliLex/main/img/domains.png" alt="Domain examples in Explore mode" />
+      </div>
+      <div class="highlight-copy">
+        <div class="hl-tag">Explore mode</div>
+        <h3>Go deeper than the definition</h3>
+        <p>Explore mode unpacks a word across every dimension — where it's used, how to use it correctly, and how to make it stick.</p>
+        <ul class="hl-points">
+          <li>Domain breakdown: academic, legal, creative, business</li>
+          <li>Common mistakes with correct alternatives explained</li>
+          <li>AI-generated practice exercises, regenerated on demand</li>
+          <li>Formality score from casual to highly formal</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- AI Providers -->
+<section>
+  <div class="container">
+    <div class="section-tag">Powered by your AI</div>
+    <h2 class="section-title">Your key, your provider.</h2>
+    <p class="section-desc">
+      MelliLex works with any major AI provider — or with a local model via Ollama, completely offline and free.
+    </p>
+
+    <div class="provider-grid">
+      <div class="provider-card">
+        <div class="pc-name">Anthropic</div>
+        <div class="pc-model">Claude Haiku 4.5</div>
+        <span class="pc-tag tag-rec">recommended</span>
+      </div>
+      <div class="provider-card">
+        <div class="pc-name">Google Gemini</div>
+        <div class="pc-model">Gemini 2.5 Flash Lite</div>
+        <span class="pc-tag tag-rec">recommended</span>
+      </div>
+      <div class="provider-card">
+        <div class="pc-name">OpenAI</div>
+        <div class="pc-model">GPT-5 mini</div>
+        <span class="pc-tag tag-neutral">supported</span>
+      </div>
+      <div class="provider-card">
+        <div class="pc-name">Ollama</div>
+        <div class="pc-model">any local model</div>
+        <span class="pc-tag tag-offline">offline</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CTA / Download -->
+<section class="cta-section">
+  <h2>Start reading better.</h2>
+  <p>Download MelliLex and understand every word you read — instantly, without leaving your flow.</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="https://github.com/trrahul/MelliLex/releases">
+      <i class="fas fa-download"></i>
+      Download for Windows
+    </a>
+    <a class="btn-ghost" href="https://github.com/trrahul/MelliLex">
+      <i class="fab fa-github"></i>
+      GitHub
+    </a>
+  </div>
+  <div class="cta-meta">
+    <span class="cta-meta-item"><i class="fas fa-check-circle"></i> Windows 10 / 11</span>
+    <span class="cta-meta-item"><i class="fas fa-check-circle"></i> No subscription</span>
+    <span class="cta-meta-item"><i class="fas fa-check-circle"></i> MIT License</span>
+    <span class="cta-meta-item"><i class="fas fa-check-circle"></i> 11 UI languages</span>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="page-footer">
+  <span>MelliLex · MIT License</span>
+  <span><a href="https://github.com/trrahul/MelliLex">github.com/trrahul/MelliLex</a></span>
+</footer>

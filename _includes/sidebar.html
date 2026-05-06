@@ -47,6 +47,8 @@
         <!-- SharpFocus goes in Apps section, skip here -->
       {% elsif tab_title == "Playground" or tab_name == "playground" %}
         <!-- Playground goes in Apps section, skip here -->
+      {% elsif tab_title == "MelliLex" or tab_name == "mellilex" %}
+        <!-- MelliLex goes in Apps section, skip here -->
       {% else %}
         <a href="{{ tab.url | relative_url }}" class="nav-item{% if tab.url == page.url %} active{% endif %}">
           <span class="nav-icon"><i class="{{ tab_icon }}"></i></span>
@@ -72,6 +74,11 @@
       {% elsif tab_title == "Playground" or tab_name == "playground" %}
         <a href="{{ tab.url | relative_url }}" class="nav-item{% if tab.url == page.url %} active{% endif %}">
           <span class="nav-icon"><i class="fa-solid fa-flask"></i></span>
+          <span>{{ tab_title }}</span>
+        </a>
+      {% elsif tab_title == "MelliLex" or tab_name == "mellilex" %}
+        <a href="{{ tab.url | relative_url }}" class="nav-item{% if tab.url == page.url %} active{% endif %}">
+          <span class="nav-icon"><i class="fa-solid fa-book-open"></i></span>
           <span>{{ tab_title }}</span>
         </a>
       {% endif %}
