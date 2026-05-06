@@ -1,7 +1,7 @@
 ---
 layout: post
 title: HTTP/2 Multiplexing
-date: 2026-05-05 19:08:08 +05:30
+date: 2026-01-09 19:08:08 +05:30
 categories: [Programming]
 tags: []
 mermaid: true

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "'I am the exception because I am in control'"
-date: 2026-05-05 18:15:24 +05:30
+date: 2026-01-25 18:15:24 +05:30
 categories: [Psychology]
 tags: []
 ---

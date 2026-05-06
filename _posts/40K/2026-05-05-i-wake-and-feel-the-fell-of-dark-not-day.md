@@ -1,7 +1,7 @@
 ---
 layout: post-w40k
 title: I wake and feel the fell of dark, not day
-date: 2026-05-05 22:37:46 +05:30
+date: 2026-04-01 22:37:46 +05:30
 categories: [Warhammer40K]
 tags: []
 ---

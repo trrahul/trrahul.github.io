@@ -1,7 +1,7 @@
 ---
 layout: post
 title: The principle of least surprise
-date: 2026-05-05 17:49:51 +05:30
+date: 2026-03-05 17:49:51 +05:30
 categories: [Design]
 tags: []
 ---

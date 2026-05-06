@@ -1,7 +1,7 @@
 ---
 layout: post
 title: On Technical Lock
-date: 2026-05-05 18:37:50 +05:30
+date: 2026-03-13 18:37:50 +05:30
 categories: [Psychology]
 tags: []
 ---

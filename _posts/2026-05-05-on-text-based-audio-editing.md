@@ -1,7 +1,7 @@
 ---
 layout: post
 title: On text-based audio editing
-date: 2026-05-05 17:11:05 +05:30
+date: 2025-04-14 17:11:05 +05:30
 categories: [Design]
 tags: []
 ---

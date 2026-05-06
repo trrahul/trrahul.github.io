@@ -1,8 +1,8 @@
 ---
 layout: post
 title: Bikeshedding - Parkinson's Law of Triviality
-date: 2026-05-05 17:56:53 +05:30
-categories: []
+date: 2025-12-01 17:56:53 +05:30
+categories: [Psychology]
 tags: []
 ---
 In 1957, C. Northcote Parkinson wrote about a fictional committee tasked with approving a nuclear power plant. The committee spent almost no time on the reactor. It was too complex, too abstract, too far outside the members' experience. But the bicycle shed for the plant's staff? That they could discuss. Everyone had opinions about roofing materials and paint colors. The meeting ran long.

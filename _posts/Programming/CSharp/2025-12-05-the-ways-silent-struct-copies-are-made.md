@@ -1,7 +1,7 @@
 ---
 layout: post
 title: The ways silent struct copies are made
-date: 2025-12-05 14:11:31 +05:30
+date: 2026-05-01 14:11:31 +05:30
 categories: [Programming, CSharp]
 tags: [c#, programming]
 ---

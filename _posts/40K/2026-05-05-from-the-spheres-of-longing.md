@@ -1,7 +1,7 @@
 ---
 layout: post-w40k
 title: I Was Liberated
-date: 2026-05-05 23:50:11 +05:30
+date: 2026-04-07 23:50:11 +05:30
 categories: [Warhammer40K]
 tags: []
 ---
