@@ -1,0 +1,258 @@
+/* Mermaid diagram styling — global, theme-aware
+ *
+ * Approach: Chirpy initializes Mermaid with theme 'default' (light) or 'dark'
+ * and re-initializes when the user toggles. We let it do that, then override
+ * the rendered SVG with our own palette so diagrams match the site instead
+ * of the stock Mermaid look. Colors are driven by CSS variables that flip
+ * with [data-mode='dark'], so a single set of selectors covers both modes.
+ */
+
+/* ---- Palette (light mode defaults) ---- */
+:root {
+  --mmd-bg: #f5f7fa;
+  --mmd-border: #e2e8f0;
+  --mmd-shadow: 0 1px 2px rgba(15, 17, 26, 0.04);
+
+  --mmd-node-fill: #ffffff;
+  --mmd-node-stroke: #2563eb;
+  --mmd-node-text: #1a202c;
+
+  --mmd-cluster-fill: #eef2ff;
+  --mmd-cluster-stroke: #94a3b8;
+  --mmd-cluster-text: #475569;
+
+  --mmd-edge: #2563eb;
+  --mmd-edge-text: #1a202c;
+
+  --mmd-actor-fill: #ffffff;
+  --mmd-actor-stroke: #2563eb;
+  --mmd-actor-text: #1a202c;
+  --mmd-actor-line: #94a3b8;
+
+  --mmd-signal: #2563eb;
+  --mmd-signal-text: #1a202c;
+
+  --mmd-note-fill: #fef3c7;
+  --mmd-note-stroke: #f59e0b;
+  --mmd-note-text: #78350f;
+
+  --mmd-loop-line: #94a3b8;
+  --mmd-loop-text: #475569;
+}
+
+/* ---- Palette (dark mode overrides) ---- */
+[data-mode='dark'] {
+  --mmd-bg: #0f111a;
+  --mmd-border: #1a202c;
+  --mmd-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+
+  --mmd-node-fill: #1a202c;
+  --mmd-node-stroke: #7aa2f7;
+  --mmd-node-text: #c0caf5;
+
+  --mmd-cluster-fill: #0f111a;
+  --mmd-cluster-stroke: #565f89;
+  --mmd-cluster-text: #c0caf5;
+
+  --mmd-edge: #7aa2f7;
+  --mmd-edge-text: #c0caf5;
+
+  --mmd-actor-fill: #1a202c;
+  --mmd-actor-stroke: #7aa2f7;
+  --mmd-actor-text: #c0caf5;
+  --mmd-actor-line: #565f89;
+
+  --mmd-signal: #7aa2f7;
+  --mmd-signal-text: #c0caf5;
+
+  --mmd-note-fill: #0f111a;
+  --mmd-note-stroke: #8b5cf6;
+  --mmd-note-text: #c4b5fd;
+
+  --mmd-loop-line: #565f89;
+  --mmd-loop-text: #c4b5fd;
+}
+
+/* ---- Container ---- */
+pre.mermaid,
+.mermaid {
+  background: var(--mmd-bg) !important;
+  border: 1px solid var(--mmd-border);
+  border-radius: 6px;
+  box-shadow: var(--mmd-shadow);
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+  text-align: center;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  overflow-x: auto;
+
+  /* Hide raw fenced text while Mermaid is still rendering. */
+  &:not([data-processed='true']) {
+    color: transparent;
+    user-select: none;
+  }
+}
+
+/* ---- Rendered SVG: typography ---- */
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+
+  text,
+  .nodeLabel,
+  .edgeLabel,
+  .cluster-label,
+  .messageText,
+  .loopText,
+  .noteText,
+  .actor,
+  .labelText,
+  .titleText,
+  .sectionTitle {
+    font-family:
+      'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace !important;
+    font-size: 13px !important;
+  }
+}
+
+/* ---- Flowchart nodes ---- */
+.mermaid svg .node {
+  rect,
+  polygon,
+  circle,
+  ellipse,
+  path {
+    fill: var(--mmd-node-fill) !important;
+    stroke: var(--mmd-node-stroke) !important;
+    stroke-width: 1px !important;
+  }
+
+  .label,
+  .nodeLabel,
+  foreignObject span,
+  foreignObject p {
+    color: var(--mmd-node-text) !important;
+    fill: var(--mmd-node-text) !important;
+  }
+}
+
+/* ---- Flowchart edges ---- */
+.mermaid svg {
+  .edgePath .path,
+  .flowchart-link {
+    stroke: var(--mmd-edge) !important;
+    stroke-width: 1.25px !important;
+    fill: none !important;
+  }
+
+  .arrowheadPath,
+  marker path {
+    fill: var(--mmd-edge) !important;
+    stroke: var(--mmd-edge) !important;
+  }
+
+  .edgeLabel {
+    background-color: var(--mmd-bg) !important;
+    color: var(--mmd-edge-text) !important;
+
+    rect {
+      fill: var(--mmd-bg) !important;
+    }
+
+    foreignObject span,
+    foreignObject p {
+      color: var(--mmd-edge-text) !important;
+      background-color: var(--mmd-bg) !important;
+    }
+  }
+}
+
+/* ---- Flowchart clusters / subgraphs ---- */
+.mermaid svg .cluster {
+  rect {
+    fill: var(--mmd-cluster-fill) !important;
+    stroke: var(--mmd-cluster-stroke) !important;
+    stroke-dasharray: 3 2 !important;
+  }
+
+  .cluster-label,
+  text,
+  foreignObject span,
+  foreignObject p {
+    color: var(--mmd-cluster-text) !important;
+    fill: var(--mmd-cluster-text) !important;
+  }
+}
+
+/* ---- Sequence diagram: actors ---- */
+.mermaid svg {
+  rect.actor,
+  .actor {
+    fill: var(--mmd-actor-fill) !important;
+    stroke: var(--mmd-actor-stroke) !important;
+  }
+
+  text.actor,
+  .actor > tspan {
+    fill: var(--mmd-actor-text) !important;
+    stroke: none !important;
+  }
+
+  line.actor-line,
+  .actor-line {
+    stroke: var(--mmd-actor-line) !important;
+  }
+}
+
+/* ---- Sequence diagram: messages ---- */
+.mermaid svg {
+  .messageLine0,
+  .messageLine1 {
+    stroke: var(--mmd-signal) !important;
+  }
+
+  text.messageText {
+    fill: var(--mmd-signal-text) !important;
+    stroke: none !important;
+  }
+}
+
+/* ---- Sequence diagram: notes ---- */
+.mermaid svg {
+  .note,
+  rect.note {
+    fill: var(--mmd-note-fill) !important;
+    stroke: var(--mmd-note-stroke) !important;
+  }
+
+  text.noteText,
+  .noteText > tspan {
+    fill: var(--mmd-note-text) !important;
+    stroke: none !important;
+  }
+}
+
+/* ---- Sequence diagram: loops / par / alt blocks ---- */
+.mermaid svg {
+  .labelBox {
+    fill: var(--mmd-cluster-fill) !important;
+    stroke: var(--mmd-loop-line) !important;
+  }
+
+  .labelText,
+  text.labelText {
+    fill: var(--mmd-loop-text) !important;
+    stroke: none !important;
+  }
+
+  .loopLine {
+    stroke: var(--mmd-loop-line) !important;
+    fill: none !important;
+  }
+
+  text.loopText,
+  .loopText > tspan {
+    fill: var(--mmd-loop-text) !important;
+    stroke: none !important;
+  }
+}

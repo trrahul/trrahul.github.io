@@ -1,0 +1,483 @@
+// ============================================================
+// W40K Post — Cogitator Terminal Aesthetic
+// Layout:  .w40k-reading body + .w40k-post-wrapper (stripped chrome)
+// Content: .w40k-post .content (scoped markdown overrides)
+//
+// Light mode: amber phosphor — "dataslate printout"
+// Dark mode:  green phosphor — "active cogitator screen"
+// ============================================================
+
+$mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+$sans:
+  'IBM Plex Sans',
+  -apple-system,
+  BlinkMacSystemFont,
+  'Segoe UI',
+  sans-serif;
+
+// OpenType feature presets
+$mono-features:
+  'kern' 1,
+  'liga' 0,
+  'calt' 1,
+  'tnum' 1,
+  'zero' 1,
+  'ss01' 1;
+$sans-body-features:
+  'kern' 1,
+  'liga' 1,
+  'calt' 1,
+  'onum' 1;
+$mono-caps-features:
+  'kern' 1,
+  'liga' 0,
+  'calt' 1,
+  'tnum' 1,
+  'zero' 1,
+  'ss02' 1;
+
+// ── CSS custom properties (light / dark) ─────────────────────
+
+html {
+  @media (prefers-color-scheme: light) {
+    &:not([data-mode]),
+    &[data-mode='light'] {
+      // amber phosphor palette
+      --wcog-hi: #c09030;
+      --wcog-mid: #7a5c1a;
+      --wcog-block-bg: rgba(192, 144, 48, 0.05);
+      --wcog-block-br: rgba(192, 144, 48, 0.25);
+      --wcog-block-rule: rgba(192, 144, 48, 0.2);
+      --wcog-block-attr: rgba(192, 144, 48, 0.15);
+      --wcog-h2-bg: rgba(192, 144, 48, 0.08);
+      --wcog-em-bg: rgba(192, 144, 48, 0.08);
+      --wcog-text: #3a3530;
+      --wcog-heading: #1e1c1a;
+      --wcog-glow: none;
+      --wcog-glow-mid: none;
+      --wcog-glow-em: none;
+    }
+
+    &[data-mode='dark'] {
+      // green phosphor palette
+      --wcog-hi: #a0c040;
+      --wcog-mid: #5a8030;
+      --wcog-block-bg: rgba(80, 120, 30, 0.08);
+      --wcog-block-br: rgba(100, 140, 40, 0.3);
+      --wcog-block-rule: rgba(100, 140, 40, 0.25);
+      --wcog-block-attr: rgba(100, 140, 40, 0.2);
+      --wcog-h2-bg: rgba(80, 120, 30, 0.12);
+      --wcog-em-bg: rgba(80, 120, 30, 0.12);
+      --wcog-text: #7a9a50;
+      --wcog-heading: #a0c040;
+      --wcog-glow: 0 0 10px rgba(120, 180, 50, 0.35);
+      --wcog-glow-mid: 0 0 8px rgba(140, 200, 50, 0.5);
+      --wcog-glow-em: 0 0 8px rgba(140, 200, 50, 0.4);
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    &:not([data-mode]),
+    &[data-mode='dark'] {
+      // green phosphor palette
+      --wcog-hi: #a0c040;
+      --wcog-mid: #5a8030;
+      --wcog-block-bg: rgba(80, 120, 30, 0.08);
+      --wcog-block-br: rgba(100, 140, 40, 0.3);
+      --wcog-block-rule: rgba(100, 140, 40, 0.25);
+      --wcog-block-attr: rgba(100, 140, 40, 0.2);
+      --wcog-h2-bg: rgba(80, 120, 30, 0.12);
+      --wcog-em-bg: rgba(80, 120, 30, 0.12);
+      --wcog-text: #7a9a50;
+      --wcog-heading: #a0c040;
+      --wcog-glow: 0 0 10px rgba(120, 180, 50, 0.35);
+      --wcog-glow-mid: 0 0 8px rgba(140, 200, 50, 0.5);
+      --wcog-glow-em: 0 0 8px rgba(140, 200, 50, 0.4);
+    }
+
+    &[data-mode='light'] {
+      // amber phosphor palette
+      --wcog-hi: #c09030;
+      --wcog-mid: #7a5c1a;
+      --wcog-block-bg: rgba(192, 144, 48, 0.05);
+      --wcog-block-br: rgba(192, 144, 48, 0.25);
+      --wcog-block-rule: rgba(192, 144, 48, 0.2);
+      --wcog-block-attr: rgba(192, 144, 48, 0.15);
+      --wcog-h2-bg: rgba(192, 144, 48, 0.08);
+      --wcog-em-bg: rgba(192, 144, 48, 0.08);
+      --wcog-text: #3a3530;
+      --wcog-heading: #1e1c1a;
+      --wcog-glow: none;
+      --wcog-glow-mid: none;
+      --wcog-glow-em: none;
+    }
+  }
+}
+
+// ── Scoped element styles ─────────────────────────────────────
+
+.w40k-post .content {
+  // ── blockquote: cogitator output block ───────────────────────
+  blockquote {
+    font-family: $mono;
+    font-size: 0.8125rem;
+    line-height: 1.72;
+    font-feature-settings: #{$mono-features};
+    font-variant-ligatures: no-common-ligatures;
+    background: var(--wcog-block-bg);
+    border: 1px solid var(--wcog-block-br) !important; // full box, overrides Chirpy's left-bar
+    border-radius: 2px;
+    padding: 1rem 1.15rem;
+    margin: 1.5rem 0;
+    color: var(--wcog-text);
+    text-shadow: var(--wcog-glow);
+    position: relative;
+    font-style: normal;
+    text-wrap: pretty;
+    hyphens: none;
+
+    // "COGITATOR OUTPUT ///" header stamp
+    &::before {
+      content: 'EXTRACT ///';
+      display: block;
+      font-family: $mono;
+      font-size: 0.5625rem;
+      letter-spacing: 0.18em;
+      color: var(--wcog-hi);
+      opacity: 0.8;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--wcog-block-rule);
+      text-shadow: var(--wcog-glow-mid);
+      font-style: normal;
+      font-feature-settings: #{$mono-caps-features};
+    }
+
+    // body paragraphs
+    p:not(:last-child) {
+      margin-bottom: 0.45rem;
+    }
+
+    // last paragraph = attribution / source tag (only when preceded by other paragraphs)
+    p:last-child:not(:only-child) {
+      font-size: 0.6875rem;
+      letter-spacing: 0.04em;
+      color: var(--wcog-mid);
+      margin-top: 0.75rem;
+      margin-bottom: 0;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--wcog-block-attr);
+      text-shadow: none;
+
+      &::before {
+        content: '» SRC: ';
+        letter-spacing: 0.1em;
+        opacity: 0.7;
+      }
+    }
+  }
+
+  // ── hr: ornamental separator ──────────────────────────────────
+  hr {
+    border: none;
+    height: 1.5rem;
+    overflow: visible;
+    text-align: center;
+    margin: 2.25rem 0;
+    background: none;
+
+    &::before {
+      content: '\2500\2500\2500\2500\2500\2500\2500\2500\2500\2500\2500\2500\2500\2500\2500\2500 \25C8 \2500\2500\2500\2500\2500\2500\2500\2500\2500\2500\2500\2500\2500\2500\2500\2500';
+      display: inline;
+      font-family: $mono;
+      font-size: 0.625rem;
+      color: var(--wcog-hi);
+      opacity: 0.55;
+      letter-spacing: 0.06em;
+      line-height: 1.5rem;
+    }
+  }
+
+  // ── h2: section header block ──────────────────────────────────
+  h2 {
+    font-family: $mono;
+    font-size: 0.78125rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--wcog-heading);
+    margin: 2.5rem 0 0.85rem;
+    padding: 0.5rem 0.85rem;
+    background: var(--wcog-h2-bg);
+    border-left: 2px solid var(--wcog-hi);
+    border-bottom: none; // kill any Chirpy underline
+    text-shadow: var(--wcog-glow-mid);
+    font-feature-settings: #{$mono-caps-features};
+    text-wrap: balance;
+
+    &::before {
+      content: '\00A7\00A0'; // § + non-breaking space
+      color: var(--wcog-hi);
+      opacity: 0.75;
+      letter-spacing: 0;
+      margin-right: 0.15em;
+    }
+
+    &::after {
+      display: none; // remove any theme pseudo-underlines
+    }
+  }
+
+  // ── h3: sub-section label ─────────────────────────────────────
+  h3 {
+    font-family: $mono;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--wcog-mid);
+    margin: 1.75rem 0 0.55rem;
+    border-bottom: none;
+    text-shadow: none;
+    font-feature-settings: #{$mono-caps-features};
+    text-wrap: balance;
+
+    &::before {
+      content: '\25B8\00A0'; // ▸ + non-breaking space
+      letter-spacing: 0;
+    }
+  }
+
+  // ── em: in-universe term — styled as inline mono tag ─────────
+  em {
+    font-style: normal;
+    font-family: $mono;
+    font-size: 0.86em;
+    color: var(--wcog-mid);
+    background: var(--wcog-em-bg);
+    padding: 0.08em 0.32em;
+    border-radius: 2px;
+    letter-spacing: 0.01em;
+    text-shadow: var(--wcog-glow-em);
+    font-feature-settings: #{$mono-features};
+    word-break: keep-all;
+  }
+
+  // ── strong: highlighted data point ───────────────────────────
+  strong {
+    font-weight: 600;
+    font-family: $mono;
+    font-size: 0.88em;
+    color: var(--wcog-heading);
+    letter-spacing: 0.04em;
+    text-shadow: var(--wcog-glow);
+    font-feature-settings: #{$mono-features};
+  }
+
+  // ── paragraph body text ───────────────────────────────────────
+  p {
+    font-size: 1rem;
+    line-height: 1.78;
+    color: var(--wcog-text);
+    margin: 0 0 1.1rem;
+    text-wrap: pretty;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphenate-limit-chars: 8 4 4;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  // tighten the first paragraph after a heading
+  h2 + p,
+  h3 + p {
+    margin-top: 0;
+  }
+
+  // ── inline code: cogitator data fragment ─────────────────────
+  code {
+    font-family: $mono;
+    font-size: 0.86em;
+    color: var(--wcog-mid);
+    background: var(--wcog-em-bg);
+    padding: 0.08em 0.32em;
+    border-radius: 2px;
+    font-feature-settings: #{$mono-features};
+  }
+
+  // ── anchor: dataslate cross-reference ────────────────────────
+  a {
+    color: var(--wcog-hi);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--wcog-block-br);
+    transition:
+      border-color 0.15s,
+      color 0.15s;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--wcog-hi);
+      border-bottom-color: var(--wcog-hi);
+      text-shadow: var(--wcog-glow-mid);
+    }
+  }
+
+  // ── lists ────────────────────────────────────────────────────
+  ul,
+  ol {
+    padding-left: 1.5rem;
+    margin: 0 0 1.1rem;
+
+    li {
+      font-size: 1rem;
+      line-height: 1.78;
+      color: var(--wcog-text);
+      margin-bottom: 0.35rem;
+      text-wrap: pretty;
+
+      &::marker {
+        color: var(--wcog-hi);
+        font-family: $mono;
+        font-size: 0.85em;
+      }
+    }
+  }
+}
+
+// ── Stripped layout: body + wrapper ──────────────────────────
+
+body.w40k-reading {
+  margin: 0;
+  padding: 0;
+
+  // light: warm off-white
+  background: #f3f0e8;
+  color: #3a3530;
+
+  // suppress any Chirpy global body rules
+  font-family: $sans;
+  font-feature-settings: #{$sans-body-features};
+  font-optical-sizing: auto;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  hanging-punctuation: first last;
+
+  ::selection {
+    background: var(--wcog-em-bg);
+    color: var(--wcog-heading);
+    text-shadow: none;
+  }
+}
+
+// dark mode
+@media (prefers-color-scheme: dark) {
+  html:not([data-mode]) body.w40k-reading,
+  html[data-mode='dark'] body.w40k-reading {
+    background: #0c0e12;
+    color: #7a9a50;
+  }
+}
+
+html[data-mode='dark'] body.w40k-reading {
+  background: #0c0e12;
+  color: #7a9a50;
+}
+
+.w40k-post-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 4rem 1.5rem 8rem;
+
+  @media (max-width: 600px) {
+    padding: 2.5rem 1.15rem 5rem;
+  }
+}
+
+article.w40k-post {
+  width: 100%;
+  max-width: 64ch; // measure: ~64 characters at body size
+}
+
+// ── Back nav ────────────────────────────────────────────────
+
+.w40k-back-nav {
+  margin-bottom: 2rem;
+}
+
+.w40k-back-link {
+  font-family: $mono;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  color: var(--wcog-mid);
+  opacity: 0.75;
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 1;
+    color: var(--wcog-hi);
+    text-decoration: none;
+  }
+}
+
+// ── Post title ───────────────────────────────────────────────
+
+.w40k-post-title {
+  font-family: $mono;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wcog-hi);
+  margin: 0 0 2.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--wcog-block-br);
+  text-shadow: var(--wcog-glow-mid);
+  text-wrap: balance;
+  font-feature-settings: #{$mono-caps-features};
+
+  &::before {
+    content: '// ';
+    opacity: 0.5;
+    letter-spacing: 0;
+    margin-right: 0.1em;
+  }
+
+  @media (max-width: 600px) {
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+  }
+}
+
+// ── Responsive tightening for small screens ──────────────────
+
+@media (max-width: 600px) {
+  .w40k-post .content {
+    p,
+    li {
+      font-size: 0.9375rem;
+      line-height: 1.7;
+    }
+
+    blockquote {
+      font-size: 0.75rem;
+      padding: 0.85rem 0.95rem;
+    }
+
+    h2 {
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      padding: 0.45rem 0.7rem;
+    }
+
+    h3 {
+      font-size: 0.65rem;
+    }
+  }
+}

@@ -21,7 +21,7 @@
       },
       "problemMatcher": []
     },
-    
+
     // AZURE FUNCTION
     {
       "label": "Azure: Start Function",
@@ -44,7 +44,7 @@
         "group": "azure"
       }
     },
-    
+
     // JEKYLL
     {
       "label": "Jekyll: Serve",
@@ -75,7 +75,7 @@
       "command": "set JEKYLL_ENV=production && bundle exec jekyll build",
       "problemMatcher": []
     },
-    
+
     // BLAZOR PLAYGROUND
     {
       "label": "Blazor: Build & Deploy",
@@ -83,17 +83,12 @@
       "command": ".\\build-playground.ps1",
       "problemMatcher": []
     },
-    
+
     // CONTENT MANAGEMENT
     {
       "label": "Content: Create New Post",
       "type": "shell",
-      "command": "powershell",
-      "args": [
-        "-NoProfile",
-        "-Command",
-        "$title = Read-Host 'Enter post title'; $slug = $title.ToLower() -replace '[^a-z0-9\\s-]','' -replace '\\s+','-'; $date = Get-Date -Format 'yyyy-MM-dd'; $datetime = Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz'; $filename = \"_posts/$date-$slug.md\"; $content = @\"\n---\nlayout: post\ntitle: $title\ndate: $datetime\ncategories: []\ntags: []\n---\n\n\"@; New-Item -Path $filename -ItemType File -Value $content -Force; code $filename"
-      ],
+      "command": ".\\new-post.ps1",
       "problemMatcher": []
     }
   ]

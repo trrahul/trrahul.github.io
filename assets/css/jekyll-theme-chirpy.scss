@@ -21,6 +21,9 @@
 @use 'addon/github-code-embed'; // GitHub code embed with syntax highlighting
 @use 'addon/topbar-overrides'; // Topbar spacing/title alignment tweaks
 @use 'addon/sidebar'; // Terminal-style sidebar navigation
+@use 'addon/codeblock'; // Code block shell — V2 terminal prompt header
+@use 'addon/mermaid'; // Mermaid diagram container (Tokyo Night palette)
+@use 'addon/post-w40k'; // W40K post — cogitator terminal aesthetic
 
 /* Page-specific Styles */
 @use 'addon/page-home'; // Home page: post cards, category filter

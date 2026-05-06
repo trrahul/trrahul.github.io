@@ -9,7 +9,7 @@ panel_includes:
 
 {% include toc-status.html %}
 
-<article class="px-1" data-toc="{{ enable_toc }}">
+<article class="px-1{% if page.categories contains 'Warhammer40K' %} w40k-post{% endif %}" data-toc="{{ enable_toc }}">
 
   <!-- Terminal command interface -->
   {% include terminal-header.html

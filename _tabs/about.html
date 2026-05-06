@@ -188,11 +188,62 @@ html:not([data-mode]) .link-list a {
   .about-page {
     padding: 1.5rem;
   }
-  
+
   .link-list {
     flex-direction: column;
     gap: 0.5rem;
   }
+}
+
+/* W40K entry — cogitator terminal override */
+.feature-list li.w40k-entry {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  margin-top: 0.2rem;
+  margin-bottom: 0;
+  padding: 0.45rem 0.55rem;
+  border-radius: 2px;
+  gap: 0.75rem;
+  transition: background 0.15s;
+}
+
+.feature-list li.w40k-entry::before {
+  content: none;
+}
+
+.feature-list li.w40k-entry::after {
+  content: '▸';
+  order: -1;
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  line-height: 1;
+  display: block;
+}
+
+/* W40K entry — light (amber phosphor) */
+[data-mode="light"] .feature-list li.w40k-entry,
+html:not([data-mode]) .feature-list li.w40k-entry {
+  color: #7a5c1a;
+  background: rgba(192, 144, 48, 0.06);
+  border: 1px solid rgba(192, 144, 48, 0.22);
+}
+
+[data-mode="light"] .feature-list li.w40k-entry::after,
+html:not([data-mode]) .feature-list li.w40k-entry::after {
+  color: #c09030;
+}
+
+/* W40K entry — dark (green phosphor) */
+[data-mode="dark"] .feature-list li.w40k-entry {
+  color: #7a9a50;
+  background: rgba(80, 120, 30, 0.1);
+  border: 1px solid rgba(100, 140, 40, 0.28);
+}
+
+[data-mode="dark"] .feature-list li.w40k-entry::after {
+  color: #a0c040;
+  text-shadow: 0 0 8px rgba(140, 200, 50, 0.6);
 }
 
 /* System preference fallback */
@@ -200,34 +251,45 @@ html:not([data-mode]) .link-list a {
   html:not([data-mode]) .about-page {
     background: linear-gradient(180deg, rgba(15, 17, 26, 0.95) 0%, transparent 100%);
   }
-  
+
   html:not([data-mode]) .about-page::before {
     background: linear-gradient(180deg, rgba(125, 207, 255, 0.03) 0%, transparent 100%);
   }
-  
+
   html:not([data-mode]) .section-label {
     color: #7dcfff;
   }
-  
+
   html:not([data-mode]) .section-label::before {
     background: #7dcfff;
   }
-  
+
   html:not([data-mode]) .content-text {
     color: #a9b1d6;
   }
-  
+
   html:not([data-mode]) .feature-list li {
     color: #c0caf5;
   }
-  
+
   html:not([data-mode]) .feature-list li::before {
     background: #7dcfff;
     box-shadow: 0 0 6px #7dcfff;
   }
-  
+
   html:not([data-mode]) .link-list a {
     color: #7dcfff;
+  }
+
+  html:not([data-mode]) .feature-list li.w40k-entry {
+    color: #7a9a50;
+    background: rgba(80, 120, 30, 0.1);
+    border: 1px solid rgba(100, 140, 40, 0.28);
+  }
+
+  html:not([data-mode]) .feature-list li.w40k-entry::after {
+    color: #a0c040;
+    text-shadow: 0 0 8px rgba(140, 200, 50, 0.6);
   }
 }
 </style>
@@ -237,20 +299,22 @@ html:not([data-mode]) .link-list a {
     <div class="section-label">What This Is</div>
     <p class="content-text">Linked notes on things I want to remember. Most posts are written for "future me", but I try to keep them readable for anyone.</p>
   </div>
-  
+
   <div class="section-block">
     <div class="section-label">What You'll Find Here</div>
     <ul class="feature-list">
       <li>Literature notes</li>
       <li>Programming notes and experiments</li>
+      <li class="w40k-entry">Lore from the 41st Millennium</li>
     </ul>
   </div>
-  
+
   <div class="section-block">
     <div class="section-label">Connect</div>
     <ul class="link-list">
       <li><a href="https://github.com/trrahul" target="_blank" rel="noopener noreferrer">GitHub</a></li>
       <li><a href="https://www.linkedin.com/in/rahul-tr-83017246" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+      <li><a href="https://www.goodreads.com/user/show/30436173-rahul-tr" target="_blank" rel="noopener noreferrer">Goodreads</a></li>
     </ul>
   </div>
 </div>

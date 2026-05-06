@@ -11,7 +11,9 @@
 body {
   line-height: 1.8;
   letter-spacing: -0.011em;
-  font-feature-settings: 'liga' 1, 'calt' 1;
+  font-feature-settings:
+    'liga' 1,
+    'calt' 1;
 }
 
 /* ============================================
@@ -19,7 +21,12 @@ body {
    ============================================ */
 
 /* Base heading styles */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   /* Note: font-family is set in font-alternatives.scss */
   color: var(--heading-color);
   font-weight: 600 !important;
@@ -27,20 +34,25 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Heading color variables */
-[data-mode="light"] {
+[data-mode='light'] {
   --heading-color: #444; /* Softer gray instead of dark blue-black */
 }
 
-[data-mode="dark"] {
+[data-mode='dark'] {
   --heading-color: #e0e0e0; /* Slightly softer white */
 }
 
 /* Heading opacity adjustments */
-[data-mode="dark"] {
-  h1, h2, h3, h4, h5, h6 {
+[data-mode='dark'] {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     opacity: 0.92; /* Consistent across all headings */
   }
-  
+
   .content,
   #post-wrapper,
   #archives,
@@ -50,8 +62,13 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-[data-mode="light"] {
-  h1, h2, h3, h4, h5, h6 {
+[data-mode='light'] {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     opacity: 0.92; /* Consistent across all headings */
   }
 }
@@ -117,7 +134,6 @@ header .post-desc,
    CONTENT & PARAGRAPHS
    ============================================ */
 
-
 .content {
   font-size: 1.08rem;
   line-height: 1.75;
@@ -137,13 +153,16 @@ header .post-desc,
   font-weight: 600;
 }
 
-
 code,
 pre,
 kbd,
 samp {
-  font-family: 'JetBrains Mono', 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-  font-feature-settings: 'liga' 1, 'calt' 1;
+  font-family:
+    'JetBrains Mono', 'SF Mono', Monaco, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
+  font-feature-settings:
+    'liga' 1,
+    'calt' 1;
 }
 
 code.highlighter-rouge {
@@ -166,21 +185,20 @@ pre code {
 
 div[class^='language-'] {
   border-radius: 8px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
-
 
 a {
   font-weight: 500;
 }
-
 
 header .post-desc {
   font-size: 1.1875rem;
   line-height: 1.65;
   font-weight: 400;
 }
-
 
 #sidebar .site-title {
   font-weight: 800;
@@ -196,17 +214,16 @@ header .post-desc {
   font-weight: 500;
 }
 
-
 /* ============================================
    HOME PAGE POST LISTING
    ============================================ */
 
 /* Home page post listing - lighter, more refined */
-#post-list .card .card-title {
-  font-size: 1.25rem;
+#post-list .card .card-body .card-title {
+  font-size: 1rem;
   font-weight: 600;
   letter-spacing: -0.01em;
-  line-height: 1.45;
+  line-height: 1.4;
   opacity: 0.88; /* Even lighter for card titles (from lighter-headings.scss) */
 }
 
@@ -222,7 +239,6 @@ header .post-desc {
   font-weight: 400;
 }
 
-
 /* Enhanced keyboard shortcuts - minimal, modern */
 kbd {
   font-family: 'JetBrains Mono', 'SF Mono', Monaco, Consolas, monospace;
@@ -234,27 +250,25 @@ kbd {
   background: var(--kbd-bg-color);
   color: var(--kbd-text-color);
   border: 1px solid var(--kbd-wrap-color);
-  box-shadow: 
+  box-shadow:
     0 1px 0 0 var(--kbd-wrap-color),
     0 2px 3px rgba(0, 0, 0, 0.12);
   transition: all 0.15s ease;
-  
+
   /* Subtle 3D effect */
   &:hover {
     transform: translateY(1px);
-    box-shadow: 
+    box-shadow:
       0 0 0 0 var(--kbd-wrap-color),
       0 1px 2px rgba(0, 0, 0, 0.08);
   }
 }
-
 
 blockquote {
   font-size: 1.0625rem;
   line-height: 1.75;
   letter-spacing: -0.003em;
 }
-
 
 .table-wrapper > table thead th {
   font-weight: 600;
@@ -263,24 +277,23 @@ blockquote {
   font-size: 0.8125rem;
 }
 
-
 @media all and (max-width: 768px) {
   :root {
     font-size: 16px;
   }
-  
+
   h1 {
     font-size: 2rem;
   }
-  
+
   h2 {
     font-size: 1.625rem;
   }
-  
+
   h3 {
     font-size: 1.375rem;
   }
-  
+
   .content {
     font-size: 1rem;
   }
@@ -291,7 +304,6 @@ blockquote {
     font-size: 16px;
   }
 }
-
 
 ::selection {
   background-color: var(--link-color);

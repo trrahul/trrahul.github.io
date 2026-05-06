@@ -63,7 +63,11 @@ panel_includes: []
 <div id="home-blog-mode" class="home-mode home-mode-blog">
   <div id="post-list" class="flex-grow-1 px-xl-1">
     {% for post in posts %}
-      <article class="card-wrapper card">
+      {% assign is_w40k = false %}
+      {% if post.categories contains 'Warhammer40K' or post.categories contains 'Warhammer 40K' or post.categories contains '40K' %}
+        {% assign is_w40k = true %}
+      {% endif %}
+      <article class="card-wrapper card{% if is_w40k %} w40k-card{% endif %}">
         <a href="{{ post.url | relative_url }}" class="post-preview row g-0 flex-md-row-reverse">
           {% assign card_body_col = '12' %}
 
@@ -90,38 +94,30 @@ panel_includes: []
 
           <div class="col-md-{{ card_body_col }}">
             <div class="card-body d-flex flex-column">
-              <h1 class="card-title my-2 mt-md-0">{{ post.title }}</h1>
-
-              <div class="card-text content mt-0 mb-3">
-                <p>{% include post-description.html %}</p>
-              </div>
-
-              <div class="post-meta flex-grow-1 d-flex align-items-end">
-                <div class="me-auto">
-                  <!-- posted date -->
-                  <i class="far fa-calendar fa-fw me-1"></i>
-                  {% include datetime.html date=post.date lang=lang %}
-
-                  <!-- categories -->
-                  {% if post.categories.size > 0 %}
-                    <i class="far fa-folder-open fa-fw me-1"></i>
-                    <span class="categories">
-                      {% for category in post.categories %}
-                        {{ category }}
-                        {%- unless forloop.last -%},{%- endunless -%}
-                      {% endfor %}
-                    </span>
+              <div class="card-row">
+                <div class="card-left">
+                  {% if is_w40k %}
+                    <div class="card-cat-label w40k-cat"><i class="fas fa-scroll fa-fw"></i>Warhammer 40,000</div>
+                  {% elsif post.categories.size > 0 %}
+                    <div class="card-cat-label">{%- for category in post.categories -%}{{ category }}{%- unless forloop.last -%}, {%- endunless -%}{%- endfor -%}</div>
+                  {% endif %}
+                  <h1 class="card-title mt-0 mb-0">{{ post.title }}</h1>
+                </div>
+                <div class="card-date{% if is_w40k %} w40k-date{% endif %}">
+                  {% if is_w40k %}
+                    <time data-ts="{{ post.date | date: '%s' }}" data-df="YYYY.MM.DD">{{ post.date | date: "%Y.%m.%d" }}</time>
+                  {% else %}
+                    {% include datetime.html date=post.date lang=lang %}
                   {% endif %}
                 </div>
-
-                {% if post.pin %}
-                  <div class="pin ms-1">
-                    <i class="fas fa-thumbtack fa-fw"></i>
-                    <span>{{ site.data.locales[lang].post.pin_prompt }}</span>
-                  </div>
-                {% endif %}
               </div>
-              <!-- .post-meta -->
+
+              {% if post.pin %}
+                <div class="pin ms-1 mt-1">
+                  <i class="fas fa-thumbtack fa-fw"></i>
+                  <span>{{ site.data.locales[lang].post.pin_prompt }}</span>
+                </div>
+              {% endif %}
             </div>
             <!-- .card-body -->
           </div>

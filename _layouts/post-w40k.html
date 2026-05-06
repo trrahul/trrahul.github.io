@@ -1,0 +1,35 @@
+---
+layout: compress
+---
+
+<!doctype html>
+
+{% include origin-type.html %}
+
+{% include lang.html %}
+
+{% if site.theme_mode %}
+  {% capture prefer_mode %}data-mode="{{ site.theme_mode }}"{% endcapture %}
+{% endif %}
+
+<html lang="{{ page.lang | default: site.alt_lang | default: site.lang }}" {{ prefer_mode }}>
+  {% include head.html %}
+
+  <body class="w40k-reading">
+    <div class="w40k-post-wrapper">
+      <article class="w40k-post">
+
+        <nav class="w40k-back-nav">
+          <a href="{{ '/' | relative_url }}" class="w40k-back-link">← cd ..</a>
+        </nav>
+
+        <h1 class="w40k-post-title">{{ page.title }}</h1>
+
+        <div class="content">
+          {{ content }}
+        </div>
+
+      </article>
+    </div>
+  </body>
+</html>

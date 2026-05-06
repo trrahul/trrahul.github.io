@@ -1,0 +1,166 @@
+/* ============================================================
+   Code Block Shell — V2: Terminal Prompt Header
+   Replaces Chirpy's macOS traffic-light dots with a >_ prompt
+   glyph + vertical divider + language label.
+   ============================================================ */
+
+// ── CSS custom properties (light / dark) ──────────────────────
+// Header bg is intentionally LIGHTER than the code body to match
+// the V2 mockup (bg-surface above code-bg). Tokyo Night palette.
+html {
+  @media (prefers-color-scheme: light) {
+    &:not([data-mode]),
+    &[data-mode='light'] {
+      --cb-body-bg: #f6f8fa;
+      --cb-header-bg: #fafbfd;
+      --cb-border: rgba(0, 0, 0, 0.08);
+      --cb-prompt-color: #2563eb;
+      --cb-lang-color: #64748b;
+      --cb-divider: rgba(0, 0, 0, 0.12);
+    }
+
+    &[data-mode='dark'] {
+      --cb-body-bg: #0b0d14;
+      --cb-header-bg: #0f111a;
+      --cb-border: rgba(255, 255, 255, 0.08);
+      --cb-prompt-color: #7aa2f7;
+      --cb-lang-color: #565f89;
+      --cb-divider: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    &:not([data-mode]),
+    &[data-mode='dark'] {
+      --cb-body-bg: #0b0d14;
+      --cb-header-bg: #0f111a;
+      --cb-border: rgba(255, 255, 255, 0.08);
+      --cb-prompt-color: #7aa2f7;
+      --cb-lang-color: #565f89;
+      --cb-divider: rgba(255, 255, 255, 0.1);
+    }
+
+    &[data-mode='light'] {
+      --cb-body-bg: #f6f8fa;
+      --cb-header-bg: #fafbfd;
+      --cb-border: rgba(0, 0, 0, 0.08);
+      --cb-prompt-color: #2563eb;
+      --cb-lang-color: #64748b;
+      --cb-divider: rgba(0, 0, 0, 0.12);
+    }
+  }
+}
+
+// Re-bind Chirpy's variables so the body bg + wrapper border use our palette.
+:root {
+  --highlight-bg-color: var(--cb-body-bg);
+  --language-border-color: var(--cb-border);
+}
+
+// ── Wrapper: flat border, consistent radius, clip children ─────
+// Chirpy uses box-shadow for its outline (avoids overflow:hidden clipping)
+// and a separate @media bp.sm rule inside `.content > &` that re-applies
+// $radius-lg (~8px). We beat both with !important and add overflow:hidden
+// so the .code-header background is clipped to the rounded corners.
+div[class^='language-'],
+.content > div[class^='language-'] {
+  box-shadow: none !important;
+  border: 1px solid var(--cb-border) !important;
+  border-radius: 6px !important;
+  overflow: hidden !important; // clips header + code to rounded corners
+}
+
+// ── Header shell override ──────────────────────────────────────
+div[class^='language-'] {
+  .code-header {
+    background-color: var(--cb-header-bg);
+    border-bottom: 1px solid var(--cb-border);
+    // No border-radius here — parent overflow:hidden clips to the wrapper radius.
+    // CRITICAL: override Chirpy's `justify-content: space-between` so the
+    // language label hugs the left (next to the >_ glyph) instead of centering.
+    justify-content: flex-start;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-right: 0.25rem; // give the copy button breathing room on the right
+
+    // Hide Chirpy's language icon; >_ glyph replaces it.
+    span > i {
+      display: none;
+    }
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      // Override Chirpy's negative margin-left (was centering label over dots)
+      margin-left: 0 !important;
+      // Push the copy button to the right edge
+      margin-right: auto;
+
+      // Vertical divider between >_ glyph and language label
+      &::before {
+        content: '';
+        display: inline-block;
+        width: 1px;
+        height: 0.85rem;
+        background-color: var(--cb-divider);
+        margin: 0 0.55rem 0 0.45rem;
+        flex-shrink: 0;
+      }
+
+      // Language label — lighter weight than Chirpy default
+      &::after {
+        font-size: 0.72rem;
+        font-weight: 400;
+        letter-spacing: 0.04em;
+        color: var(--cb-lang-color);
+      }
+    }
+
+    // Copy button — match the muted style of the rest of the header
+    button {
+      i {
+        color: var(--cb-lang-color);
+      }
+
+      &:not([timeout]):hover {
+        background-color: transparent;
+
+        i {
+          color: var(--cb-prompt-color);
+        }
+      }
+    }
+  }
+}
+
+// ── sm+ breakpoint (mirrors Chirpy's bp.sm = 576px) ───────────
+// Overrides scoped here to match Chirpy's cascade origin.
+@media all and (min-width: 576px) {
+  div[class^='language-'] {
+    .code-header {
+      // >_ prompt replaces the three macOS dot circles
+      &::before {
+        content: '>_';
+        display: inline-flex;
+        align-items: center;
+        margin-left: 0.875rem;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: var(--cb-prompt-color);
+        line-height: 1;
+        // Reset Chirpy's circle geometry
+        width: auto;
+        height: auto;
+        border-radius: 0;
+        background-color: transparent;
+        box-shadow: none;
+      }
+
+      span {
+        // Reset Chirpy's negative offset (was compensating for dot width)
+        margin-left: 0;
+      }
+    }
+  }
+}
