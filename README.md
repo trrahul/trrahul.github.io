@@ -1,43 +1,85 @@
-# Chirpy Starter
+# trrahul.github.io
 
-[![Gem Version](https://img.shields.io/gem/v/jekyll-theme-chirpy)][gem]&nbsp;
-[![GitHub license](https://img.shields.io/github/license/cotes2020/chirpy-starter.svg?color=blue)][mit]
+Source for [rahultr.dev](https://www.rahultr.dev). Built with Jekyll on the [Chirpy](https://github.com/cotes2020/jekyll-theme-chirpy) theme.
 
-When installing the [**Chirpy**][chirpy] theme through [RubyGems.org][gem], Jekyll can only read files in the folders
-`_data`, `_layouts`, `_includes`, `_sass` and `assets`, as well as a small part of options of the `_config.yml` file
-from the theme's gem. If you have ever installed this theme gem, you can use the command
-`bundle info --path jekyll-theme-chirpy` to locate these files.
+Posts cover programming, engineering, technical writing, and some fiction.
 
-The Jekyll team claims that this is to leave the ball in the user’s court, but this also results in users not being
-able to enjoy the out-of-the-box experience when using feature-rich themes.
+## Divergence from Chirpy
 
-To fully use all the features of **Chirpy**, you need to copy the other critical files from the theme's gem to your
-Jekyll site. The following is a list of targets:
+Started from the Chirpy starter. The theme is still the dependency, but the site overrides enough of it that in-place theme upgrades are no longer viable.
 
-```shell
-.
-├── _config.yml
-├── _plugins
-├── _tabs
-└── index.html
+### Custom plugins
+
+- **backlinks-generator** -- scans all posts for internal links, attaches `backlinks` and `outgoing_links` data to each document. Posts can render "what links here" panels from this data.
+- **knowledge-graph-generator** -- runs after backlinks, produces `graph/data.json` (nodes = posts, edges = links). Consumed by the `/graph/` page.
+- **category-hierarchy-generator** -- builds a nested category tree from post front matter, available in Liquid templates as `site.data.category_hierarchy` and served as JSON for client-side category filtering on the home page.
+- **search-index-generator** -- produces a structured search index that segments posts by markdown heading, rather than treating the full post as one document.
+- **cil_lexer** -- Rouge lexer for CIL/MSIL/ILAsm (`.il` files). Enables syntax highlighting for .NET IL code in posts.
+- **github_code_embed** -- Liquid tag `{% github_code <url> <lines> %}` that fetches a file from GitHub at build time and renders it with syntax highlighting.
+- **posts-lastmod-hook** -- uses `git log` to set `last_modified_at` on any post that has been committed more than once.
+
+
+### SCSS
+
+All additions live in `_sass/addon/` so they don't conflict with Chirpy's layer:
+
+- Sidebar rewrite (`_sidebar.scss`, `_sidebar-colors.scss`) -- the sidebar is visually distinct from Chirpy's default.
+- Topbar overrides (`_topbar-overrides.scss`)
+- Typography and code block overrides
+- Page-specific styles: home (post cards, quick-jump, mode-switch, terminal bar, responsive), categories, graph, tags, backlinks panel
+- Diagram styles (`diagram.scss`) -- hides the light or dark SVG variant depending on the active theme
+- Component styles: link previews, Mermaid diagrams, abbreviation tooltips, GitHub code embeds, W40K posts
+- Font alternatives (`font-alternatives.scss`)
+
+### Diagram toolchain
+
+`tools/diagrams/` is a Node.js build step separate from Jekyll.
+
+Diagrams are authored as JavaScript modules using a small helper API (box, arrow, label, region). Running `node tools/diagrams/index.mjs` discovers all scenes, renders each in light and dark variants, and writes:
+
+- `_diagrams/<name>.<theme>.excalidraw` -- the JSON source, diffable and openable at excalidraw.com
+- `assets/img/diagrams/<name>.<theme>.svg` -- background-stripped SVG for the site
+
+Posts embed diagrams with `{% include diagram.html name="..." alt="..." %}`. The include renders both variants; CSS shows only the one matching the active theme.
+
+### Includes and composition
+
+Several includes override or replace Chirpy's equivalents:
+
+- `sidebar.html` -- fully rewritten, terminal-aesthetic sidebar
+- `topbar.html` -- overrides Chirpy's topbar
+- `diagram.html` -- theme-aware diagram include (described above)
+- `backlinks.html`, `panel-backlinks.html` -- backlinks panel, used in post and page layouts
+- `toc.html` -- custom table of contents
+- `terminal/` -- component tree for terminal-style pages: breadcrumb, prompt, input line, controls, help modal, debug log
+
+---
+
+## Local setup
+
+Requires Ruby, Bundler, and Node.js (for diagrams).
+
+```sh
+bundle install
+bundle exec jekyll serve --livereload
 ```
 
-To save you time, and also in case you lose some files while copying, we extract those files/configurations of the
-latest version of the **Chirpy** theme and the [CD][CD] workflow to here, so that you can start writing in minutes.
+The site runs at `http://localhost:4000`.
 
-## Usage
+To rebuild diagrams:
 
-Check out the [theme's docs](https://github.com/cotes2020/jekyll-theme-chirpy/wiki).
+```sh
+node tools/diagrams/index.mjs
+```
 
-## Contributing
+## New post
 
-This repository is automatically updated with new releases from the theme repository. If you encounter any issues or want to contribute to its improvement, please visit the [theme repository][chirpy] to provide feedback.
+```sh
+.\new-post.ps1
+```
+
+Prompts for a title, creates a dated file in `_posts/`, and opens it in VS Code.
 
 ## License
 
-This work is published under [MIT][mit] License.
-
-[gem]: https://rubygems.org/gems/jekyll-theme-chirpy
-[chirpy]: https://github.com/cotes2020/jekyll-theme-chirpy/
-[CD]: https://en.wikipedia.org/wiki/Continuous_deployment
-[mit]: https://github.com/cotes2020/chirpy-starter/blob/master/LICENSE
+[MIT](LICENSE)
