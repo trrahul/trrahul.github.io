@@ -13,19 +13,19 @@ Social psychologists call the relevant bias the [Fundamental Attribution Error](
 
 The work of Leon Festinger on [cognitive dissonance](https://en.wikipedia.org/wiki/Cognitive_dissonance) explains what happens next. Holding two contradictory beliefs is uncomfortable: "I believe in unwavering habits" and "I am skipping mine today." The mind resolves it by inventing a third belief that makes both acceptable. It is rarely a composed internal speech. It is faster and vaguer than that: a quick sense that this situation is different, that the rule applies to the general case but not this specific one, that the gap will be made up and therefore does not yet exist. The justification arrives before the person has fully registered that one was needed.
 
-The lapse becomes executive authority. The failure becomes proof of sophistication.
+The lapse becomes proof of executive authority over the rule, and the failure becomes proof of sophistication.
 
 There is a fourth layer. The person invested in being the advocate, the one who knows, who advises, who holds the standard, can separate knowing from doing. The fitness expert who skips workouts does not experience that as a contradiction. His expertise lives in the knowing. The practice is secondary. He is the source of the wisdom. That role survives the missed session.
 
 ## The willpower question
 
-For a long time, psychology offered a comforting explanation for all of this. Roy Baumeister proposed in the late 1990s that self-control works like a muscle. Exert it on one task and you have less available for the next. This became known as [ego depletion](https://en.wikipedia.org/wiki/Ego_depletion). The supporting experiment participants who were forced to resist fresh cookies and eat radishes instead gave up faster than participants who had eaten the cookies freely. Willpower, the study concluded, was a finite resource that could be spent.
+For a long time, psychology offered a comforting explanation for all of this. Roy Baumeister proposed in the late 1990s that self-control works like a muscle. Exert it on one task and you have less available for the next. This became known as [ego depletion](https://en.wikipedia.org/wiki/Ego_depletion). In the supporting experiment, participants who were forced to resist fresh cookies and eat radishes instead gave up faster on a subsequent task than participants who had eaten the cookies freely. Willpower, the study concluded, was a finite resource that could be spent.
 
 The model spread quickly. It gave people a way to explain why discipline fails without implicating character. You ran out of fuel. It will replenish overnight. Try again tomorrow.
 
 In 2016, [a coordinated attempt to replicate the original effect](https://doi.org/10.1177/1745691616652873) across twenty-four laboratories found no significant result. The muscle theory, at least in its simple form, did not survive scrutiny.
 
-What replaced it is probably more accurate. The brain appears to recalculate rather than deplete. After sustained effort, the weighting of goals shifts. Immediate rewards gain value relative to abstract future gains. The feeling called depletion is a signal, not a deficit: the cost of continuing now exceeds what the brain has decided the benefit is worth. Carol Dweck's research complicates this further. People who believe willpower is unlimited show no depletion effect. The exhaustion follows the belief.
+What replaced it fits the data better. The brain appears to recalculate rather than deplete. After sustained effort, the weighting of goals shifts. Immediate rewards gain value relative to abstract future gains. The feeling called depletion is a signal, not a deficit: the cost of continuing now exceeds what the brain has decided the benefit is worth. Carol Dweck's research complicates this further. People who believe willpower is unlimited show no depletion effect. The exhaustion follows the belief.
 
 This revision matters for the "I am in control" story specifically. If the brain is recalculating rather than depleting, then the decision to stop is less a failure and more a real-time judgment call. The person is not entirely wrong to sense that. The problem is the story layered on top of it: that the pause was chosen, that it is contained, that the future self will resume without friction. That part is construction. The brain made a calculation; the mind invented an executive.
 
@@ -43,4 +43,4 @@ In fiction, the same architecture appears in [Anna Karenina](https://en.wikipedi
 
 ## The belief that does the work
 
-The "I am in control" conviction works because it is partly true. The person does know the system. The exception sometimes is contained. The future self sometimes does recover. What the belief cannot account for is its own selectivity: it appears precisely when the person is acting against the standard, and vanishes the moment the standard is met. It is not a description of control. It is the instrument by which the mind disguises its own retreat as a decision.
+The "I am in control" conviction works because it is partly true. The person does know the system. The exception sometimes is contained. The future self sometimes does recover. What the belief cannot account for is its own selectivity: it appears precisely when the person is acting against the standard, and vanishes the moment the standard is met. It lets the mind disguise retreat as a decision.

@@ -93,11 +93,11 @@ Finding the answer requires tracing data dependencies backward through the code.
 - **Debugging** shows runtime values but requires reproducing the exact failure conditions and stepping through each instruction.
 - **Manual inspection** demands mental tracking of all possible data flows, which becomes impractical in large methods.
 
-The fundamental question is: **What statements could have influenced the value of this variable?** This is the dependency problem, and solving it requires understanding data flow.
+The fundamental question is: what statements could have influenced the value of this variable? This is the dependency problem, and solving it requires understanding data flow.
 
 ### Program Slicing: Isolating Relevant Code
 
-Program slicing, introduced by Mark Weiser in 1981, provides a formal answer to the dependency question. A slice is a subset of a program that preserves behavior for a specific variable at a specific location—the "slicing criterion."
+Program slicing, introduced by Mark Weiser in 1981, provides a formal answer to the dependency question. A slice is a subset of a program that preserves behavior for a specific variable at a specific location, the "slicing criterion."
 
 Unlike text search, which finds syntactic occurrences, slicing finds semantic dependencies. It understands the difference between `x = y` (data flows from `y` to `x`) and `print(x)` (data flows from `x` to the console).
 
@@ -107,44 +107,36 @@ Two types of slices exist:
 
 **Forward Slicing**: Given a variable at a program point, find all statements that could be affected by its value. This answers "what depends on this?"
 
-<!--
-Image Placeholder: A side-by-side comparison showing:
-Left: Source code with all lines visible
-Middle: Same code with backward slice highlighted (showing sources)
-Right: Same code with forward slice highlighted (showing sinks)
-Caption: Program slicing reveals semantic dependencies that text search cannot find.
--->
-
 #### Backward Slice Example
 
 Return to the `OrderProcessor`. Place the cursor on `_currentOrder` in the guard `if (_currentOrder == null)` inside `Validate` and compute a backward slice. The slice includes:
 
-1. `_currentOrder = await _cache.GetAsync(orderId);` — the cache hit assignment
-2. `_currentOrder = await _repository.FetchAsync(orderId);` — both the direct load and the cache-miss fallback
-3. `_currentOrder = manualOrder;` in `ApplyManualOverride` — a different entry point that can replace the value
-4. `_currentOrder = null;` in `ResetIfExpired` — a mutation that can wipe the state
-5. The guard itself — the target location where the null is observed
+1. `_currentOrder = await _cache.GetAsync(orderId);`, the cache hit assignment
+2. `_currentOrder = await _repository.FetchAsync(orderId);`, both the direct load and the cache-miss fallback
+3. `_currentOrder = manualOrder;` in `ApplyManualOverride`, a different entry point that can replace the value
+4. `_currentOrder = null;` in `ResetIfExpired`, a mutation that can wipe the state
+5. The guard itself, the target location where the null is observed
 
 The slice excludes calls such as `SendToQueueAsync` because they happen after the target and cannot influence whether `_currentOrder` is null at that point. It also ignores unrelated fields that never flow into `_currentOrder`.
 
 This isolation reveals the data's history. The null could come from a cache miss, a manual override, or an expiry reset. Without the slice, you'd have to inspect each path manually and reason about their interleaving.
 
-**In practice, the payoff is readability.** Slicing collapses dozens of scattered statements into one coherent story you can read top to bottom. Instead of jumping between cache code, override handlers, and lifecycle hooks, you see only the handful of lines that actually matter for the failure you are diagnosing. The trade-off is that you now depend on the tool's analysis being up to date with the exact build you are running; stale caches or partial projects can produce slices that hide a relevant path, so you still need a quick gut-check review before fully trusting the result. SharpFocus surfaces stale-analysis warnings, but it is still worth rerunning the analysis after large merges or dependency updates to keep the highlights trustworthy.
+In practice, the payoff is readability. Slicing collapses dozens of scattered statements into one coherent story you can read top to bottom. Instead of jumping between cache code, override handlers, and lifecycle hooks, you see only the handful of lines that actually matter for the failure you are diagnosing. The trade-off is that the slice depends on the analysis being current with the build you are running; stale caches or partial projects can hide a relevant path. SharpFocus surfaces stale-analysis warnings, but it is still worth rerunning the analysis after large merges or dependency updates.
 
 #### Forward Slice Example
 
 Place the cursor on the assignments that load `_currentOrder` in `InitializeAsync` and compute a forward slice. The slice includes:
 
-1. The loading statements themselves — both the cache hit and the repository fetch
-2. The guard `if (_currentOrder == null)` inside `Validate` — control flow that depends on the value
-3. `_currentOrder.RequiresApproval = true;` — a mutation based on the loaded data
-4. `await SendToQueueAsync(_currentOrder!);` — the value flowing into an external system
-5. `_currentOrder.Status = OrderStatus.Completed;` — a later mutation applied to the same object
-6. `_currentOrder = null;` in `ResetIfExpired` — the point where the assignment's influence stops
+1. The loading statements themselves, both the cache hit and the repository fetch
+2. The guard `if (_currentOrder == null)` inside `Validate`, control flow that depends on the value
+3. `_currentOrder.RequiresApproval = true;`, a mutation based on the loaded data
+4. `await SendToQueueAsync(_currentOrder!);`, the value flowing into an external system
+5. `_currentOrder.Status = OrderStatus.Completed;`, a later mutation applied to the same object
+6. `_currentOrder = null;` in `ResetIfExpired`, the point where the assignment's influence stops
 
 The forward slice shows each statement whose behavior would change if `_currentOrder` were loaded differently. That precision is essential for impact analysis during refactoring or when evaluating a fix.
 
-Just as importantly, it keeps the investigation readable. The slice is still code—not an abstract graph—but it is pared down to the minimal set of statements you need to understand. You stay in the source file, maintain context, and avoid the cognitive load of filtering noise manually. The cost is additional context switching when the slice jumps across files or generated code; the highlights guide you, but you may still need to open those sites to verify assumptions, so the experience works best when paired with strong navigation support in the editor and a deliberate habit of stepping through each highlighted dependency that lands outside the current view.
+It also keeps the investigation readable. The slice is still code, not an abstract graph, but pared down to the minimal set of statements you need to understand. You stay in the source file, maintain context, and avoid the cognitive load of filtering noise manually. The cost is additional context switching when the slice jumps across files or generated code; you may still need to open those sites to verify assumptions, so the experience works best paired with strong navigation in the editor.
 
 ### The Information Flow Lattice
 
@@ -152,9 +144,9 @@ Slicing algorithms operate on a mathematical structure called a lattice. For Sha
 
 Each variable at each program point has a dependency set: the collection of program locations that could influence its value. The lattice structure defines how these sets combine:
 
-- **Bottom (⊥)**: The empty set—no dependencies yet established
-- **Join (∪)**: Set union—merging dependencies from multiple execution paths
-- **Ordering (⊆)**: Subset relation—one set of dependencies is more precise than another if it contains fewer elements
+- **Bottom (⊥)**: The empty set, no dependencies yet established
+- **Join (∪)**: Set union, merging dependencies from multiple execution paths
+- **Ordering (⊆)**: Subset relation, one set of dependencies is more precise than another if it contains fewer elements
 
 Consider this code:
 
@@ -172,13 +164,7 @@ At location L3, the dependency set for `x` is `{L1, L2}` because both assignment
 
 This lattice-based approach enables the analysis to handle complex control flow systematically. SharpFocus computes dependency sets by iterating to a fixpoint where no new dependencies emerge.
 
-<!--
-Image Placeholder: A diagram showing:
-- A control flow graph with an if-else statement
-- Dependency sets propagating through the graph
-- The join operation merging sets at the confluence point
-Caption: Dependency sets propagate through control flow and merge at join points.
--->
+{% include diagram.html name="sharpfocus-dep-lattice" alt="Information flow lattice: dependency sets merge at the join point of an if/else branch" %}
 
 ### SharpFocus: Making Dependencies Visible
 
@@ -200,15 +186,15 @@ The value of program slicing becomes clear when applied to actual development ta
 
 #### Debugging: Finding the Source of Bad Data
 
-A service returns incorrect results. The bug is subtle—a calculation uses stale cached data instead of fresh values. Debugging confirms the symptom but tracing through five method calls to find where the cache was populated is tedious.
+A service returns incorrect results. The bug is subtle: a calculation uses stale cached data instead of fresh values. Debugging confirms the symptom but tracing through five method calls to find where the cache was populated is tedious.
 
-With SharpFocus, place the cursor on the variable holding the incorrect result and trigger a backward slice. The slice highlights the entire dependency chain: the cache read, the cache write, the database query that populated it, and the configuration flag that controls cache behavior. The bug becomes obvious—the cache invalidation logic has a flaw.
+With SharpFocus, place the cursor on the variable holding the incorrect result and trigger a backward slice. The slice highlights the entire dependency chain: the cache read, the cache write, the database query that populated it, and the configuration flag that controls cache behavior. The bug becomes obvious: the cache invalidation logic has a flaw.
 
 The slice eliminated irrelevant code from consideration. Instead of reading hundreds of lines, the developer examines only the dozen statements in the dependency chain.
 
 #### Refactoring: Assessing Impact
 
-A method signature needs to change—a parameter type must be generalized from `string` to `IFormattable`. How many call sites need updates? Find All References lists 47 locations. But which of those actually use the parameter's string-specific methods? Which can accept the more general type without modification?
+A method signature needs to change: a parameter type must be generalized from `string` to `IFormattable`. How many call sites need updates? Find All References lists 47 locations. But which of those actually use the parameter's string-specific methods? Which can accept the more general type without modification?
 
 Forward slicing from the parameter declaration reveals the answer. The slice shows exactly which statements depend on string-specific behavior. In one migration we ran, only 8 of the 47 references actually called string-only APIs; the remaining 39 simply passed the parameter along or relied on members exposed by `IFormattable`.
 

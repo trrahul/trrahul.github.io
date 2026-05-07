@@ -37,10 +37,4 @@ Sentence by sentence:
    - “Delineating of human passions” = “showing human feelings.”  
    - Intention: This impossible premise is a better lens on human nature than realistic plots.
 
-Overall:
 
-- The sentences are long, but not just long—they are **differently organized** from how I now think.  
-- She uses words I know, but in roles that feel slightly off: “supposed,” “accord,” “event,” “interest,” “recommended.”  
-- The ideas are structured indirectly: negative phrasing, heavy framing clauses, abstract nouns ("delineating," "relations," "occurrence") that blur edges.
-
-**The real difficulty:** It isn't the complexity of the ideas—it's the mismatch in sentence architecture and word usage. The prose looks modern enough to lull you into thinking it should be easy, but the logic moves on different rails. Reading Shelley means adjusting not just to vocabulary, but to how thoughts are structured and delivered.

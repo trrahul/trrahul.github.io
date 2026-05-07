@@ -143,11 +143,11 @@ If a struct has no mutable state, the distinction between a copy and a reference
 ```csharp
 var list = new List<Customer> { new Customer(age: 5) };
 list[0].IncrementAge();
-Console.WriteLine(list[0].Age); // still 5 — mutation lost
+Console.WriteLine(list[0].Age); // still 5, mutation lost
 
 var array = new Customer[] { new Customer(age: 5) };
 array[0].IncrementAge();
-Console.WriteLine(array[0].Age); // 6 — mutation kept
+Console.WriteLine(array[0].Age); // 6, mutation kept
 ```
 
 The `List<T>` indexer getter is a method. It returns `T` by value, so accessing `list[0]` is same as the property case. A copy lands in a local, `IncrementAge` mutates the copy, and the list element is untouched.

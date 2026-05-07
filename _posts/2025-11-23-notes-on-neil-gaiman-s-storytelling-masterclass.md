@@ -8,11 +8,11 @@ tags: [literature, book, writing, neil-gaiman]
 ## Executive Summary
 This note collects the core principles of storytelling as articulated by author Neil Gaiman. The central thesis is that fiction is the art of "using memorable lies" to communicate profound human truths. Effective storytelling hinges on achieving verisimilitude, or "truthiness," making even the most outlandish worlds feel credible to the reader through specific sensory details, emotional honesty, and internal consistency.
 
-A writer's primary source of inspiration is a "compost heap"—a mental collection of everything they have read, seen, and experienced. Ideas emerge from the "confluence" of these disparate elements. A writer's unique voice is not something to be found, but rather developed over time through voluminous practice; it is "the stuff you can’t help doing."
+A writer's primary source of inspiration is a "compost heap," a mental collection of everything they have read, seen, and experienced. Ideas emerge from the "confluence" of these disparate elements. A writer's unique voice is not something to be found, but rather developed over time through voluminous practice; it is "the stuff you can’t help doing."
 
 Character is the engine of narrative. A story moves forward when a character's wants collide with obstacles or the wants of another character. The most critical question for a writer is "what your characters want," as this illuminates the path forward. Dialogue is not merely conversation but a primary tool for revealing character, advancing plot, and entertaining the reader.
 
-Finally, the writer's life requires discipline, bravery, and a structured approach to overcoming common obstacles like writer's block and the challenges of editing. The writer's ultimate responsibility is to tell good, honest stories that are true to their own vision while also being open to other points of view, recognizing that human nature is complex and rarely defined by simple notions of good and evil.
+The writer's life requires discipline, bravery, and a structured approach to overcoming common obstacles like writer's block and the challenges of editing. The writer's responsibility is to tell good, honest stories that are true to their own vision while staying open to other points of view, recognising that human nature is complex and rarely defined by simple notions of good and evil.
 
 ## 1. The Foundational Philosophy: Truth Through Lies
 
@@ -55,7 +55,7 @@ Gaiman advocates for creating a "compost heap," a mental repository for everythi
 This process requires a writer to be open to everything and recognize that influences can come from any source, from high literature to modern cinema.
 ### 2.2 Finding Ideas
 
-Ideas are born from confluence—the collision of two separate things. A writer's unique perspective allows them to combine thoughts and experiences in novel ways.
+Ideas are born from confluence, the collision of two separate things. A writer's perspective allows them to combine thoughts and experiences in new ways.
 
 >"You get ideas from two things coming together. You get ideas from things that you have seen and thought and known about and then something else that you've seen and thought and known about, and the realization that you can just collide those things."
 
@@ -68,13 +68,13 @@ Methods for Reinterpreting Old Stories:
 
 ### 2.3 Developing a Writer's Voice
 
-A writer's voice is the unique style and personality that emerges on the page. It is the sum of choices regarding tone, character, setting, diction, and sentence structure. Voice is not found, but earned through practice. (See also: [Creative writing principles translated to technical writing](/posts/creative-writing-principles-translated-to-technical-writing/))
+A writer's voice is the unique style and personality that emerges on the page. It is the sum of choices regarding tone, character, setting, diction, and sentence structure. Voice is not found, but earned through practice.
 
 >"After you've written 10,000 words, 30,000 words, 60,000 words, 150,000 words, a million words, you will have your voice because your voice is the stuff you can't help doing."
 
 A story may also demand a specific persona, a narrative voice distinct from the writer's own. Gaiman identifies several personas in his own work:
 
-- **The ["American transparent voice"](/posts/american-transparent-voice/)**: A clean, conservative style that makes the author seem invisible.
+- **The "American transparent voice"**: A clean, conservative style that makes the author seem invisible.
 - **The "formal" voice** (*Stardust*): A style using syntax and vocabulary from an earlier time period.
 - **The "cicerone"** (*The Ocean at the End of the Lane*): An informal, close persona that feels like a person telling their story directly to you.
 
@@ -92,13 +92,13 @@ A story is defined as "anything fictional that keeps you turning the pages and d
     - Dramatic irony (letting the reader know things the characters don't).
     - Making the stakes clear for the characters.
     - Generating increasing conflict.
-- **Genre**: Genre creates a set of expectations for the reader. A writer must understand these conventions—the stock characters, events, and resolutions—before they can effectively subvert them to surprise and delight the audience.
+- **Genre**: Genre creates a set of expectations for the reader. A writer must understand these conventions, the stock characters, events, and resolutions, before they can subvert them to surprise the audience.
 
 ### 3.2 Character as the Driving Force
 
 Characters are the engine of every story. Their desires, motivations, and conflicts propel the narrative forward.
 
->"Everything is driven by characters wanting different things, and by those different things colliding. Every moment that one character wants something, and another character wants something mutually exclusive, and they collide—every time that happens, you have a story."
+>"Everything is driven by characters wanting different things, and by those different things colliding. Every moment that one character wants something, and another character wants something mutually exclusive, and they collide, every time that happens, you have a story."
 
 - **Wants vs. Needs**: Character desire is the "flashlight" that illuminates the road ahead. However, characters do not always get what they want; for good or evil, they get what they need.
 - **Flat vs. Round Characters**: The distinction lies in the complexity of their motivations. A writer develops a round character by lavishly exploring their desires, especially their unconscious ones or "dark side."
@@ -115,7 +115,7 @@ Worldbuilding Techniques:
 
 - **Establish the Rules**: Every world, whether real or fantastic, has rules. These rules should create drama and be discovered by the characters through experience, not explained in exposition.
 - **Use Confluence**: Combine disparate elements to create something fresh and avoid clichés.
-- **Ground in Sensory Experience**: Reveal the world through a character's senses—especially smell, which is often ignored but highly evocative.
+- **Ground in Sensory Experience**: Reveal the world through a character's senses, especially smell, which is often ignored but highly evocative.
 - **Research and Observation**: Do your homework. Visit locations, read widely, and take notes on the real world to smuggle details into your fiction. A writer should always "know more than you tell."
 
 ### 3.4 The Role of Humor
@@ -178,7 +178,7 @@ Strategies for Overcoming Blocks:
 The second draft is the process of "making it look like you knew what you were doing all along."
 
 - **Gain Objectivity**: Before editing, take time away from the project. Return to it pretending to be a reader seeing it for the first time.
-- **Ask What the Story Is About**: Create a logline—a single sentence summarizing the protagonist, conflict, and world—to clarify the story's core.
+- **Ask What the Story Is About**: Create a logline (a single sentence summarising the protagonist, conflict, and world) to clarify the story's core.
 - **Fulfill the Promise**: Ensure the ending provides a satisfying answer to the major dramatic question raised at the beginning.
 - **Listen to Feedback Carefully**: When people say something isn't working, they are right. When they tell you how to fix it, they are "almost always wrong."
 
@@ -189,7 +189,7 @@ Gaiman shares a modified version of [Robert Heinlein's "Business Rules"](/posts/
 1. You have to write.
 2. You have to finish what you write.
 3. You have to send it out to someone who could publish it.
-4. Refrain from rewriting—except to editorial request. (Gaiman notes this is a matter of personal process).
+4. Refrain from rewriting, except to editorial request. (Gaiman notes this is a matter of personal process.)
 5. When it comes back, send it out again.
 6. Gaiman's Rule: Then start the next thing.
 

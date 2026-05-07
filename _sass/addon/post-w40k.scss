@@ -42,20 +42,22 @@ html {
   @media (prefers-color-scheme: light) {
     &:not([data-mode]),
     &[data-mode='light'] {
-      // amber phosphor palette
       --wcog-hi: #c09030;
-      --wcog-mid: #7a5c1a;
-      --wcog-block-bg: rgba(192, 144, 48, 0.05);
-      --wcog-block-br: rgba(192, 144, 48, 0.25);
-      --wcog-block-rule: rgba(192, 144, 48, 0.2);
-      --wcog-block-attr: rgba(192, 144, 48, 0.15);
-      --wcog-h2-bg: rgba(192, 144, 48, 0.08);
-      --wcog-em-bg: rgba(192, 144, 48, 0.08);
+      --wcog-mid: #8c6820;
+      --wcog-block-bg: rgba(192, 144, 48, 0.065);
+      --wcog-block-br: rgba(192, 144, 48, 0.38);
+      --wcog-block-rule: rgba(192, 144, 48, 0.22);
+      --wcog-block-attr: rgba(192, 144, 48, 0.22);
+      --wcog-h2-bg: rgba(192, 144, 48, 0.065);
+      --wcog-em-bg: rgba(192, 144, 48, 0.065);
       --wcog-text: #3a3530;
       --wcog-heading: #1e1c1a;
-      --wcog-glow: none;
-      --wcog-glow-mid: none;
-      --wcog-glow-em: none;
+      // glow tokens: --g-mid (structural elements), --g-hi (pure amber stamps)
+      --wcog-glow:
+        0 0 5px rgba(160, 115, 30, 0.85), 0 0 12px rgba(140, 100, 24, 0.35);
+      --wcog-glow-mid:
+        0 0 1px rgba(192, 144, 48, 0.95), 0 0 18px rgba(165, 122, 36, 0.45);
+      --wcog-glow-em: 0 0 4px rgba(160, 115, 30, 0.5);
     }
 
     &[data-mode='dark'] {
@@ -96,20 +98,22 @@ html {
     }
 
     &[data-mode='light'] {
-      // amber phosphor palette
+      // amber phosphor palette — values match R1 mockup exactly
       --wcog-hi: #c09030;
-      --wcog-mid: #7a5c1a;
-      --wcog-block-bg: rgba(192, 144, 48, 0.05);
-      --wcog-block-br: rgba(192, 144, 48, 0.25);
-      --wcog-block-rule: rgba(192, 144, 48, 0.2);
-      --wcog-block-attr: rgba(192, 144, 48, 0.15);
-      --wcog-h2-bg: rgba(192, 144, 48, 0.08);
-      --wcog-em-bg: rgba(192, 144, 48, 0.08);
+      --wcog-mid: #8c6820;
+      --wcog-block-bg: rgba(192, 144, 48, 0.065);
+      --wcog-block-br: rgba(192, 144, 48, 0.38);
+      --wcog-block-rule: rgba(192, 144, 48, 0.22);
+      --wcog-block-attr: rgba(192, 144, 48, 0.22);
+      --wcog-h2-bg: rgba(192, 144, 48, 0.065);
+      --wcog-em-bg: rgba(192, 144, 48, 0.065);
       --wcog-text: #3a3530;
       --wcog-heading: #1e1c1a;
-      --wcog-glow: none;
-      --wcog-glow-mid: none;
-      --wcog-glow-em: none;
+      --wcog-glow:
+        0 0 5px rgba(160, 115, 30, 0.85), 0 0 12px rgba(140, 100, 24, 0.35);
+      --wcog-glow-mid:
+        0 0 1px rgba(192, 144, 48, 0.95), 0 0 18px rgba(165, 122, 36, 0.45);
+      --wcog-glow-em: 0 0 4px rgba(160, 115, 30, 0.5);
     }
   }
 }
@@ -195,6 +199,7 @@ html {
       opacity: 0.55;
       letter-spacing: 0.06em;
       line-height: 1.5rem;
+      text-shadow: var(--wcog-glow-mid);
     }
   }
 
@@ -238,7 +243,7 @@ html {
     color: var(--wcog-mid);
     margin: 1.75rem 0 0.55rem;
     border-bottom: none;
-    text-shadow: none;
+    text-shadow: var(--wcog-glow-em);
     font-feature-settings: #{$mono-caps-features};
     text-wrap: balance;
 
@@ -392,20 +397,38 @@ html[data-mode='dark'] body.w40k-reading {
   display: flex;
   justify-content: center;
   padding: 4rem 1.5rem 8rem;
+  position: relative;
 
   @media (max-width: 600px) {
     padding: 2.5rem 1.15rem 5rem;
   }
 }
 
+// CRT "screen" — sized to the article's reading column.
+// Holds the article + absolute CRT overlay layers. No background, no border,
+// no overflow clipping — effects fade out via radial mask on each layer.
+.w40k-crt-screen {
+  position: relative;
+  width: 100%;
+  max-width: 64ch;
+}
+
 article.w40k-post {
   width: 100%;
-  max-width: 64ch; // measure: ~64 characters at body size
+  position: relative; // stacking only — keeps content above absolute CRT layers
+  z-index: 1;
+  padding: 1rem 1.5rem 3rem;
+
+  @media (max-width: 600px) {
+    padding: 0.85rem 1rem 2rem;
+  }
 }
 
 // ── Back nav ────────────────────────────────────────────────
 
 .w40k-back-nav {
+  position: relative;
+  z-index: 1;
   margin-bottom: 2rem;
 }
 
@@ -428,6 +451,8 @@ article.w40k-post {
 // ── Post title ───────────────────────────────────────────────
 
 .w40k-post-title {
+  position: relative;
+  z-index: 1;
   font-family: $mono;
   font-size: 1.125rem;
   font-weight: 600;
@@ -455,6 +480,11 @@ article.w40k-post {
   }
 }
 
+.w40k-post .content {
+  position: relative;
+  z-index: 1;
+}
+
 // ── Responsive tightening for small screens ──────────────────
 
 @media (max-width: 600px) {
@@ -479,5 +509,311 @@ article.w40k-post {
     h3 {
       font-size: 0.65rem;
     }
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// CRT overlay layers — R1 CSS animated stack
+// Six divs injected via post-w40k.html, position: absolute
+// inside .w40k-post-wrapper (position: relative, overflow: hidden)
+// ══════════════════════════════════════════════════════════════
+
+// Shared base — effects extend well past the screen and fade out very
+// gradually in all directions so there are no visible boundary lines.
+.w40k-crt-scanlines,
+.w40k-crt-noise,
+.w40k-crt-reflection,
+.w40k-crt-vignette,
+.w40k-crt-ambient {
+  pointer-events: none;
+  position: absolute;
+  inset: -10rem -8rem;
+  z-index: 0;
+  // Long, soft radial fade. Solid only in the very center, then a long
+  // tail of transparency so the eye never catches an edge.
+  -webkit-mask-image: radial-gradient(
+    ellipse 70% 60% at center,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.85) 30%,
+    rgba(0, 0, 0, 0.5) 55%,
+    rgba(0, 0, 0, 0.18) 78%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 70% 60% at center,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.85) 30%,
+    rgba(0, 0, 0, 0.5) 55%,
+    rgba(0, 0, 0, 0.18) 78%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+// ── Layer 1: Scanlines ────────────────────────────────────────
+// 4px pitch: 2px bright + 2px dark, slow drift
+// Ported from TerminalUniverse style.css .glass-scanlines
+.w40k-crt-scanlines {
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.025) 0px,
+    rgba(255, 255, 255, 0.025) 2px,
+    rgba(0, 0, 0, 0.048) 3px,
+    rgba(0, 0, 0, 0) 4px
+  );
+  opacity: 0.6;
+  animation: w40k-scanline-drift 14s linear infinite;
+}
+
+@keyframes w40k-scanline-drift {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(8px);
+  }
+}
+
+// ── Layer 2: Film grain ───────────────────────────────────────
+// SVG feTurbulence fractalNoise, ported from TerminalUniverse .glass-noise
+// mix-blend-mode: multiply = amber-tinted grain on light bg
+// stylelint-disable value-no-vendor-prefix
+.w40k-crt-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  mix-blend-mode: multiply;
+  opacity: 0.22;
+  animation: w40k-grain-shift 0.18s steps(2) infinite;
+}
+
+@keyframes w40k-grain-shift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(1px, 1px);
+  }
+}
+
+// ── Layer 3: Glass reflection ─────────────────────────────────
+.w40k-crt-reflection {
+  background: linear-gradient(
+    108deg,
+    rgba(255, 245, 220, 0.06),
+    transparent 52%
+  );
+  mix-blend-mode: screen;
+}
+
+// ── Layer 4: Vignette ─────────────────────────────────────────
+.w40k-crt-vignette {
+  background: radial-gradient(
+    ellipse at 50% 40%,
+    transparent 52%,
+    rgba(60, 40, 10, 0.07) 100%
+  );
+}
+
+// ── Layer 5: Ambient glow ─────────────────────────────────────
+// Ported from GLSL ambientLight * (1-dist)^2
+.w40k-crt-ambient {
+  background: radial-gradient(
+    ellipse at 50% 35%,
+    rgba(192, 144, 48, 0.045) 0%,
+    transparent 65%
+  );
+  mix-blend-mode: multiply;
+}
+
+// ── Flicker ───────────────────────────────────────────────────
+// Applied to the wrapper so flicker affects content + CRT layers + bg tint together.
+// Range widened so it's actually perceptible (was 0.975–1, now 0.86–1.06).
+@keyframes w40k-crt-flicker {
+  0% {
+    filter: brightness(1);
+  }
+  6% {
+    filter: brightness(0.92);
+  }
+  6.5% {
+    filter: brightness(1.04);
+  }
+  7% {
+    filter: brightness(1);
+  }
+  19% {
+    filter: brightness(0.95);
+  }
+  19.5% {
+    filter: brightness(1);
+  }
+  37% {
+    filter: brightness(1.06);
+  }
+  37.5% {
+    filter: brightness(1);
+  }
+  52% {
+    filter: brightness(0.86);
+  }
+  52.6% {
+    filter: brightness(1.03);
+  }
+  53% {
+    filter: brightness(1);
+  }
+  71% {
+    filter: brightness(0.94);
+  }
+  71.5% {
+    filter: brightness(1);
+  }
+  88% {
+    filter: brightness(0.9);
+  }
+  88.5% {
+    filter: brightness(1.05);
+  }
+  89% {
+    filter: brightness(1);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+.w40k-crt-screen {
+  animation: w40k-crt-flicker 4s steps(1) infinite;
+}
+
+// ── Dark mode: adjust CRT overlay colors to green phosphor ────
+@media (prefers-color-scheme: dark) {
+  html:not([data-mode]) .w40k-crt-noise,
+  html[data-mode='dark'] .w40k-crt-noise {
+    mix-blend-mode: screen;
+    opacity: 0.15;
+    animation: none;
+  }
+
+  html:not([data-mode]) .w40k-crt-ambient,
+  html[data-mode='dark'] .w40k-crt-ambient {
+    background: radial-gradient(
+      ellipse at 50% 35%,
+      rgba(80, 140, 30, 0.04) 0%,
+      transparent 65%
+    );
+    mix-blend-mode: screen;
+  }
+
+  html:not([data-mode]) .w40k-crt-vignette,
+  html[data-mode='dark'] .w40k-crt-vignette {
+    background: radial-gradient(
+      ellipse at 50% 40%,
+      transparent 55%,
+      rgba(0, 0, 0, 0.3) 100%
+    );
+  }
+
+  html:not([data-mode]) .w40k-crt-reflection,
+  html[data-mode='dark'] .w40k-crt-reflection {
+    background: linear-gradient(
+      108deg,
+      rgba(100, 180, 60, 0.04),
+      transparent 50%
+    );
+  }
+}
+
+// Explicit data-mode="dark" overrides (no media query needed)
+html[data-mode='dark'] {
+  .w40k-crt-noise {
+    mix-blend-mode: screen;
+    opacity: 0.15;
+    animation: none;
+  }
+  .w40k-crt-ambient {
+    background: radial-gradient(
+      ellipse at 50% 35%,
+      rgba(80, 140, 30, 0.04) 0%,
+      transparent 65%
+    );
+    mix-blend-mode: screen;
+  }
+  .w40k-crt-vignette {
+    background: radial-gradient(
+      ellipse at 50% 40%,
+      transparent 55%,
+      rgba(0, 0, 0, 0.3) 100%
+    );
+  }
+  .w40k-crt-reflection {
+    background: linear-gradient(
+      108deg,
+      rgba(100, 180, 60, 0.04),
+      transparent 50%
+    );
+  }
+}
+
+// ── Light mode element overrides — match R1 mockup exactly ───
+// h2:        body gets --g-mid (--wcog-glow); ::before gets --g-hi (--wcog-glow-mid)
+// blockquote: body text unglowen; ::before uses --wcog-mid color not --wcog-hi
+// hr:         opacity 0.7 (mockup) not 0.55 (default)
+@mixin w40k-light-overrides {
+  .w40k-post .content {
+    blockquote {
+      text-shadow: none;
+      box-shadow:
+        0 0 22px rgba(192, 144, 48, 0.14),
+        inset 0 0 8px rgba(192, 144, 48, 0.04);
+
+      &::before {
+        color: var(--wcog-mid);
+        opacity: 0.9;
+      }
+
+      p:last-child:not(:only-child) {
+        color: #6a5018;
+      }
+    }
+
+    hr::before {
+      opacity: 0.7;
+    }
+
+    h2 {
+      text-shadow: var(--wcog-glow);
+      box-shadow: 0 0 16px rgba(192, 144, 48, 0.1);
+
+      &::before {
+        text-shadow: var(--wcog-glow-mid);
+      }
+    }
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  html:not([data-mode]) {
+    @include w40k-light-overrides;
+  }
+
+  html[data-mode='light'] {
+    @include w40k-light-overrides;
+  }
+}
+
+html[data-mode='light'] {
+  @include w40k-light-overrides;
+}
+
+// ── Reduced motion: disable all CRT animations ────────────────
+@media (prefers-reduced-motion: reduce) {
+  .w40k-crt-scanlines,
+  .w40k-crt-noise {
+    animation: none;
+  }
+
+  article.w40k-post {
+    animation: none;
   }
 }

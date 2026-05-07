@@ -17,19 +17,26 @@ layout: compress
 
   <body class="w40k-reading">
     <div class="w40k-post-wrapper">
-      <article class="w40k-post">
+      <div class="w40k-crt-screen">
+        <div class="w40k-crt-scanlines"  aria-hidden="true"></div>
+        <div class="w40k-crt-noise"      aria-hidden="true"></div>
+        <div class="w40k-crt-reflection" aria-hidden="true"></div>
+        <div class="w40k-crt-vignette"   aria-hidden="true"></div>
+        <div class="w40k-crt-ambient"    aria-hidden="true"></div>
 
-        <nav class="w40k-back-nav">
-          <a href="{{ '/' | relative_url }}" class="w40k-back-link">← cd ..</a>
-        </nav>
+        <article class="w40k-post">
+          <nav class="w40k-back-nav">
+            <a href="{{ '/' | relative_url }}" class="w40k-back-link">← cd ..</a>
+          </nav>
 
-        <h1 class="w40k-post-title">{{ page.title }}</h1>
+          <h1 class="w40k-post-title">{{ page.title }}</h1>
 
-        <div class="content">
-          {{ content }}
-        </div>
+          <div class="content">
+            {{ content }}
+          </div>
 
-      </article>
+        </article>
+      </div>
     </div>
   </body>
 </html>

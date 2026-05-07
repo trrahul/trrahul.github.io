@@ -1,0 +1,24 @@
+{%- comment -%}
+Theme-aware diagram include. Renders both light and dark SVG variants of a
+diagram authored in tools/diagrams/. CSS in _sass/addon/diagram.scss hides
+the variant that doesn't match the active theme.
+
+Usage:
+  {% include diagram.html name="http2-stream-multiplexing"
+                          alt="HTTP/2 multiplexing across one TCP connection"
+                          caption="Optional italic caption shown below the image" %}
+{%- endcomment -%}
+{%- comment -%}
+  The <img> tags are wrapped in <a> elements so that Chirpy's
+  refactor-content.html does not add the `.popup` class (which would attach
+  GLightbox and open them in a fullscreen lightbox with a black backdrop that
+  clashes with the transparent diagram SVGs). The anchors point at the SVG
+  itself so right-click "open image in new tab" still works.
+{%- endcomment -%}
+<figure class="diagram-figure">
+  <a href="/assets/img/diagrams/{{ include.name }}.light.svg" class="diagram-link diagram-link-light"><img class="diagram diagram-light" src="/assets/img/diagrams/{{ include.name }}.light.svg" alt="{{ include.alt | default: include.name }}" loading="lazy"></a>
+  <a href="/assets/img/diagrams/{{ include.name }}.dark.svg" class="diagram-link diagram-link-dark"><img class="diagram diagram-dark" src="/assets/img/diagrams/{{ include.name }}.dark.svg" alt="{{ include.alt | default: include.name }}" loading="lazy"></a>
+  {%- if include.caption -%}
+  <figcaption>{{ include.caption }}</figcaption>
+  {%- endif -%}
+</figure>

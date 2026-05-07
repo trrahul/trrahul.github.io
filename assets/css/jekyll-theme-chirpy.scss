@@ -23,6 +23,7 @@
 @use 'addon/sidebar'; // Terminal-style sidebar navigation
 @use 'addon/codeblock'; // Code block shell — V2 terminal prompt header
 @use 'addon/mermaid'; // Mermaid diagram container (Tokyo Night palette)
+@use 'addon/diagram'; // Theme-aware Excalidraw diagrams (tools/diagrams/)
 @use 'addon/post-w40k'; // W40K post — cogitator terminal aesthetic
 
 /* Page-specific Styles */

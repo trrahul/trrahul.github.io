@@ -78,7 +78,7 @@ This ensures that backward slices include the conditions that determine whether 
 
 ### Interprocedural Analysis
 
-Most analysis so far has been intraprocedural—confined to a single method. But dependencies often cross method boundaries:
+Most analysis so far has been intraprocedural, confined to a single method. But dependencies often cross method boundaries:
 
 ```csharp
 public class OrderService
@@ -270,7 +270,7 @@ void Example(List<int> list)
 }
 ```
 
-A backward slice from `first` includes `list.Count > 0` because it controls whether the assignment executes. But the count itself doesn't affect the value of `first`—only the element at index 0 matters. A perfectly precise analysis would exclude the count. SharpFocus includes it for soundness.
+A backward slice from `first` includes `list.Count > 0` because it controls whether the assignment executes. But the count itself doesn't affect the value of `first`, only the element at index 0 matters. A perfectly precise analysis would exclude the count. SharpFocus includes it for soundness.
 
 This conservative approach ensures developers don't miss important dependencies, at the cost of occasionally highlighting extra code.
 

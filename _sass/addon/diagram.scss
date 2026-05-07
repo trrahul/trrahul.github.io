@@ -1,0 +1,99 @@
+/* Theme-aware diagrams produced by tools/diagrams/.
+ * Each diagram ships as <name>.light.svg + <name>.dark.svg with
+ * transparent backgrounds. We show the variant matching the active theme.
+ *
+ * Each <img> is wrapped in an <a class="diagram-link">; this prevents
+ * Chirpy's refactor-content.html from adding the `.popup` class (which would
+ * activate GLightbox). Both the <a> wrapper and the inner <img> need to be
+ * toggled so the hidden variant doesn't leave an empty link occupying layout.
+ */
+
+.diagram-figure {
+  display: block;
+  margin: 1.25rem 0;
+  text-align: center;
+
+  figcaption {
+    margin-top: 0.5rem;
+    color: var(--text-muted-color);
+    font-size: 0.9rem;
+    font-style: italic;
+  }
+}
+
+.diagram-link {
+  display: inline-block;
+  cursor: default;
+  /* Strip every flavour of link decoration Chirpy applies to .content a:
+   * the underline, the hover/visited colour shift, and the inline-link
+   * border-bottom. The wrapper exists only so refactor-content.html does
+   * not promote our diagram into a GLightbox popup. */
+  border: 0 !important;
+  background: none !important;
+  text-decoration: none !important;
+  color: inherit !important;
+  &:hover,
+  &:focus,
+  &:active,
+  &:visited {
+    border: 0 !important;
+    background: none !important;
+    text-decoration: none !important;
+    color: inherit !important;
+  }
+}
+
+.diagram {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Default = light: hide the dark variant (wrapper + image). */
+.diagram-link-dark,
+.diagram-dark {
+  display: none;
+}
+
+html[data-mode='dark'] {
+  .diagram-link-light,
+  .diagram-light {
+    display: none;
+  }
+  .diagram-link-dark {
+    display: inline-block;
+  }
+  .diagram-dark {
+    display: inline;
+  }
+}
+
+/* Visitor hasn't toggled — fall back to OS preference. */
+@media (prefers-color-scheme: dark) {
+  html:not([data-mode]) {
+    .diagram-link-light,
+    .diagram-light {
+      display: none;
+    }
+    .diagram-link-dark {
+      display: inline-block;
+    }
+    .diagram-dark {
+      display: inline;
+    }
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  html:not([data-mode]) {
+    .diagram-link-light {
+      display: inline-block;
+    }
+    .diagram-light {
+      display: inline;
+    }
+    .diagram-link-dark,
+    .diagram-dark {
+      display: none;
+    }
+  }
+}

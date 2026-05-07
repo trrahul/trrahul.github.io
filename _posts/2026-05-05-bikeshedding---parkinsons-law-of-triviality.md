@@ -27,7 +27,7 @@ Only three people in the room can say anything meaningful about the architecture
 
 Bikeshedding is not harmless. Every hour spent on the shed is an hour not spent on the reactor. Decisions that matter get deferred, delegated, or made carelessly in the last five minutes of a meeting that ran over.
 
-There is also a subtler cost. When a team habitually avoids the hard problems, it trains itself to do so. The instinct to reach for something comfortable, something discussable, becomes a reflex. Hard thinking atrophies.
+When a team habitually avoids the hard problems, it trains itself to do so. The instinct to reach for something comfortable, something discussable, becomes a reflex. Hard thinking atrophies.
 
 ## How to Recognize It
 
@@ -44,6 +44,4 @@ Constrain who decides low-stakes questions. If one person has the expertise and 
 For high-stakes decisions, shift the default from open discussion to written reasoning first. When people commit a position to writing before the meeting, they engage with the complexity instead of waiting for a comfortable moment to speak. It also makes visible who has actually thought through the problem.
 
 Timebox the shed. If a name or a visual choice will not noticeably change the outcome, set a short limit and move on when the time is up. A hard stop removes the incentive to treat a minor decision as a participation opportunity.
-
-And name it when it happens. Most people, when told directly that the group has drifted, will redirect.
 

@@ -35,6 +35,10 @@ At the TCP layer nothing changed. The socket still carries one ordered byte stre
 
 The result is that two requests no longer block each other. A slow response on stream 1 does not stop stream 2 from delivering its frames. There is no head-of-line blocking at the HTTP layer. There is no need to open six connections to get six things in parallel.
 
+{% include diagram.html name="http2-stream-multiplexing"
+   alt="HTTP/2 stream multiplexing across one TCP connection"
+   caption="Three logical requests share a single TCP connection. The framing layer splits each into HEADERS and DATA frames, tags them with a stream id, and interleaves them on the wire. The server reassembles per-stream by id." %}
+
 ```mermaid
 sequenceDiagram
     participant Client
@@ -74,9 +78,6 @@ flowchart LR
 
 ## Where multiplexing lives in the stack
 
-The OSI model gives us seven layers. Physical at the bottom, Application at the top. HTTP sits at layer seven. TCP sits at layer four. The interesting thing about HTTP/2 multiplexing is that it lives between them, in a place that did not really exist before.
-
-Here are the layers that matter for this story:
 
 | Layer | Name         | What it handles                                  |
 | ----- | ------------ | ------------------------------------------------ |
@@ -111,7 +112,7 @@ flowchart LR
 
 TCP has no idea that HTTP/2 streams exist. It does what it has always done: deliver a reliable, ordered stream of bytes from one endpoint to another. The kernel's TCP implementation is the same whether the bytes flowing through it are an HTTP/1.1 request, an HTTP/2 frame, or a file download.
 
-This is good and bad. Good because HTTP/2 needs no kernel changes to work. Bad because TCP's notion of "reliable, ordered" applies to the whole byte stream. If one packet is lost, TCP holds back every byte that came after it until the lost packet is retransmitted and reassembled. If those held-back bytes belonged to three different HTTP/2 streams, all three streams stall, even though only one of them was waiting for the missing data. This is TCP-level head-of-line blocking, and HTTP/2 does not solve it. HTTP/3 does, by replacing TCP with QUIC, which understands streams natively. That is a different post.
+HTTP/2 needs no kernel changes to work. The cost is that TCP's notion of "reliable, ordered" applies to the whole byte stream. If one packet is lost, TCP holds back every byte that came after it until the lost packet is retransmitted and reassembled. If those held-back bytes belonged to three different HTTP/2 streams, all three streams stall, even though only one of them was waiting for the missing data. This is TCP-level head-of-line blocking, and HTTP/2 does not solve it. HTTP/3 does, by replacing TCP with QUIC, which understands streams natively. That is a different post.
 
 ### Layer 5 is where the trick lives
 
@@ -119,9 +120,9 @@ Above TCP, HTTP/2 inserts its own framing layer. Every message is broken into fr
 
 This layer also handles header compression with an algorithm called HPACK, which keeps a small dictionary of headers seen on the connection so far. Common headers like `:method` and `user-agent` get compressed to a byte or two on the wire instead of repeating in full on every request.
 
-If you want to point at one place and say "this is what HTTP/2 added," this is the place. The framing layer at session scope is the entire innovation.
+The framing layer at session scope is what HTTP/2 actually added. Everything else follows from it.
 
-### Layer 6 quietly benefits
+### Layer 6 also benefits
 
 TLS lives here, and one TLS handshake costs the same whether the connection that follows carries one request or a thousand. With HTTP/1.1 and six connections, the browser pays for six handshakes. With HTTP/2 and one connection, it pays for one. The savings are real on slow networks and high-latency links, where each round trip costs tens or hundreds of milliseconds.
 
@@ -134,11 +135,11 @@ The application code does not change much. A REST handler still sees a request a
 
 ## When the upgrade actually pays off
 
-The biggest wins come in three places. First, any service called many times in quick succession from the same client benefits, because the per-request overhead drops to almost nothing. A backend-for-frontend API serving a chatty single-page app is a good fit. So is a microservice mesh where one service calls several others in a fan-out pattern.
+Any service called frequently from the same client sees the most benefit, because the per-request overhead drops to almost nothing. A backend-for-frontend API serving a chatty single-page app is a good fit. So is a microservice mesh where one service calls several others in a fan-out pattern.
 
-Second, anything that paid a lot of TLS handshake cost gets that money back. Mobile clients on cellular networks, where round-trip times are high, see the largest improvement.
+Anything that paid a lot of TLS handshake cost also benefits. Mobile clients on cellular networks, where round-trip times are high, see the largest improvement.
 
-Third, gRPC services get HTTP/2 as a hard requirement, and with it the ability to do bidirectional streaming on a single connection. Server-streaming RPCs, client-streaming RPCs, and full duplex streams are all just multiple stream IDs flowing through the same framing layer. This is impossible to do cleanly with HTTP/1.1.
+gRPC services get HTTP/2 as a hard requirement, and with it bidirectional streaming on a single connection. Server-streaming RPCs, client-streaming RPCs, and full duplex streams are all just multiple stream IDs flowing through the same framing layer. This is impossible to do cleanly with HTTP/1.1.
 
 ## TCP slow start and why it matters for connection count
 
@@ -164,12 +165,6 @@ Server push is off by default in most configurations. The current approach is ea
 
 gRPC is where HTTP/2 stops feeling like an incremental browser upgrade and starts looking like an application transport. Each RPC gets its own stream, so many calls can share one connection without the client opening a socket farm. That matters in service-to-service traffic where a process may keep dozens of calls in flight all the time.
 
-Streaming is the second reason. Unary calls benefit from lower overhead, but server-streaming, client-streaming, and bidirectional streaming are the real payoff. Those interaction patterns are awkward on HTTP/1.1 and natural on HTTP/2 because the connection is already built to carry multiple long-lived logical exchanges at once; see the [gRPC core concepts guide](https://grpc.io/docs/what-is-grpc/core-concepts/).
+Unary calls benefit from lower overhead, but server-streaming, client-streaming, and bidirectional streaming are the real payoff. Those interaction patterns are awkward on HTTP/1.1 and natural on HTTP/2 because the connection is already built to carry multiple long-lived logical exchanges at once; see the [gRPC core concepts guide](https://grpc.io/docs/what-is-grpc/core-concepts/).
 
-This is also why teams sometimes overstate the role of Protobuf alone. Protobuf helps, but the larger shift is transport behavior: one warm connection, multiplexed streams, proper backpressure, and deadlines that can propagate cleanly across service hops.
 
-## The shape of the change
-
-HTTP/1.1 made a virtue of simplicity. One connection, one request at a time, plain text on the wire. You could telnet to port 80 and type a request by hand. HTTP/2 gave that up in exchange for a binary framing layer that lets one connection carry many concurrent exchanges. You can no longer type it by hand. In return, you stop paying for six TCP handshakes, six TLS handshakes, and six congestion windows climbing out of slow start.
-
-The trade is worth it for almost any modern workload. The cost is that the protocol is no longer something you can read off the wire with `tcpdump` and a calm afternoon. The benefit is lower connection overhead and better concurrency for request-heavy systems.

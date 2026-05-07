@@ -6,123 +6,106 @@ categories: [SharpFocus]
 tags: [csharp, roslyn, static-analysis, control-flow, dataflow-analysis]
 ---
 
-**Part 2 of 3** in the [SharpFocus](https://github.com/trrahul/SharpFocus) series. Read [Part 1: Understanding Code Through Data Flow](/posts/part1-getting-started/) first if you haven't already.
+Part 2 of 3 in the [SharpFocus](https://github.com/trrahul/SharpFocus) series. Read [Part 1: Understanding Code Through Data Flow](/posts/part1-getting-started/) first if you haven't already.
 
-The first article introduced program slicing and demonstrated its applications. This article examines the analysis engine that makes slicing possible: how code is represented internally, how dependencies are computed, and how the analysis handles the complexities of real programming languages.
+Part 1 described what slicing does. This part describes how SharpFocus computes it: the program representation, the lattice, the worklist, the heuristics around aliases and mutations, and the places where soundness wins over precision.
 
-### Representing Code Structure
+### Two representations
 
-Before analyzing code, the tool must represent it in a form suitable for computation. Text is insufficient—the analyzer needs semantic information about declarations, types, control flow, and data dependencies.
+Source text is the wrong starting point for the analysis. Identifiers need to resolve to symbols, expressions to types, and branches to edges. SharpFocus reads two structures off Roslyn:
 
-SharpFocus uses two representations:
+1. The **semantic model** answers "what does this name refer to" and "what type does this expression produce".
+2. The **control flow graph (CFG)** is a directed graph whose nodes are basic blocks (single entry, single exit) and whose edges are the possible transfers between them.
 
-1. **The Semantic Model**: Provided by Roslyn, this structure resolves identifiers to symbols, types to their definitions, and expressions to their computed types. It answers questions like "What variable does this name refer to?" and "What type does this expression produce?"
+The CFG is what the dataflow algorithm walks. The semantic model is what makes each step accurate.
 
-2. **The Control Flow Graph**: A directed graph where nodes represent basic blocks (sequences of statements with a single entry and single exit) and edges represent possible execution paths.
+#### Basic blocks and control flow
 
-#### Basic Blocks and Control Flow
-
-Consider this method:
+For example:
 
 ```csharp
-int ComputeDiscount(int total, bool isVIP)
+decimal ComputeOrderTotal(Order order, IPricingService pricing)
 {
-    int discount = 0;
-    
-    if (isVIP)
-        discount = total * 15 / 100;
-    else
-        discount = total * 5 / 100;
-    
-    return discount;
+    if (order.Items.Count == 0)
+        return 0m;
+
+    decimal subtotal = 0m;
+    foreach (var item in order.Items)
+    {
+        decimal unit = pricing.LookupPrice(item.Sku);
+        if (item.Quantity >= 10)
+            unit *= 0.9m;
+        subtotal += unit * item.Quantity;
+    }
+
+    return order.IsTaxExempt ? subtotal : subtotal * 1.08m;
 }
 ```
 
-The control flow graph for this method contains five basic blocks:
+1. The early `return 0m` creates a second exit. A backward slice from the final return must exclude the guard's then-branch even though it appears earlier in the source.
+2. The `foreach` introduces a back edge. `subtotal` flows from one iteration into the next, and the dependency set of any read inside the loop only stabilizes after the worklist has been around the loop enough times for the set to stop growing. That is the work the fixpoint does.
+3. `pricing.LookupPrice` is opaque. Without a summary, the analyzer has to assume `pricing` and anything reachable from it might have been mutated by the call. That is the conservatism that pollutes dependency sets later.
+
+Roslyn lowers the method to eight basic blocks:
 
 ```
-Block 0 (Entry):
-    discount = 0
-
-Block 1 (Condition):
-    evaluate: isVIP
-
-Block 2 (Then branch):
-    discount = total * 15 / 100
-
-Block 3 (Else branch):
-    discount = total * 5 / 100
-
-Block 4 (Exit):
-    return discount
+B0  guard            evaluate: order.Items.Count == 0
+B1  early return     return 0m
+B2  loop init        subtotal = 0m;  acquire enumerator
+B3  loop test        MoveNext() ?
+B4  body fetch       unit = pricing.LookupPrice(item.Sku);
+                     evaluate: item.Quantity >= 10
+B5  bulk discount    unit *= 0.9m
+B6  accumulate       subtotal += unit * item.Quantity
+B7  exit             return order.IsTaxExempt ? subtotal : subtotal * 1.08m
 ```
 
-Edges connect the blocks:
-- Block 0 → Block 1
-- Block 1 → Block 2 (if isVIP is true)
-- Block 1 → Block 3 (if isVIP is false)
-- Block 2 → Block 4
-- Block 3 → Block 4
+The edges are where the topology stops being a tree:
 
-<!--
-Image Placeholder: A control flow graph diagram showing:
-- Five blocks arranged vertically with entry at top
-- Conditional branching at Block 1 splitting into two paths
-- Both paths merging back at Block 4
-- Arrows labeled with conditions
-Caption: A control flow graph represents all possible execution paths through a method.
--->
+- `B0 -> B1` when the guard fires; otherwise `B0 -> B2`.
+- `B2 -> B3 -> B4` enters the body. `B3 -> B7` leaves once the enumerator is exhausted.
+- Inside the body, `B4 -> B5` on the bulk-discount branch and `B4 -> B6` otherwise. Both rejoin at `B6`.
+- `B6 -> B3` is the back edge. It is what distinguishes the CFG from the syntax tree, and it is the reason the algorithm needs to iterate.
 
-This graph makes control flow explicit. The analyzer can traverse the graph to determine which statements might execute before or after any given point.
+{% include diagram.html name="sharpfocus-cfg-basic-blocks" alt="Control flow graph for ComputeOrderTotal: eight basic blocks with an early-return guard, a foreach loop with a back edge, and a nested branch in the body" %}
 
-Roslyn provides a `ControlFlowGraph` API that constructs these graphs automatically. SharpFocus uses this API but must also track additional information for dependency analysis.
+The graph supports questions the AST cannot answer. Which statements can reach this read of `subtotal`? Everything along any path from B2 through one or more passes of B6. Which statements are reachable from this write? B7, plus B6 itself on later iterations.
 
-### Places: Representing Memory Locations
+Roslyn's `ControlFlowGraph` API builds these graphs. SharpFocus uses it as-is and layers its own per-block state on top.
 
-A **place** is a symbolic name for a memory location that can be read or written. In C#, places include:
+### Places
 
-- Local variables: `x`, `result`, `discount`
-- Parameters: `total`, `isVIP`
-- Fields: `_currentOrder`, `Config.Timeout`
-- Properties: `order.Status`, `customer.Address.City`
+A **place** names a memory location that can be read or written. In C# that includes locals (`subtotal`, `unit`, `item`), parameters (`order`, `pricing`), fields (`_currentOrder`, `Config.Timeout`), and properties (`order.Status`, `customer.Address.City`).
 
-The analysis operates on a representation called a **Place**—a memory location that can be read or written. A place consists of a base symbol (variable, parameter, field) and an optional access path representing nested field accesses.
+Internally a place is a base symbol plus an optional access path of nested member accesses. See [Place.cs (lines 6-36)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Models/Place.cs#L6-L36).
 
-**See:** [Place.cs (lines 6-36)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Models/Place.cs#L6-L36) in the SharpFocus repository.
-
-This representation allows tracking dependencies at fine granularity. When `order.Status` is modified, the analysis knows this affects `order` but not `order.Total`.
-
-Examples:
-- Simple variable: `Place { Symbol = "x", AccessPath = [] }`
-- Field access: `Place { Symbol = "order", AccessPath = ["Status"] }`
-- Nested access: `Place { Symbol = "customer", AccessPath = ["Address", "City"] }`
-
-### The Dependency Lattice
-
-The core data structure is a mapping from places to dependency sets:
-
-**See:** [FlowDomain.cs (lines 6-50)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Models/FlowDomain.cs#L6-L50) in the SharpFocus repository.
-
-A `Location` identifies a specific point in the control flow graph—typically a basic block and statement index.
-
-The `FlowDomain` forms a lattice where:
-- The join operation (⊔) is set union
-- The ordering (⊑) is the subset relation
-- The bottom element (⊥) is the empty domain
-
-This lattice structure enables fixpoint computation, explained in the next section.
-
-### The Dataflow Algorithm
-
-Computing dependencies requires propagating information through the control flow graph until reaching a stable state—a fixpoint where no new dependencies emerge.
-
-**See:** [DataflowEngine.cs (lines 26-65)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Engine/DataflowEngine.cs#L26-L65) for the fixpoint algorithm implementation.
-
-The algorithm follows this structure:
+The access path is what lets the analysis distinguish a write to `order.Status` from a write to `order.Total`. Both touch `order`, but only one invalidates dependencies on `Total`.
 
 ```
-1. Initialize: Create empty FlowDomain for each block
-2. Worklist ← all blocks in CFG
+Place { Symbol = "x",        AccessPath = [] }
+Place { Symbol = "order",    AccessPath = ["Status"] }
+Place { Symbol = "customer", AccessPath = ["Address", "City"] }
+```
+
+### The dependency lattice
+
+The per-block state is a map from places to dependency sets. Each entry says "here is the set of program locations whose values flow into this place". See [FlowDomain.cs (lines 6-50)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Models/FlowDomain.cs#L6-L50). A `Location` is a (basic block, statement index) pair.
+
+`FlowDomain` is a lattice:
+
+- Join is set union.
+- Order is the subset relation.
+- Bottom is the empty domain.
+
+Two properties matter for the algorithm. The lattice has finite height because the set of program locations in a method is finite, and the transfer functions are monotonic. Together they guarantee that the worklist iteration terminates.
+
+### The dataflow algorithm
+
+The algorithm is the textbook forward worklist:
+
+```
+1. Initialize: empty FlowDomain for each block
+2. Worklist <- all blocks in CFG
 3. While worklist is not empty:
      a. Remove block B from worklist
      b. Compute input state by joining predecessor states
@@ -133,24 +116,17 @@ The algorithm follows this structure:
 4. Return final states
 ```
 
-The transfer function determines how a block's operations affect the dependency information. This is where the actual analysis logic resides.
+The implementation is in [DataflowEngine.cs (lines 26-65)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Engine/DataflowEngine.cs#L26-L65). The interesting part is the transfer function.
 
-#### Transfer Function for Assignments
+#### Transfer function for assignments
 
-For a simple assignment `x = y + z`, the transfer function:
-
-1. Creates a new location L for this statement
-2. Retrieves dependencies of `y` and `z` from the input state
-3. Computes dependencies of `x` as {L} ∪ deps(y) ∪ deps(z)
-4. Updates the output state with this information
-
-Symbolically:
+For an assignment `x = y + z` at location L:
 
 ```
-deps_out(x) = {current_location} ∪ deps_in(y) ∪ deps_in(z)
+deps_out(x) = {L} ∪ deps_in(y) ∪ deps_in(z)
 ```
 
-For example:
+`x` depends on the assignment itself plus everything that flowed into the right-hand side. Worked through a short example:
 
 ```csharp
 int a = 5;        // L1: deps(a) = {L1}
@@ -159,89 +135,78 @@ int c = a + b;    // L3: deps(c) = {L3, L1, L2}
 int d = c * 2;    // L4: deps(d) = {L4, L3, L1, L2}
 ```
 
-At location L4, the dependencies of `d` include L4 itself plus all dependencies inherited from `c`.
+Dependencies inherited from the RHS persist transitively. By L4, `d` carries the full chain back to L1 and L2.
 
-#### Handling Branches
+#### Joining at branches
 
-At merge points where multiple control flow paths converge, the analysis joins the dependency sets:
+When two paths reach the same block, the input state is the union of their output states:
 
 ```csharp
 int x;
 if (condition)     // L1
-    x = 1;         // L2: deps(x) = {L2, L1}
+    x = 1;         // L2: deps(x) = {L1, L2}
 else
-    x = 2;         // L3: deps(x) = {L3, L1}
-                   
-int y = x;         // L4: deps(x) = {L2, L3, L1} (union of both branches)
-                   //      deps(y) = {L4, L2, L3, L1}
+    x = 2;         // L3: deps(x) = {L1, L3}
+
+int y = x;         // L4: deps(x) = {L1, L2, L3}
+                   //      deps(y) = {L1, L2, L3, L4}
 ```
 
-The condition itself creates a dependency because it controls which assignment executes. This is a control dependency, discussed later.
+The condition at L1 appears in both branches because it controls which assignment runs. That is a control dependency, covered below.
 
-<!--
-Image Placeholder: A flowchart showing:
-- State propagation through a conditional branch
-- Dependency sets at each program point
-- The join operation merging sets after the branch
-Caption: Dependency information flows through control structures and merges at join points.
--->
+{% include diagram.html name="sharpfocus-dep-lattice" alt="Dependency sets merge at branch join: union of both paths propagates to the use site" %}
 
-### Alias Analysis
+### Aliases
 
-When two variables reference the same object, modifications through one affect the value visible through the other:
+Two variables can refer to the same object. A write through one is visible through the other:
 
 ```csharp
 var order = new Order();
-var backup = order;      // 'backup' is an alias for 'order'
+var backup = order;                       // backup aliases order
 order.Status = OrderStatus.Shipped;
-Console.WriteLine(backup.Status);  // Prints "Shipped"
+Console.WriteLine(backup.Status);         // prints "Shipped"
 ```
 
-Accurate dependency tracking requires identifying these aliases. When `order.Status` is modified, a forward slice from `order` must include uses of `backup` because both refer to the same object.
+If the analyzer treats `backup` as independent of `order`, a forward slice from `order` will miss the read through `backup` and a backward slice from `backup.Status` will miss the write to `order.Status`.
 
-SharpFocus implements a basic alias analysis that tracks:
+SharpFocus tracks aliases from four sources:
 
-1. **Direct assignments**: `var y = x` creates an alias relationship
-2. **Parameter passing**: Arguments passed to methods create aliases with parameters
-3. **Reference parameters**: `ref` and `out` parameters create explicit aliases
-4. **Field projection**: If `x` and `y` alias, then `x.Field` and `y.Field` also alias
+1. Direct assignment: `var y = x`.
+2. Argument passing: arguments alias the corresponding parameters inside the callee's frame.
+3. `ref` and `out` parameters: explicit aliases by language design.
+4. Field projection: if `x` and `y` alias, then `x.F` and `y.F` alias.
 
-**See:** [BasicAliasAnalyzer.cs (lines 38-96)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Analyzers/BasicAliasAnalyzer.cs#L38-L96) for the alias tracking implementation.
+The implementation is in [BasicAliasAnalyzer.cs (lines 38-96)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Analyzers/BasicAliasAnalyzer.cs#L38-L96). The transfer function consults it on every write to propagate the dependency to every aliased place.
 
-When analyzing an assignment `x = y`, the transfer function queries the alias analyzer to propagate dependencies through all aliases.
+The analysis is intraprocedural. Aliases that emerge through shared collection state, like two variables holding the same dictionary entry, are not tracked precisely. SharpFocus assumes any mutation to such a collection might affect every place that holds a reference to it. Soundness over precision.
 
-This conservative approach ensures mutations propagate to all potentially affected places. However, it remains intraprocedural and does not track aliases that emerge through shared collection references—for example, two variables pointing to the same element in a dictionary. In those cases, SharpFocus conservatively assumes any mutation to the collection might affect all places that reference it, preserving soundness at the expense of precision.
+### Mutation detection
 
-### Mutation Detection
+Assignment is not the only way to write state. C# also has compound assignment (`x += 5`), increment and decrement, property setters, mutating method calls (`list.Add(item)`), and `ref`/`out` parameters.
 
-Not all operations are simple assignments. C# provides numerous ways to modify state:
+Roslyn's CFG lowers most of these to plain assignments. `x++` becomes `x = x + 1`. The detector handles the cases the lowering leaves intact. See [RoslynMutationDetector.cs (lines 68-115)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Analyzers/RoslynMutationDetector.cs#L68-L115).
 
-- Direct assignment: `x = 5`
-- Compound assignment: `x += 5`
-- Increment/decrement: `x++`, `--x`
-- Method calls on mutable objects: `list.Add(item)`
-- Property setters: `order.Status = ...`
-- `ref` and `out` parameters: `int.TryParse(input, out result)`
+For `x += y`:
 
-Roslyn's control flow graph lowers many of these to simple assignments. For instance, `x++` becomes `x = x + 1` in the CFG. This simplifies analysis at the cost of losing information about the original syntax.
+```
+target: x
+inputs: {x, y}     // result depends on the old value of x and on y
+status: Definitely
+```
 
-**See:** [RoslynMutationDetector.cs (lines 68-115)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Analyzers/RoslynMutationDetector.cs#L68-L115) for mutation detection logic.
+For `list.Add(item)` where `list` is mutable:
 
-For a compound assignment `x += y`, the detector records:
-- Target: `x`
-- Inputs: `{x, y}` (the result depends on both the old value of `x` and `y`)
-- Status: `Definitely`
+```
+target: list
+inputs: {item, list}
+status: Possibly
+```
 
-For a method call `list.Add(item)` where `list` is mutable:
-- Target: `list`
-- Inputs: `{item}` (and potentially `list` itself)
-- Status: `Possibly` (without interprocedural analysis, the exact effects are unknown)
+`Possibly` triggers the same conservative propagation as an unknown call: the call site enters the dependency set of every later read of `list`. SharpFocus has a small allowlist of provably pure BCL methods (`string.ToUpper`, `Math.Abs`, etc.) that bypass this. Everything else is assumed to mutate.
 
-SharpFocus applies heuristics to recognize common pure methods in the Base Class Library—such as `string.ToUpper()` or `Math.Abs()`—and marks them as non-mutating. This prevents pollution of dependency sets by calls that provably produce no side effects. For user-defined methods or lesser-known APIs, the analysis remains conservative and assumes possible mutation unless proven otherwise.
+### Control dependencies
 
-### Control Dependencies
-
-Data dependencies arise from assignments. Control dependencies arise from branching:
+A statement nested inside a branch depends on the branch condition because the condition decides whether the statement runs at all:
 
 ```csharp
 int result;
@@ -253,160 +218,116 @@ else
 return result;      // L4
 ```
 
-At location L4, `result` depends not only on locations L2 and L3 (where values are assigned) but also on L1 (which determines which branch executes). This is a control dependency.
+At L4, `result` depends on L2 and L3 for its value and on L1 for whether L2 or L3 was the source.
 
-SharpFocus computes control dependencies using dominance analysis. A block X controls block Y if every path from the entry to Y passes through X. The algorithm:
+SharpFocus computes control dependencies from the post-dominator tree. A block X is a control dependency of Y if some successor of X reaches Y and another does not. The construction handles loops by adding back edges to the dominator computation, which keeps the post-dominator tree well-defined for cyclic CFGs. Once control dependencies are known, the transfer function adds the controlling location to the dependency set of every place written in the controlled block.
 
-1. Compute post-dominators for each block
-2. For each branch, identify blocks that are not post-dominated
-3. Those blocks are control-dependent on the branch condition
+### Intraprocedural and interprocedural analysis
 
-This extends to loops: blocks inside a loop body are control-dependent on the loop condition, and back edges receive special handling to ensure the post-dominator tree correctly captures cyclic control flow. When a block is control-dependent on a condition, the transfer function adds the condition's location to the dependency set of all variables written in that block.
+SharpFocus is primarily intraprocedural. A call `Foo(x)` is handled with three rules:
 
-### Intraprocedural vs. Interprocedural Analysis
+1. If `x` is passed by `ref` or `out`, treat it as written.
+2. If `x` is a mutable reference type and no summary is available, assume its fields might be written.
+3. Add the call site to `dep(x)` so later reads see it.
 
-The analysis must decide its scope. Two strategies exist:
+This overestimates dependencies. A call that reads `x` but never mutates it still gets added. The trade-off is that a real mutation inside `Foo` cannot be silently missed.
 
-**Intraprocedural**: Analyze one method at a time. Method calls are treated as black boxes that might modify anything reachable through their parameters.
+When summaries are available, the analysis uses them: it maps the callee's effects back to the caller's places and stops at the boundary to keep cost bounded.
 
-**Interprocedural**: Analyze across method boundaries, potentially inlining or summarizing callees.
+### The pipeline end to end
 
-SharpFocus uses primarily intraprocedural analysis for performance. When a method call `Foo(x)` appears:
-
-1. If `x` is passed by reference (`ref` or `out`), assume `x` is modified
-2. If `x` is a mutable reference type, conservatively assume fields might be modified
-3. Add the call site to `x`'s dependency set
-
-This conservative approach may overestimate dependencies but ensures correctness. A mutation might occur inside `Foo` that affects `x`, and the analysis won't miss it.
-
-For critical scenarios, SharpFocus can optionally perform limited interprocedural analysis by:
-- Examining the callee's summary (if available)
-- Mapping callee effects back to caller places
-- Stopping at method boundaries to prevent exponential blowup
-
-### The Complete Pipeline
-
-Combining these components, the analysis pipeline is:
+Given a method `M` and a cursor position `P`:
 
 ```
-Input: Method M, cursor position P
-
-1. Extract place at P using semantic model
-2. Build control flow graph for M
-3. Initialize flow domain (all places start with empty deps)
-4. Run fixpoint iteration:
-     For each block in CFG:
-       a. Detect mutations in block
-       b. Query alias analyzer for affected places
-       c. Retrieve dependencies of input places
-       d. Update dependencies of output places
-       e. Add control dependencies
-       f. Propagate to successors
-5. Extract fixpoint state for place at P
-6. Map locations back to source ranges
-7. Return highlighted ranges to editor
-
-Output: Backward slice, forward slice, or focus mode
+1. Resolve P to a place using the semantic model.
+2. Build the CFG for M.
+3. Initialize the flow domain (every place starts with empty deps).
+4. Run the worklist:
+     For each block:
+       a. Detect mutations.
+       b. Query the alias analyzer for affected places.
+       c. Read deps of input places.
+       d. Update deps of output places.
+       e. Add control dependencies.
+       f. Push successors.
+5. Read the fixpoint state for the place at P.
+6. Map locations back to source ranges.
+7. Hand the ranges to the editor for highlighting.
 ```
 
-The fixpoint iteration typically converges quickly—within a few passes through the CFG—because C# methods are usually small and dependency chains are short. In practice, most methods stabilize within 2–4 iterations. For methods with deep nesting or complex loops, convergence can take longer, but the algorithm is guaranteed to terminate because the dependency lattice has finite height and the transfer functions are monotonic.
+In practice the worklist converges in two to four passes for most methods. Deep nesting and complex loops take longer, but termination is guaranteed by the lattice height and monotonicity of the transfer functions.
 
-<!--
-Image Placeholder: A pipeline diagram showing:
-Input (Source Code) → CFG Construction → Alias Analysis → Mutation Detection → Fixpoint Iteration → Slice Extraction → Output (Highlighted Code)
-Caption: The analysis pipeline transforms source code into dependency information.
--->
+{% include diagram.html name="sharpfocus-pipeline" alt="SharpFocus analysis pipeline: source code through CFG, alias, mutation, fixpoint, and slice extraction to highlighted code" %}
 
-### Handling Language Complexity
+### Things the language makes harder
 
-Real C# code includes features that complicate analysis:
+A few C# features need special handling:
 
-**Async/Await**: Async methods produce state machines that drastically alter control flow. SharpFocus relies on Roslyn's CFG, which models async control flow correctly, but dependency tracking must account for the fact that `await` expressions introduce suspension points.
+- **async/await.** Roslyn's CFG already models the state machine, so the analyzer treats await blocks like any other. The interesting consequence is that captured locals can be observed by other code between suspension and resumption, which is one more reason mutations through reference types are treated conservatively.
+- **LINQ.** Query syntax desugars to `Where`/`Select`/etc. with lambdas. The analyzer treats those calls like any other and analyzes the lambda body as a nested scope, propagating captured-variable dependencies to the outer scope.
+- **Lambdas and closures.** Captures are tracked through the semantic model. A read of a captured local inside a lambda contributes to the slice the same way a direct read would.
+- **Properties.** Auto-properties act like fields. Custom getters and setters are analyzed like methods, which means a read of `order.Total` in the running example would pull in the body of the getter if SharpFocus had a summary for it.
+- **Generics.** Type parameters do not change the dependency structure. The analysis runs on shapes, not types, and Roslyn's semantic model handles constraint resolution.
+- **Pattern matching and switch expressions.** These lower to nested branches with temporary bindings. The temporaries need to be tracked carefully so that dependencies flow from the matched expression through the guards into the result.
 
-**LINQ**: Query expressions desugar to method calls. SharpFocus treats them as method calls, conservatively assuming they might modify captured variables.
+### Putting it together
 
-**Lambdas and Closures**: Captured variables create aliases between the outer scope and the lambda's scope. SharpFocus tracks these captures through Roslyn's semantic model.
-
-**Properties**: Auto-properties are treated like fields. Custom property getters and setters are analyzed like methods.
-
-**Generics**: Type parameters don't affect dependency analysis—the analysis operates on the structure of code, not on concrete types.
-
-**Pattern Matching and Switch Expressions**: These constructs produce complex lowered CFG shapes with nested branches and temporary variables. Roslyn exposes these structures explicitly, but SharpFocus must carefully track dependencies through the temporaries that represent matched values and guards. Switch expressions in particular introduce multiple decision points that merge into a single output, requiring precise join operations to avoid losing dependencies.
-
-### Example: Complete Analysis
-
-Consider this method:
+A worked example, with the cursor on the final `return rounded`:
 
 ```csharp
 public int ProcessOrder(Order order, decimal discount)
 {
     if (order.Total < 100)
         return 0;
-    
+
     decimal adjusted = order.Total * (1 - discount);
     int rounded = (int)Math.Round(adjusted);
-    
+
     order.ProcessedAmount = rounded;
     return rounded;
 }
 ```
 
-Cursor position: `return rounded` statement.
+The CFG has six blocks:
 
-**CFG Construction**:
 ```
-Block 0: if (order.Total < 100)
-Block 1: return 0
-Block 2: adjusted = order.Total * (1 - discount)
-Block 3: rounded = (int)Math.Round(adjusted)
-Block 4: order.ProcessedAmount = rounded
-Block 5: return rounded
-```
-
-**Mutation Detection**:
-- L2: Writes to `adjusted`, reads `order`, `discount`
-- L3: Writes to `rounded`, reads `adjusted`
-- L4: Writes to `order.ProcessedAmount`, reads `rounded`
-
-**Alias Analysis**:
-- No aliases created in this method
-
-**Control Dependencies**:
-- Blocks 2-5 are control-dependent on Block 0 (the condition)
-
-**Dependency Computation** (simplified):
-```
-Block 0: deps(order.Total) = {L0}
-Block 2: deps(adjusted) = {L2, L0} (depends on order.Total)
-         deps(adjusted) += {discount} (depends on discount parameter)
-Block 3: deps(rounded) = {L3, L2, L0, discount}
-Block 4: deps(order.ProcessedAmount) = {L4, L3, L2, L0, discount}
-Block 5: deps(return value) = {L5, L3, L2, L0, discount}
+B0: if (order.Total < 100)
+B1: return 0
+B2: adjusted = order.Total * (1 - discount)
+B3: rounded = (int)Math.Round(adjusted)
+B4: order.ProcessedAmount = rounded
+B5: return rounded
 ```
 
-**Backward Slice from `return rounded`**:
+Mutation detection records writes to `adjusted`, `rounded`, and `order.ProcessedAmount`, with reads of `order`, `discount`, and intermediate values. No aliases are created. Blocks B2 through B5 are control-dependent on B0.
+
+After the fixpoint:
+
+```
+B0: deps(order.Total)         = {L0}
+B2: deps(adjusted)            = {L2, L0, discount}
+B3: deps(rounded)             = {L3, L2, L0, discount}
+B4: deps(order.ProcessedAmount) = {L4, L3, L2, L0, discount}
+B5: deps(return value)        = {L5, L3, L2, L0, discount}
+```
+
+The backward slice from `return rounded`:
+
 - L5: `return rounded`
 - L3: `rounded = (int)Math.Round(adjusted)`
 - L2: `adjusted = order.Total * (1 - discount)`
 - L0: `if (order.Total < 100)` (control dependency)
-- Parameter: `discount`
+- the parameter `discount`
 
-The slice excludes:
-- L1: `return 0` (in alternate control path)
-- L4: `order.ProcessedAmount = rounded` (doesn't affect return value)
+What it leaves out: L1 (a different control path) and L4 (a write that doesn't flow into the return).
 
-**Forward Slice from `discount`**:
+The forward slice from `discount`:
+
 - L2: `adjusted = order.Total * (1 - discount)`
 - L3: `rounded = (int)Math.Round(adjusted)`
 - L4: `order.ProcessedAmount = rounded`
 - L5: `return rounded`
 
-The forward slice shows that modifying `discount` affects the computed result, the field assignment, and the return value.
+Changing `discount` would change the computed value, the field write, and the return.
 
-### Summary
-
-This article examined the core analysis techniques: control flow graphs for representing execution paths, places for representing memory locations, dependency lattices for tracking information flow, and algorithms for computing aliases, mutations, and control dependencies.
-
-**Next in this series:** [Part 3: Advanced Analysis Techniques](/posts/part3-advanced-concepts/) explores advanced topics: how transfer functions handle complex updates, what strategies optimize performance, and what challenges remain in scaling the analysis to large codebases.
-
----
+Next: [Part 3: Advanced Analysis Techniques](/posts/part3-advanced-concepts/) covers strong-vs-weak updates, summary-based interprocedural analysis, and where the current implementation gives up.

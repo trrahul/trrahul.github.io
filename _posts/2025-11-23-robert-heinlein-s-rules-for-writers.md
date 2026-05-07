@@ -36,24 +36,20 @@ Neil Gaiman added his own rule to Heinlein's list:
 
 ## Context and Controversy
 
-Heinlein's rules were written for the pulp magazine era, when writers were paid by the word and speed mattered. Rule #3 (avoiding rewrites) reflects this economic reality—time spent polishing one story was time not spent writing the next paying work.
+Heinlein's rules were written for the pulp magazine era, when writers were paid by the word and speed mattered. Rule #3 (avoiding rewrites) reflects this economic reality: time spent polishing one story was time not spent writing the next paying work.
 
 Modern writers often adapt these rules to contemporary publishing:
 
-- **Rule #3 is frequently modified** to allow for one careful revision pass before submission
-- The core principle remains: don't let perfectionism prevent you from finishing and submitting
-- **Professional editing happens** *after* acceptance, not before submission
+- Rule #3 is frequently modified to allow one careful revision pass before submission.
+- The core principle remains: don't let perfectionism prevent you from finishing and submitting.
+- Professional editing happens *after* acceptance, not before submission.
 
 ## The Underlying Philosophy
 
-These rules address the most common failure modes for aspiring writers:
-
-- **Not writing** (procrastination)
-- **Not finishing** (the perpetual first chapter)
-- **Endless tinkering** ([perfectionism](/posts/notes-on-neil-gaiman-s-storytelling-masterclass/#52-the-process-of-editing))
-- **Fear of submission** (hiding work)
-- **Giving up after rejection** (lack of persistence)
-- **Waiting instead of working** (creative paralysis)
-
-The rules are pragmatic, not aesthetic. They won't make you a [better stylist](/posts/creative-writing-principles-translated-to-technical-writing/), but they will make you a working writer.
+- Not writing (procrastination)
+- Not finishing (the perpetual first chapter)
+- Endless tinkering ([perfectionism](/posts/notes-on-neil-gaiman-s-storytelling-masterclass/#52-the-process-of-editing))
+- Fear of submission (hiding work)
+- Giving up after rejection (lack of persistence)
+- Waiting instead of working (creative paralysis)
 
