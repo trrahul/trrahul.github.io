@@ -75,46 +75,53 @@ h6 {
 
 /* Individual heading sizes and spacing */
 h1 {
-  font-size: 2rem;
+  font-size: 2.25rem;
   font-weight: 800 !important;
 }
 
 h2 {
-  font-size: 1.625rem;
-  margin-top: 2.5rem;
+  font-size: 1.95rem;
+  font-weight: 700 !important;
+  margin-top: 3.25rem;
   /* H2 underline styling (from h1-underline.scss) */
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.4rem;
   border-bottom: 1px solid var(--main-border-color);
-  margin-bottom: 1.25rem !important;
+  margin-bottom: 1.1rem !important;
 }
 
 main h2 {
-  margin: 2.5rem 0 1.25rem;
+  margin: 3.25rem 0 1.1rem;
 }
 
 .content h2,
 main h2 {
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.4rem;
   border-bottom: 1px solid var(--main-border-color);
-  margin-bottom: 1.25rem !important;
+  margin-bottom: 1.1rem !important;
 }
 
 h3 {
-  font-size: 1.375rem;
-  margin-top: 2rem;
+  font-size: 1.3rem;
+  margin-top: 2.3rem;
+  margin-bottom: 0.6rem;
 }
 
 main h3 {
-  margin: 2rem 0 1rem;
+  margin: 2.3rem 0 0.6rem;
 }
 
+/* H4 as a small-caps eyebrow, clearly subordinate to h3 */
 h4 {
-  font-size: 1.18rem;
+  font-size: 0.9rem;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted-color);
+  margin-top: 1.8rem;
 }
 
 main h4 {
-  margin: 2rem 0 1rem;
+  margin: 1.8rem 0 0.6rem;
 }
 
 h5 {
@@ -283,15 +290,15 @@ blockquote {
   }
 
   h1 {
-    font-size: 2rem;
+    font-size: 1.9rem;
   }
 
   h2 {
-    font-size: 1.625rem;
+    font-size: 1.6rem;
   }
 
   h3 {
-    font-size: 1.375rem;
+    font-size: 1.2rem;
   }
 
   .content {

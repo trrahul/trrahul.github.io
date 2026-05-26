@@ -1,6 +1,7 @@
 ---
 layout: post
 title: The Kindle reviews were right about Frankenstein being difficult to read
+description: "It do be like that."
 date: 2025-11-23 12:12 +0530
 categories: [Epistemology]
 tags: [literature, book, classics, epistemology]

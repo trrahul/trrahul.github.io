@@ -182,7 +182,10 @@ module Jekyll
       self.content = content
       self.data = {
         'layout' => nil,
-        'sitemap' => false
+        'sitemap' => false,
+        # The JSON embeds post text verbatim (code segments can contain `{{`,
+        # `{%`, etc.). Skip Liquid so those aren't parsed/mangled or warned on.
+        'render_with_liquid' => false
       }
     end
   end

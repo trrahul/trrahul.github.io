@@ -1,55 +1,31 @@
 ---
 layout: post
 title: Robert Heinlein's Rules for Writers
+description: "Five business rules for finishing and selling what you write."
 date: 2025-11-23 13:14 +0530
 categories: [Epistemology]
 tags: [writing, robert-heinlein, business-rules]
 ---
 
-Robert A. Heinlein, the prolific science fiction author, formulated five "Business Rules" for writers seeking publication. These rules, originally published in his essay "On the Writing of Speculative Fiction" (1947), have become foundational advice in the writing community.
+Robert Heinlein gave writers five "Business Rules" in his 1947 essay "On the Writing of Speculative Fiction." They're blunt, and most of them have aged well.
 
-## The Five Rules
+## The five rules
 
-1. **You must write.**
-   - Writing requires actually putting words on the page. Ideas alone don't count.
+1. You must write. Ideas don't count until they're words on the page.
+2. You must finish what you start. An unfinished manuscript can't be sold, and finishing turns out to be a skill of its own.
+3. You must refrain from rewriting, except to editorial order. Endless revision is how a story never reaches an editor. This is the rule people argue with: plenty of writers, [Neil Gaiman](/posts/notes-on-neil-gaiman-s-storytelling-masterclass/#52-editing) among them, allow themselves one revision pass before submitting.
+4. You must put your story on the market. Finished work sitting in a drawer does nothing.
+5. You must keep it on the market until it is sold. [Rejection](/posts/notes-on-neil-gaiman-s-storytelling-masterclass/#53-rules-for-getting-published) is part of the process; keep sending it out until an editor says yes.
 
-2. **You must finish what you write.**
-   - Incomplete manuscripts can't be published. The discipline of finishing is essential.
+## The sixth rule, from Gaiman
 
-3. **You must refrain from rewriting, except to editorial order.**
-   - Endless revision can prevent work from ever reaching an editor. Perfect is the enemy of done.
-   - *Note: This rule is the most controversial. Many successful writers, including [Neil Gaiman](/posts/notes-on-neil-gaiman-s-storytelling-masterclass/#52-the-process-of-editing), modify this to allow for necessary revision before submission.*
+Neil Gaiman adds one of his own:
 
-4. **You must put your story on the market.**
-   - Finished work sitting in a drawer serves no one. Submission is a requirement for publication.
+6. Start the next thing. Don't sit waiting on an acceptance or a rejection. The best response to finishing one piece is starting another, which keeps you working and keeps the wait from hardening into [writer's block](/posts/notes-on-neil-gaiman-s-storytelling-masterclass/#51-writers-block).
 
-5. **You must keep your story on the market until it is sold.**
-   - [Rejection](/posts/notes-on-neil-gaiman-s-storytelling-masterclass/#53-rules-for-writers-and-publication) is part of the process. Persistence matters. Keep submitting until you find the right editor.
+## Rule 3 in context
 
-## The Sixth Rule (Gaiman's Addition)
+Heinlein wrote these for the pulp magazines, where writers were paid by the word and speed paid the rent. Rule 3 follows directly: time spent polishing one story was time not spent writing the next one that paid.
 
-Neil Gaiman added his own rule to Heinlein's list:
-
-6. **Start working on the next thing.**
-   - Don't wait for acceptance or rejection. The best response to completing a work is to begin the next one.
-   - This keeps you productive and prevents [emotional paralysis](/posts/notes-on-neil-gaiman-s-storytelling-masterclass/#51-overcoming-writers-block) from the submission process.
-
-## Context and Controversy
-
-Heinlein's rules were written for the pulp magazine era, when writers were paid by the word and speed mattered. Rule #3 (avoiding rewrites) reflects this economic reality: time spent polishing one story was time not spent writing the next paying work.
-
-Modern writers often adapt these rules to contemporary publishing:
-
-- Rule #3 is frequently modified to allow one careful revision pass before submission.
-- The core principle remains: don't let perfectionism prevent you from finishing and submitting.
-- Professional editing happens *after* acceptance, not before submission.
-
-## The Underlying Philosophy
-
-- Not writing (procrastination)
-- Not finishing (the perpetual first chapter)
-- Endless tinkering ([perfectionism](/posts/notes-on-neil-gaiman-s-storytelling-masterclass/#52-the-process-of-editing))
-- Fear of submission (hiding work)
-- Giving up after rejection (lack of persistence)
-- Waiting instead of working (creative paralysis)
+Today most writers soften it to allow a single careful revision before submitting. The spirit survives the change: don't let polishing become the reason you never finish or never send. The real editing happens after an editor takes the work, not before.
 

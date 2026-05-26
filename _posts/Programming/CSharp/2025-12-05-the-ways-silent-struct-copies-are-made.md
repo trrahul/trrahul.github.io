@@ -1,10 +1,13 @@
 ---
 layout: post
 title: The ways silent struct copies are made
+description: "Where C# copies structs."
 date: 2026-05-01 14:11:31 +05:30
 categories: [Programming, CSharp]
-tags: [c#, programming]
+tags: [csharp, programming]
 ---
+
+In C#, a struct is a value type: assign it somewhere, pass it to a method, or return it from a property, and you're holding a copy, not the original. Most of the time that's fine. But put a mutable struct behind the wrong kind of accessor and you get a bug that looks impossible. You call a method that plainly increments a field, twice, and the value just doesn't change.
 
 Consider a mutable struct with a single property and a method that increments it:
 
@@ -23,7 +26,7 @@ internal struct Mutable
 }
 ```
 
-And a class that holds three copies of it. One as a property, one as a readonly field, and one as a plain field.
+And a class that holds three copies of it: one as a property, one as a readonly field, one as a plain field.
 
 ```csharp
 internal class A
@@ -41,7 +44,7 @@ internal class A
 }
 ```
 
-Now call `IncrementX()` twice through each accessor:
+Now call `IncrementX()` twice through each one:
 
 ```csharp
 A a = new A();
@@ -56,21 +59,21 @@ Console.WriteLine(a.FieldMutable.IncrementX());      // 2
 Console.WriteLine(a.FieldMutable.IncrementX());      // 3  ← accumulates
 ```
 
-The property and readonly field both print `2` twice. The plain field prints `2` then `3`. The mutations in the first two cases vanish.
+The property and the readonly field both print `2` twice. The plain field prints `2`, then `3`. In the first two cases the mutations vanish, and the IL shows exactly where they go.
 
 ---
 
 ## What a method call on a struct actually needs
 
-When you call an instance method on a struct, the runtime needs a managed pointer to the struct's storage, which is a `this` reference that points somewhere the method can actually write to. The question the compiler has to answer is: *where does that pointer come from?*
+To run an instance method on a struct, the runtime needs a pointer to where that struct actually lives, so that `this` inside the method points at storage it can write to. Every case below comes down to one question the compiler has to answer for each call: where does that pointer come from? When it points at the real field, your mutation sticks. When it points at a throwaway copy, your mutation dies with the copy.
 
-The answer depends on the accessor.
+The answer depends on the accessor, and the three cases compile to different IL. (IL is the stack-based intermediate language the C# compiler emits before anything becomes machine code; reading it is the clearest way to see what's really happening.) The whole difference between a vanished mutation and a real one is a single instruction.
 
 ---
 
 ## The property case
 
-A property getter is a method. It returns the struct **by value**, meaning the struct is pushed onto the evaluation stack as a copy. Look at the IL.
+A property getter is just a method, and a method hands back a struct by value: it pushes a copy onto the stack, not a reference to the original. Here's the IL for `a.PropertyMutable.IncrementX()`:
 
 ```cil
 callvirt  instance valuetype Mutable A::get_PropertyMutable()
@@ -79,15 +82,15 @@ ldloca.s  V_1
 call      instance int32 Mutable::IncrementX()
 ```
 
-The getter runs and returns a copy. That copy is stored in a throwaway local `V_1`. Then `ldloca.s V_1` takes the *address of that local* and hands it to `IncrementX` as `this`. The method mutates `V_1`. The actual backing field inside `a` is never touched.
+Read it top to bottom. The getter runs and returns a copy. That copy goes into a throwaway local the compiler calls `V_1`. Then `ldloca.s V_1` takes the address of that local and passes it to `IncrementX` as `this`. So the method faithfully increments `V_1`, and the backing field inside `a` is never touched.
 
-The second call is identical. The getter runs again, produces a copy from the unchanged backing field, and `IncrementX` increments the copy. That is why you see `2` twice.
+The second call is identical. The getter runs again, produces a fresh copy from the unchanged backing field, and `IncrementX` increments that copy. That's why you see `2` twice.
 
 ---
 
 ## The readonly field case
 
-One might expect the compiler to do something different here, since a field access is not a method call. But again look at the IL.
+You might expect a field to behave differently, since reading a field isn't a method call. It doesn't. Here's the IL:
 
 ```cil
 ldfld    valuetype Mutable A::ReadonlyMutable
@@ -96,49 +99,46 @@ ldloca.s V_1
 call     instance int32 Mutable::IncrementX()
 ```
 
-The instruction `ldfld` (load field value) copies the field's value onto the evaluation stack. The rest of the pattern is the same: store into a local, take the local's address and call the method on the copy.
+The instruction `ldfld` (load field value) copies the field's value onto the stack. From there the pattern is the same as before: store into a local, take the local's address, call the method on the copy.
 
-`ReadonlyMutable` is marked `initonly` in the IL. Handing out a direct pointer to a readonly field would let any method mutate it from the inside, which would silently defeat the `readonly` guarantee without the compiler or the caller knowing. So the compiler makes a defensive copy for every call.
-
-The behavior is the same as the property case. Both calls print `2`.
+The reason is the `readonly`. In the IL the field is marked `initonly`. If the compiler handed `IncrementX` a direct pointer to it, the method could quietly mutate a field you promised wouldn't change, defeating `readonly` from the inside without the compiler or the caller knowing. So it makes what's called a defensive copy before every call, which lands you right back in the property case for a different reason. Both calls print `2`.
 
 ---
 
 ## The plain field case
 
-Now look at the plain field:
+Now the plain field:
 
 ```cil
 ldflda   valuetype Mutable A::FieldMutable
 call     instance int32 Mutable::IncrementX()
 ```
 
-The instruction is `ldflda` (load field address). No copy. No local. The compiler pushes a managed pointer directly to `FieldMutable`'s storage location inside the heap object `a`, and that pointer becomes `this` in `IncrementX`. The method mutates the actual field.
+One instruction, `ldflda` (load field address), and that's the whole difference. No copy, no local. It pushes a pointer straight to `FieldMutable`'s storage inside the heap object `a`, and that pointer becomes `this`. So `IncrementX` mutates the real field.
 
-First call: X goes from 1 to 2, prints `2`. Second call: same field, X goes from 2 to 3, prints `3`. Mutations accumulate because there is no copy between the caller and the field.
+First call: X goes 1 to 2, prints `2`. Second call: same field, X goes 2 to 3, prints `3`. The mutations accumulate because nothing sits between the caller and the field.
 
 ---
 
 ## The mental model
 
-Whenever you access a struct member through some accessor, ask yourself: does this accessor hand me an address or a copy?
+Whenever you reach a struct member through an accessor, ask one thing: does this hand me an address or a copy?
 
- - A property getter always hands you a copy because it is a method, and methods return by value. 
- - A `readonly` field always hands you a copy. Per the C# language specification, when a readonly member invokes a non-readonly member, the structure referred to by `this` must be copied to produce a writable reference [[ECMA C# Language Spec — Structs](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/structs)].
+ - A property getter always hands you a copy, because it's a method and methods return by value.
+ - A `readonly` field always hands you a copy. Per the C# language specification, when a readonly member invokes a non-readonly member, the struct that `this` refers to must be copied to produce a writable reference [[ECMA C# Language Spec: Structs](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/structs)].
 
-If you see `ldfld` in the IL, think *copy*, and know that mutations die with the local. `ldfld` pushes the value of a field onto the stack, producing a copy [[ECMA-335, §III.4.10](https://ecma-international.org/publications-and-standards/standards/ecma-335/)]. If you see `ldflda`, think *reference*. It pushes the address of the field and know mutations persist [[ECMA-335, §III.4.11](https://ecma-international.org/publications-and-standards/standards/ecma-335/)].
+If you see `ldfld` in the IL, think copy, and know the mutation dies with the local. `ldfld` pushes the value of a field onto the stack, producing a copy [[ECMA-335, §III.4.10](https://ecma-international.org/publications-and-standards/standards/ecma-335/)]. If you see `ldflda`, think reference: it pushes the address of the field, so the mutation persists [[ECMA-335, §III.4.11](https://ecma-international.org/publications-and-standards/standards/ecma-335/)].
 
-The safest conclusion is the one the C# documentation has long held: **structs should be immutable**. The Microsoft docs on structure types note that marking a struct `readonly` lets the compiler make use of the modifier for performance optimizations by skipping defensive copies [[Microsoft Learn: Structure types](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct)]. The `readonly` keyword reference explains that, value types directly contain their data, a field that is a readonly value type is immutable, and the compiler enforces that immutability by copying the value before any member call that might mutate it [[Microsoft Learn: readonly keyword](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/readonly)].
+The safest conclusion is the one the C# docs have held all along: make your structs immutable. The docs on structure types note that marking a struct `readonly` lets the compiler optimize by skipping defensive copies [[Microsoft Learn: Structure types](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct)]. The `readonly` keyword reference explains that because value types contain their data directly, a field that is a readonly value type is immutable, and the compiler enforces that by copying the value before any member call that might mutate it [[Microsoft Learn: readonly keyword](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/readonly)].
 
-If a struct has no mutable state, the distinction between a copy and a reference becomes meaningless. A defensive copy of an immutable struct is indistinguishable from the original.
+If a struct has no mutable state, the difference between a copy and a reference stops mattering. A defensive copy of an immutable struct is indistinguishable from the original.
 
 > Make your structs immutable.
 {: .prompt-tip }
 
 ---
 
-## Extra - The collection case: List vs array
-
+## Extra: the List vs array case
 
 ```csharp
 var list = new List<Customer> { new Customer(age: 5) };
@@ -150,7 +150,7 @@ array[0].IncrementAge();
 Console.WriteLine(array[0].Age); // 6, mutation kept
 ```
 
-The `List<T>` indexer getter is a method. It returns `T` by value, so accessing `list[0]` is same as the property case. A copy lands in a local, `IncrementAge` mutates the copy, and the list element is untouched.
+A `List<T>` indexer (`list[0]`) is a method too, `get_Item`, and it returns the element by value. So `list[0]` is the property case all over again: a copy lands in a local, `IncrementAge` mutates the copy, and the element inside the list never moves.
 
 ```il
 ldloc.0      // list
@@ -162,10 +162,10 @@ call         instance int32 Customer::IncrementAge()
 pop
 ```
 
-`IncrementAge` mutates `V_2`. The element inside the list is never touched. When the "Modified Age" `WriteLine` call then fetches `list[0]` again, it gets yet another fresh copy of the original unchanged element and prints `5`.
+`IncrementAge` mutates `V_2`, and the element in the list is never touched. When the next `WriteLine` fetches `list[0]` again, it gets yet another fresh copy of the unchanged element, and prints `5`.
 
-For the array case, the compiler emits a different instruction `ldelema`, load element address, which pushes a managed pointer directly into the array's heap storage.
- 
+An array is different. Indexing it emits `ldelema` (load element address), which pushes a pointer straight into the array's heap storage.
+
 ```il
 ldloc.1      // 'array'
 ldc.i4.0
@@ -174,4 +174,4 @@ call         instance int32 Customer::IncrementAge()
 pop
 ```
 
-`IncrementAge` receives a direct address into the array buffer as `this`, mutates the element in place, and the subsequent `get_Age` call on the same address reads the updated value. The output is `6`.
+`IncrementAge` gets a direct address into the array's buffer as `this`, mutates the element in place, and reading `array[0].Age` afterward sees the update. Output: `6`. Same code shape, opposite result, because the array hands out an address and the list hands out a copy.

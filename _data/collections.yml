@@ -1,0 +1,26 @@
+# Collections shown in the "Collections" section of the home page.
+#
+# Membership is derived from post front matter: add `collection_id: <slug>` to a
+# post and it will be counted under the matching entry below. A collection only
+# appears on the home page once at least one post references its slug.
+#
+# (The field is `collection_id`, not `collection` — Jekyll reserves `collection`
+# on documents for the built-in collection name, e.g. "posts".)
+#
+# Each entry controls how the collection row is displayed:
+#   slug   - matches the post `collection_id:` value (required)
+#   name   - display name in the row (required)
+#   desc   - one-line editorial description
+#   w40k   - true to render the row in the Warhammer 40,000 (Cinzel/green) style
+#   order  - sort order in the list (ascending)
+
+- slug: warhammer40k
+  name: Warhammer 40,000
+  desc: Works from the grim dark.
+  w40k: true
+  order: 1
+
+- slug: sharpfocus
+  name: SharpFocus
+  desc: Program slicing for C# - VSCode and Rider extensions.
+  order: 2

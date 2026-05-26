@@ -1,8 +1,10 @@
 ---
 layout: post-w40k
 title: The Reverie
+description: "Some prose I liked"
 date: 2025-07-11 00:27:33 +05:30
 categories: [Warhammer40K]
+collection_id: warhammer40k
 tags: []
 ---
 >The Mirrored Path is navigated by ideals, not traversed by steps

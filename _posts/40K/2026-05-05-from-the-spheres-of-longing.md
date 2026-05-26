@@ -1,8 +1,10 @@
 ---
 layout: post-w40k
 title: I Was Liberated
+description: "Quotes from Ravenor"
 date: 2026-04-07 23:50:11 +05:30
 categories: [Warhammer40K]
+collection_id: warhammer40k
 tags: []
 ---
 

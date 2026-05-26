@@ -1,8 +1,10 @@
 ---
 layout: post-w40k
 title: I wake and feel the fell of dark, not day
+description: "The original reference and full-poem"
 date: 2026-04-01 22:37:46 +05:30
 categories: [Warhammer40K]
+collection_id: warhammer40k
 tags: []
 ---
 

@@ -1,43 +1,46 @@
 ---
 layout: post
 title: "SharpFocus Part 3: Advanced Analysis Techniques"
+description: "Following data flow across method and class boundaries."
 date: 2025-11-09 12:00:00 +0530
 categories: [SharpFocus]
-tags: [csharp, roslyn, static-analysis, transfer-functions, interprocedural]
+collection_id: sharpfocus
+tags: [csharp, roslyn, ide-extension]
 ---
 
-**Part 3 of 3** in the [SharpFocus](https://github.com/trrahul/SharpFocus) series. Read [Part 1: Understanding Code Through Data Flow](/posts/part1-getting-started/) and [Part 2: The Analysis Engine](/posts/part2-core-technology/) first.
+Part 3 of 3 in the [SharpFocus](https://github.com/trrahul/SharpFocus) series. Read [Part 1: Understanding Code Through Data Flow](/posts/part1-getting-started/) and [Part 2: The Analysis Engine](/posts/part2-core-technology/) first.
 
-The previous articles introduced program slicing and examined the core analysis techniques. This final article explores advanced topics: how transfer functions propagate dependencies accurately, when precision must be traded for soundness, and what challenges arise in analyzing real codebases.
+Parts 1 and 2 covered what slicing is and how the engine computes it. This last part is about the harder calls: how the transfer function stays accurate, when I had to trade precision for safety, what trips the analysis up in complex code, and where it gives up entirely.
 
-### The Transfer Function: Heart of the Analysis
+### The transfer function
 
-The transfer function determines how each operation affects dependency information. It takes an input state (dependencies before the operation) and produces an output state (dependencies after the operation).
+The transfer function is the rule for how a single operation changes the dependency information. It takes the dependencies as they stand before the operation and produces the dependencies after it.
 
-For an assignment `target = value`, the basic transfer function:
+For an assignment `target = value`, the basic version is:
 
 ```
 deps_out(target) = {current_location} ∪ deps_in(value)
 ```
 
-But real code is more complex. The transfer function must handle:
+Complex code asks more of it than that. It also has to handle:
+
 - Multiple input places
 - Aliases that share dependencies
-- Control dependencies from surrounding conditionals
-- Weak vs. strong updates
+- Control dependencies from the conditionals around it
+- Weak versus strong updates
 
-#### Strong Updates vs. Weak Updates
+#### Strong and weak updates
 
-When a place is assigned a new value, should the old dependencies be discarded or retained?
+When a place gets a new value, should the old dependencies be thrown away or kept?
 
-**Strong Update**: Replace all dependencies. Used when the assignment definitely overwrites the previous value:
+A strong update throws them away. You can do this when the assignment definitely overwrites whatever was there:
 
 ```csharp
 int x = 10;        // L1: deps(x) = {L1}
 x = 20;            // L2: deps(x) = {L2}  // Strong update: L1 is removed
 ```
 
-**Weak Update**: Merge with existing dependencies. Used when the assignment might not happen or when aliases exist:
+A weak update merges the new dependencies with the old. You fall back to this when the assignment might not run, or when an alias means you can't be sure you've covered the only copy:
 
 ```csharp
 int x = 10;        // L1: deps(x) = {L1}
@@ -45,23 +48,21 @@ if (condition)
     x = 20;        // L2: deps(x) = {L1, L2}  // Weak update: L1 is retained
 ```
 
-The distinction matters for precision. Strong updates eliminate irrelevant dependencies. Weak updates maintain soundness when certainty is impossible.
+The difference is what keeps slices tight. A strong update drops dependencies that no longer apply; a weak update keeps everything when the analysis can't be certain, which is safer but noisier.
 
-The decision criteria:
+Three questions decide which one applies:
 
-1. **Unique Place**: Can the analysis prove only one memory location is affected? If yes, strong update. If aliases exist, weak update.
+1. Is only one memory location affected? If the analysis can prove that, it's a strong update. If aliases mean other places might point at the same thing, it's weak.
+2. Does the assignment always run on this path? If yes, strong. If it's behind a condition, weak.
+3. Does the assignment write the whole place? Assigning a whole object is a strong update; modifying one field of it is weak.
 
-2. **Definite Execution**: Does the assignment always execute along this path? If yes, strong update. If conditional, weak update.
+#### The implementation
 
-3. **Complete Coverage**: Does the assignment write all components of a structured place? If yes (e.g., assigning a whole object), strong update. If partial (e.g., modifying one field), weak update.
+The full transfer function is in [DataflowTransferFunction.cs (lines 55-130)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Engine/DataflowTransferFunction.cs#L55-L130).
 
-#### Implementing the Transfer Function
+#### Control dependencies in the transfer function
 
-**See:** [DataflowTransferFunction.cs (lines 55-130)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Engine/DataflowTransferFunction.cs#L55-L130) for the complete transfer function implementation.
-
-#### Control Dependencies in the Transfer Function
-
-Operations inside conditional blocks depend not only on their inputs but also on the condition that guards them:
+An operation inside a conditional block depends not only on its inputs but on the condition guarding it:
 
 ```csharp
 if (user.IsAdmin)              // L1
@@ -70,15 +71,13 @@ if (user.IsAdmin)              // L1
 }
 ```
 
-The assignment at L2 only executes if `user.IsAdmin` is true. Therefore, `grant` depends on both the assignment itself and the condition.
+The assignment at L2 only runs if `user.IsAdmin` is true, so `grant` depends on both the assignment and the condition.
 
-**See:** [ControlFlowDependencyAnalyzer.cs (lines 50-90)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Analyzers/ControlFlowDependencyAnalyzer.cs#L50-L90) for control dependency computation.
+The computation is in [ControlFlowDependencyAnalyzer.cs (lines 50-90)](https://github.com/trrahul/SharpFocus/blob/main/src/SharpFocus.Core/Analyzers/ControlFlowDependencyAnalyzer.cs#L50-L90). It's what makes a backward slice include the conditions that decide whether a statement runs, not just the statements that compute the value.
 
-This ensures that backward slices include the conditions that determine whether a statement executes.
+### Following data across methods
 
-### Interprocedural Analysis
-
-Most analysis so far has been intraprocedural, confined to a single method. But dependencies often cross method boundaries:
+Everything so far has stayed inside a single method. But data doesn't respect method boundaries:
 
 ```csharp
 public class OrderService
@@ -102,41 +101,39 @@ public class OrderService
 }
 ```
 
-A forward slice from `_currentOrder` in `LoadOrder` should include both L2 and L3, which occur in different methods. This requires interprocedural analysis.
+A forward slice from `_currentOrder` in `LoadOrder` ought to reach L2 and L3, even though they live in other methods. Catching them means looking across methods, not just within one.
 
-#### The Modular Strategy
+#### The modular approach
 
-SharpFocus adopts a modular approach:
+SharpFocus does this in three steps:
 
-1. **Analyze each method independently**: Compute dependencies within method boundaries.
-
-2. **Build summaries**: For each method, record which fields it reads and writes.
-
-3. **Connect summaries**: When analyzing a method that accesses a field, consult the summaries of other methods that might have written to that field.
+1. Analyze each method on its own, computing dependencies within its boundaries.
+2. Build a summary for each method, recording which fields it reads and which it writes.
+3. Connect the summaries: when a method touches a field, consult the summaries of the other methods that might have written to it.
 
 For the example above:
 - `LoadOrder` summary: writes `_currentOrder`
 - `ApplyDiscount` summary: reads and writes `_currentOrder`
 - `SaveOrder` summary: reads `_currentOrder`
 
-When computing a forward slice from `_currentOrder` in `LoadOrder`, the analysis:
+So a forward slice from `_currentOrder` in `LoadOrder`:
 1. Finds the initial write at L1
-2. Scans the class for other methods accessing `_currentOrder`
-3. Includes L2 and L3 based on the summaries
+2. Scans the class for other methods that touch `_currentOrder`
+3. Pulls in L2 and L3 based on their summaries
 
-#### Handling Method Calls
+#### Method calls
 
-Within a method, calls to other methods create dependencies:
+Within a method, a call to another method creates dependencies:
 
 ```csharp
 int result = ComputeValue(x, y);  // How does 'result' depend on x and y?
 ```
 
-Without inspecting `ComputeValue`, the analysis must conservatively assume:
+Without looking inside `ComputeValue`, the analysis has to assume the worst:
 - If `x` or `y` are reference types, they might be modified
-- The return value depends on all arguments
+- The return value depends on every argument
 
-With summary information, the analysis can be precise:
+With a summary, it can do better:
 
 ```csharp
 [Summary: Pure(reads: arg0, arg1)]
@@ -146,22 +143,22 @@ int ComputeValue(int a, int b)
 }
 ```
 
-The `[Pure]` attribute indicates no side effects. The analysis knows `result` depends only on `x` and `y`, with no modifications.
+The `[Pure]` attribute says there are no side effects, so the analysis knows `result` depends only on `x` and `y` and that nothing was modified.
 
-SharpFocus uses Roslyn's semantic model to identify pure methods:
-- Methods marked `[Pure]` attribute
+SharpFocus leans on Roslyn's semantic model to spot pure methods:
+- Methods marked with the `[Pure]` attribute
 - Methods on immutable types
 - Simple property getters
 
-For other methods, the analysis applies conservative assumptions.
+Everything else gets the conservative treatment.
 
-### Handling Complex Language Features
+### Language features that fight back
 
-Real C# code uses features that challenge static analysis.
+Complex C# leans on features that make static analysis harder. Here's how SharpFocus copes with the main ones.
 
-#### Async/Await
+#### Async/await
 
-Async methods introduce hidden control flow:
+Async methods hide their control flow:
 
 ```csharp
 public async Task ProcessAsync()
@@ -171,16 +168,14 @@ public async Task ProcessAsync()
 }
 ```
 
-The `await` expression suspends execution, and the method resumes later. Between suspension and resumption, other code might execute, potentially modifying shared state.
-
-Roslyn's CFG models async control flow by creating additional blocks for the state machine. SharpFocus processes these blocks like normal control flow, but must account for:
+The `await` suspends the method, which resumes later. In between, other code can run and change shared state. Roslyn's CFG models this by adding blocks for the state machine, and SharpFocus walks those like any other control flow, but it has to account for:
 - Captured variables in the closure
-- Potential modifications during suspension
-- Task results as dependencies
+- Possible changes during the suspension
+- The task result as a dependency
 
-#### LINQ Query Expressions
+#### LINQ
 
-LINQ queries desugar to method chains with lambdas:
+LINQ queries desugar into method chains with lambdas:
 
 ```csharp
 var result = orders
@@ -196,19 +191,16 @@ var result = orders
     .Select(new Func<Order, int>(o => o.CustomerId));
 ```
 
-The analysis must:
+So the analysis has to:
 1. Recognize the lambda captures (`o`)
-2. Track dependencies within the lambda body
-3. Propagate dependencies from the collection to the result
+2. Track dependencies inside the lambda body
+3. Carry dependencies from the collection through to the result
 
-SharpFocus treats LINQ as method calls with lambda parameters. The lambda analysis:
-- Identifies captured variables
-- Analyzes the lambda body as a nested method
-- Connects lambda dependencies to the outer scope
+SharpFocus treats LINQ as method calls that take lambdas. For each lambda it finds the captured variables, analyzes the body as a nested method, and connects the lambda's dependencies back to the surrounding scope.
 
-#### Properties and Indexers
+#### Properties and indexers
 
-Properties can have complex getter and setter bodies:
+A property can have a real getter and setter:
 
 ```csharp
 public int Total
@@ -223,16 +215,11 @@ public int Total
 }
 ```
 
-SharpFocus analyzes properties like methods:
-- Auto-properties are treated as fields
-- Custom getters are analyzed when computing backward slices
-- Custom setters are analyzed when detecting mutations
+SharpFocus analyzes properties like methods: auto-properties act as fields, custom getters are analyzed when computing backward slices, and custom setters are analyzed when detecting mutations. For `var x = order.Total`, the backward slice reaches not just `_items` but each item's `Price`.
 
-For `var x = order.Total`, the backward slice includes not just `_items` but also each item's `Price` property.
+#### Generics
 
-#### Generics and Type Parameters
-
-Generic types don't directly affect dependency analysis because the analysis operates on structure, not concrete types:
+Generic types don't change the dependency analysis, because it works on the structure of the code rather than the concrete type:
 
 ```csharp
 public T Process<T>(T input) where T : IComparable<T>
@@ -241,23 +228,21 @@ public T Process<T>(T input) where T : IComparable<T>
 }
 ```
 
-The dependency `result depends on input` holds regardless of what `T` is. Type constraints might affect which methods are available, but Roslyn's semantic model resolves that.
+"result depends on input" holds whatever `T` turns out to be. Constraints might decide which methods are available, and Roslyn's semantic model resolves that.
 
-### The Precision vs. Soundness Trade-off
+### Soundness versus precision
 
-Static analysis faces a fundamental trade-off:
+Static analysis lives with a basic trade-off.
 
-**Soundness**: Never miss a real dependency. If A might affect B, report it.
+Soundness means never missing a real dependency: if A might affect B, report it. Precision means avoiding false alarms: don't report a dependency that can't actually happen.
 
-**Precision**: Avoid false positives. Don't report dependencies that cannot occur.
+SharpFocus chooses soundness. In practice that means:
 
-SharpFocus prioritizes soundness. This means:
+- When it's unsure whether two places alias, it assumes they might.
+- When it's unsure whether a call mutates, it assumes it does.
+- When a method has no summary, it assumes the worst-case effects.
 
-- When uncertain about aliasing, assume places might alias
-- When uncertain about mutations, assume they might occur
-- When methods lack summaries, assume worst-case effects
-
-The cost is reduced precision:
+The cost is precision:
 
 ```csharp
 void Example(List<int> list)
@@ -270,17 +255,15 @@ void Example(List<int> list)
 }
 ```
 
-A backward slice from `first` includes `list.Count > 0` because it controls whether the assignment executes. But the count itself doesn't affect the value of `first`, only the element at index 0 matters. A perfectly precise analysis would exclude the count. SharpFocus includes it for soundness.
+A backward slice from `first` includes `list.Count > 0`, because that condition controls whether the assignment runs. The count doesn't actually affect the value of `first`, only the element at index 0 does, so a perfectly precise analysis would leave it out. SharpFocus keeps it. You occasionally see a few extra highlighted lines; you never miss one that mattered.
 
-This conservative approach ensures developers don't miss important dependencies, at the cost of occasionally highlighting extra code.
+### Keeping it fast
 
-### Performance Optimization
+Dataflow analysis isn't cheap. A big method with lots of variables and tangled control flow is real work, and the editor can't stall while it runs. A few things keep it responsive.
 
-Dataflow analysis can be expensive. Large methods with many variables and complex control flow require significant computation. SharpFocus employs several optimizations.
+#### Caching control flow graphs
 
-#### Caching Control Flow Graphs
-
-Building a CFG from Roslyn's semantic model is costly. SharpFocus caches CFGs per method:
+Building a CFG off Roslyn's semantic model is one of the more expensive steps, so SharpFocus caches them per method:
 
 ```csharp
 public class CFGCache
@@ -299,69 +282,52 @@ public class CFGCache
 }
 ```
 
-Cache invalidation occurs when the method's source changes. Roslyn's `SyntaxTree` version acts as a cache key.
+The cache entry is dropped when the method's source changes, using Roslyn's `SyntaxTree` version as the key.
 
-#### Incremental Analysis
+#### Incremental analysis
 
-When code changes, reanalyzing the entire method is wasteful if only a small portion changed. SharpFocus explores incremental analysis:
+When code changes, re-running the whole method is wasteful if only a few lines moved. The idea is to detect which blocks changed, restart the fixpoint from those, and stop once the output matches what was there before. I haven't finished this one; it's a direction more than a feature today.
 
-1. Detect which blocks in the CFG changed
-2. Re-run fixpoint iteration starting from those blocks
-3. Stop when the output state matches the previous state
+#### Limiting scope
 
-This optimization isn't fully implemented but represents a future direction.
-
-#### Limiting Analysis Scope
-
-For very large methods (>500 lines), analysis time becomes noticeable. SharpFocus applies limits:
+For very large methods (over 500 lines), the analysis time starts to show, so SharpFocus caps it:
 
 - Maximum CFG size: 1000 blocks
 - Maximum fixpoint iterations: 100
 - Timeout: 5 seconds per analysis
 
-When limits are exceeded, the analysis returns a partial result or an error. This prevents the editor from freezing on pathological code.
+Past those limits it returns a partial result or an error, rather than freezing the editor on pathological code.
 
-### Current Limitations
+### What it can't do yet
 
-SharpFocus handles common C# patterns well but has limitations:
+SharpFocus handles common C# well, but there are real gaps:
 
-1. **No cross-class analysis**: Dependencies stop at class boundaries. A field written in class A and read in class B won't be connected.
+1. No cross-class analysis. Dependencies stop at the class boundary. A field written in class A and read in class B won't be connected.
+2. Limited pointer analysis. Unsafe code with pointers isn't supported; the analysis assumes managed-memory semantics.
+3. Conservative method summaries. Without full cross-method analysis, calls are treated conservatively, which over-approximates.
+4. No dynamic dispatch resolution. A virtual call assumes the worst, that any override might run. Devirtualization could tighten that.
+5. Reflection and dynamic code. Anything using `dynamic` or reflection is opaque to static analysis and gets treated as an unknown effect.
 
-2. **Limited pointer analysis**: Unsafe code with pointers is not supported. The analysis assumes managed memory semantics.
+### Where it could go
 
-3. **Conservative method summaries**: Without interprocedural analysis, method calls are treated conservatively, leading to over-approximation.
+A few things would push it further:
 
-4. **No dynamic dispatch resolution**: Virtual method calls assume worst-case: any override might be invoked. Devirtualization could improve precision.
+- Full interprocedural analysis. Build a call graph for the whole assembly and propagate dependencies across method boundaries, which would let field-level analysis cross classes.
+- Context-sensitive analysis. Today a method is analyzed once and produces one summary. Telling call sites apart would let it produce a different summary per caller.
+- Taint tracking. A security-focused variant that follows untrusted input through the program to sensitive sinks like SQL queries and file writes.
+- More precise alias analysis. Field-sensitive and flow-sensitive aliasing would cut false positives; right now, if `x` and `y` alias anywhere, they're treated as aliased everywhere.
+- Test-coverage integration. Combine static slicing with runtime coverage, and highlight code that both affects a variable and is exercised by your tests.
 
-5. **Reflection and dynamic code**: Code using `dynamic` keyword or reflection is opaque to static analysis. These are treated as unknown effects.
+### What I learned building it
 
-### Future Directions
+A few things stuck with me from building this:
 
-Several enhancements would improve SharpFocus:
+1. Roslyn is powerful and large. Getting comfortable with `IOperation` trees, CFGs, and semantic models took real time before any of the analysis worked at all.
+2. Soundness costs precision. The conservative approximations are what keep it correct, but they also make the output noisier, and balancing the two never really ends.
+3. Caching isn't optional. Without it, every cursor move would re-run the analysis. People notice delays past about 200ms, so the caching is what makes the tool usable in the first place.
+4. The edge cases are the job. async, LINQ, and generics turn up constantly in real code. Skip them and you've built something that only works on toy examples.
+5. Showing the result matters as much as computing it. Accurate dependencies are useless if the UI doesn't make them clear. Focus Mode's fading is what turns a dependency set into something you can actually read.
 
-**Full Interprocedural Analysis**: Build a call graph for the entire assembly and propagate dependencies across method boundaries. This enables field-level analysis across classes.
-
-**Context-Sensitive Analysis**: Distinguish different call sites. Currently, a method analyzed once produces one summary. Context sensitivity would produce different summaries depending on the caller.
-
-**Taint Tracking**: Specialized analysis for security. Track how untrusted input flows through the program to sensitive sinks (SQL queries, file operations).
-
-**More Precise Alias Analysis**: Field-sensitive and flow-sensitive aliasing would reduce false positives. Currently, if `x` and `y` alias at any point, they're treated as aliases throughout.
-
-**Integration with Test Coverage**: Combine static slicing with dynamic test coverage. Highlight code that affects a variable *and* is exercised by tests.
-
-### Lessons from Implementation
-
-Building SharpFocus revealed insights about static analysis:
-
-1. **Roslyn is powerful but complex**: The API surface is large. Understanding `IOperation` trees, CFGs, and semantic models requires significant investment.
-
-2. **Soundness costs precision**: Conservative approximations are necessary for correctness but produce noisier results. Balancing the two is an ongoing challenge.
-
-3. **Caching is essential**: Without caching, every cursor movement would trigger reanalysis. Users notice delays above 200ms.
-
-4. **Edge cases matter**: Rare language features (async, LINQ, generics) appear frequently in real code. Ignoring them creates a tool that works only on toy examples.
-
-5. **Visualization is as important as analysis**: Accurate dependency computation is useless if the UI doesn't communicate results clearly. Focus Mode's fading strategy makes slices understandable.
-
+The code is all on [GitHub](https://github.com/trrahul/SharpFocus) if you want to see how any of this is wired together.
 
 ---

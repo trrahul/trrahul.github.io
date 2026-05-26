@@ -1,21 +1,6 @@
 <!-- The Sidebar - Terminal Style -->
 
 <aside aria-label="Sidebar" id="sidebar" class="sidebar">
-  <div class="profile-section">
-    <div class="avatar-container">
-      {%- if site.avatar != empty and site.avatar -%}
-        {%- capture avatar_url -%}
-          {% include media-url.html src=site.avatar %}
-        {%- endcapture -%}
-        <img src="{{- avatar_url -}}" class="avatar" alt="avatar" onerror="this.style.display='none'">
-      {%- endif -%}
-    </div>
-    <div class="site-identity">
-      <h1>{{ site.title }}</h1>
-      <p>{{ site.tagline }}</p>
-    </div>
-  </div>
-
   <nav class="nav-section" aria-label="Main Navigation">
     <div class="nav-header">System</div>
 

@@ -1,0 +1,60 @@
+{%- comment -%}
+  Renders a reverse-chronological feed of post cards with year dividers.
+  Shared by the home "Latest" section and the per-collection pages.
+
+  Parameters:
+    include.posts — a list of posts (already in the desired order; newest-first).
+
+  The first year never gets a leading divider; a divider appears only when the
+  year changes between consecutive cards. W40K posts get distinct styling.
+{%- endcomment -%}
+{% include lang.html %}
+{%- assign prev_year = '' -%}
+{%- for post in include.posts -%}
+  {%- assign y = post.date | date: '%Y' -%}
+  {%- if prev_year != '' and y != prev_year -%}
+    <div class="year-div"><span>{{ y }}</span></div>
+  {%- endif -%}
+  {%- assign prev_year = y -%}
+
+  {%- assign is_w40k = false -%}
+  {%- if post.categories contains 'Warhammer40K' or post.categories contains 'Warhammer 40K' or post.categories contains '40K' -%}
+    {%- assign is_w40k = true -%}
+  {%- endif -%}
+
+  <article class="post-card{% if is_w40k %} w40k{% endif %}">
+    <a class="pc-inner" href="{{ post.url | relative_url }}">
+      <div class="cat-label">
+        <span class="cl-meta">
+          {%- if is_w40k -%}
+            <span class="cl-cat">40k</span>
+          {%- elsif post.categories.size > 0 -%}
+            <span class="cl-cat">{{ post.categories.first }}</span>
+          {%- endif -%}
+          {%- for tag in post.tags -%}
+            <span class="cl-sep">·</span><span class="cl-tag">{{ tag }}</span>
+          {%- endfor -%}
+        </span>
+        <span class="pc-date">
+          {%- if is_w40k -%}
+            <time data-ts="{{ post.date | date: '%s' }}" data-df="YYYY.MM.DD">{{ post.date | date: '%Y.%m.%d' }}</time>
+          {%- else -%}
+            {% include datetime.html date=post.date lang=lang %}
+          {%- endif -%}
+        </span>
+      </div>
+      <div class="pc-title">{{ post.title }}</div>
+      {%- assign desc = post.description | default: post.excerpt -%}
+      {%- assign desc = desc | strip_html | normalize_whitespace -%}
+      {%- if desc != '' -%}
+        <div class="pc-desc">{{ desc | truncatewords: 30 }}</div>
+      {%- endif -%}
+      {%- if post.pin -%}
+        <div class="pin">
+          <i class="fas fa-thumbtack fa-fw"></i>
+          <span>{{ site.data.locales[lang].post.pin_prompt | default: 'Pinned' }}</span>
+        </div>
+      {%- endif -%}
+    </a>
+  </article>
+{%- endfor -%}

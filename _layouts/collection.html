@@ -1,0 +1,32 @@
+---
+layout: default
+refactor: true
+panel_includes: []
+---
+
+{% include lang.html %}
+
+{%- comment -%}
+  Per-collection landing page. The page metadata (collection_slug / _name /
+  _desc / _w40k) is injected by _plugins/collection-pages-generator.rb from
+  _data/collections.yml. Members are posts whose `collection_id` matches the
+  slug; site.posts is already newest-first.
+{%- endcomment -%}
+{%- assign members = site.posts | where: 'collection_id', page.collection_slug -%}
+
+<div class="home-landing collection-page">
+  <a class="coll-back" href="{{ '/' | relative_url }}">‹ All collections</a>
+
+  <section class="coll-header{% if page.collection_w40k %} w40k{% endif %}">
+    <div class="p-kicker">Collection</div>
+    <h1 class="p-name">{{ page.collection_name }}</h1>
+    {% if page.collection_desc %}<p class="p-blurb">{{ page.collection_desc }}</p>{% endif %}
+    <div class="sec-head">{{ members.size }} post{% if members.size != 1 %}s{% endif %}</div>
+  </section>
+
+  <section class="section">
+    <div class="feed">
+      {% include post-feed.html posts=members %}
+    </div>
+  </section>
+</div>

@@ -158,3 +158,49 @@ article header {
     margin-top: 0.5rem;
   }
 }
+
+/* Category eyebrow — replaces the terminal breadcrumb on post pages.
+   A quiet "filed under" folder path; each category links to its
+   collection-style page at /categories/<slug>/. */
+.post-topic-path {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 2rem 0 0;
+  font-family: 'JetBrains Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  color: var(--text-color);
+
+  > i {
+    margin-right: 0.55rem;
+    color: var(--link-color);
+    opacity: 0.7;
+    font-size: 0.85em;
+  }
+
+  a {
+    color: var(--link-color);
+    text-decoration: none;
+    opacity: 0.9;
+    border-bottom: 1px solid transparent;
+    transition:
+      opacity 0.15s ease,
+      border-color 0.15s ease;
+
+    &:hover {
+      opacity: 1;
+      border-bottom-color: rgba(var(--link-color-rgb, 0, 102, 204), 0.4);
+    }
+  }
+
+  .sep {
+    margin: 0 0.4rem;
+    opacity: 0.4;
+  }
+
+  @media (max-width: 768px) {
+    margin-top: 1.5rem;
+    font-size: 0.72rem;
+  }
+}

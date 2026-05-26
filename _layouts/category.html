@@ -1,0 +1,41 @@
+---
+layout: default
+refactor: true
+panel_includes: []
+---
+
+{% include lang.html %}
+
+{%- comment -%}
+  Collection-style page for a category. Rendered by jekyll-archives at
+  /categories/<name>/ (page.title = category name, page.posts = its posts).
+  Reuses the .home-landing collection look. If a _data/collections.yml entry
+  shares the category slug, its name/desc/w40k flag are used for the header.
+{%- endcomment -%}
+{%- assign cat_slug = page.title | slugify -%}
+{%- assign coll = '' -%}
+{%- for c in site.data.collections -%}
+  {%- if c.slug == cat_slug -%}{%- assign coll = c -%}{%- endif -%}
+{%- endfor -%}
+{%- assign is_w40k = false -%}
+{%- if page.title == 'Warhammer40K' or page.title == 'Warhammer 40K' or page.title == '40K' or coll.w40k -%}
+  {%- assign is_w40k = true -%}
+{%- endif -%}
+{%- assign feed_posts = page.posts | sort: 'date' | reverse -%}
+
+<div class="home-landing collection-page">
+  <a class="coll-back" href="{{ '/' | relative_url }}">‹ Home</a>
+
+  <section class="coll-header{% if is_w40k %} w40k{% endif %}">
+    <div class="p-kicker">Category</div>
+    <h1 class="p-name">{{ coll.name | default: page.title }}</h1>
+    {% if coll.desc %}<p class="p-blurb">{{ coll.desc }}</p>{% endif %}
+    <div class="sec-head">{{ feed_posts.size }} post{% if feed_posts.size != 1 %}s{% endif %}</div>
+  </section>
+
+  <section class="section">
+    <div class="feed">
+      {% include post-feed.html posts=feed_posts %}
+    </div>
+  </section>
+</div>

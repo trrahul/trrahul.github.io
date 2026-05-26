@@ -9,16 +9,21 @@ panel_includes:
 
 {% include toc-status.html %}
 
-<article class="px-1{% if page.categories contains 'Warhammer40K' %} w40k-post{% endif %}" data-toc="{{ enable_toc }}">
+<article class="px-1{% if page.categories contains 'Warhammer40K' %} w40k-post{% endif %}{% if page.categories contains 'Science' %} science-post{% endif %}" data-toc="{{ enable_toc }}">
 
-  <!-- Terminal command interface -->
-  {% include terminal-header.html
-    show_breadcrumb=true
-    show_prompt=false
-    categories=page.categories
-    filename=page.title
-  %}
-  {% include terminal/debug-log.html selector='.terminal-post-header' label='post-page' %}
+  <!-- Category eyebrow — leads to the category collection page (skipped for W40K posts) -->
+  {%- unless page.categories contains 'Warhammer40K' or page.categories contains 'Warhammer 40K' or page.categories contains '40K' -%}
+    {%- if page.categories.size > 0 -%}
+      <nav class="post-topic-path" aria-label="Category">
+        <i class="far fa-folder-open" aria-hidden="true"></i>
+        {%- for category in page.categories -%}
+          {%- assign cslug = category | slugify -%}
+          <a href="{{ '/categories/' | append: cslug | append: '/' | relative_url }}">{{ category }}</a>
+          {%- unless forloop.last %}<span class="sep">/</span>{%- endunless -%}
+        {%- endfor -%}
+      </nav>
+    {%- endif -%}
+  {%- endunless -%}
 
   <header>
     <h1 data-toc-skip>{{ page.title }}</h1>
@@ -219,3 +224,7 @@ panel_includes:
 <script src="{{ '/assets/js/abbr-tooltip.js' | relative_url }}"></script>
 <!-- Connected Notes Mobile Popup -->
 <script defer src="{{ '/assets/js/backlinks-mobile.js' | relative_url }}"></script>
+{% if page.mermaid %}
+<!-- Mermaid zoom / pan / fullscreen -->
+<script defer src="{{ '/assets/js/mermaid-zoom.js' | relative_url }}"></script>
+{% endif %}

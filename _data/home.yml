@@ -1,0 +1,16 @@
+# Home page profile (rendered at the top of the home page).
+# Edit the copy here without touching the layout.
+profile:
+  name: Rahul
+  tagline: Drawn to how machines work, and why people do.
+  # Literal block: the line break is intentional and rendered via newline_to_br.
+  blurb: |-
+    I'm a software engineer. I like to know how things work and build stuff.
+    When I'm not coding, I read science, philosophy, and plenty of sci-fi and 40k.
+  links:
+    - label: GitHub
+      url: https://github.com/trrahul
+    - label: LinkedIn
+      url: https://www.linkedin.com/in/rahul-tr-83017246
+    - label: Goodreads
+      url: https://www.goodreads.com/user/show/30436173-rahul-tr
