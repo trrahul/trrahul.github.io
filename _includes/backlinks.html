@@ -1,120 +1,111 @@
 {% assign has_backlinks = page.backlinks and page.backlinks.size > 0 %}
 {% assign has_outgoing = page.outgoing_links and page.outgoing_links.size > 0 %}
 
-{% if has_backlinks or has_outgoing %}
+{%- comment -%}
+  Render the link items into captures first, then only emit a terminal block
+  when its capture actually contains markup. The `.size > 0` gate alone is not
+  enough: the generator can hand back a value whose size is non-zero but which
+  produces no rendered rows, which previously shipped two empty `$ ls incoming/`
+  / `$ ls outgoing/` prompts with a blinking cursor and ~230px of dead space.
+{%- endcomment -%}
+
+{%- capture incoming_html -%}
+  {%- if has_backlinks -%}
+    {%- assign grouped_backlinks = page.backlinks | group_by: "title" -%}
+    {%- for group in grouped_backlinks -%}
+      {%- if group.items.size == 1 -%}
+        <article class="directory-item directory-file flat-view">
+          <a href="{{ group.items[0].url | relative_url }}" class="file-link no-preview">
+            <div class="directory-icon"><i class="fas fa-arrow-left"></i></div>
+            <div class="file-info"><div class="file-name">{{ group.name }}</div></div>
+          </a>
+        </article>
+      {%- else -%}
+        <div class="directory-group">
+          <article class="directory-item directory-file flat-view">
+            <a href="{{ group.items[0].url | split: '#' | first | relative_url }}" class="file-link no-preview">
+              <div class="directory-icon"><i class="fas fa-arrow-left"></i></div>
+              <div class="file-info"><div class="file-name">{{ group.name }}</div></div>
+            </a>
+          </article>
+          <div class="directory-group-sections">
+            {%- for item in group.items -%}
+              {%- if item.context -%}
+                <article class="directory-item directory-file flat-view">
+                  <a href="{{ item.url | relative_url }}" class="file-link no-preview">
+                    <div class="directory-icon"><span class="section-icon">←</span></div>
+                    <div class="file-info"><div class="file-name">{{ item.context }}</div></div>
+                  </a>
+                </article>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- capture outgoing_html -%}
+  {%- if has_outgoing -%}
+    {%- assign grouped_outgoing = page.outgoing_links | group_by: "title" -%}
+    {%- for group in grouped_outgoing -%}
+      {%- if group.items.size == 1 -%}
+        <article class="directory-item directory-file flat-view">
+          <a href="{{ group.items[0].url | relative_url }}" class="file-link no-preview">
+            <div class="directory-icon"><i class="fas fa-arrow-right"></i></div>
+            <div class="file-info"><div class="file-name">{{ group.name }}</div></div>
+          </a>
+        </article>
+      {%- else -%}
+        <div class="directory-group">
+          <article class="directory-item directory-file flat-view">
+            <a href="{{ group.items[0].url | split: '#' | first | relative_url }}" class="file-link no-preview">
+              <div class="directory-icon"><i class="fas fa-arrow-right"></i></div>
+              <div class="file-info"><div class="file-name">{{ group.name }}</div></div>
+            </a>
+          </article>
+          <div class="directory-group-sections">
+            {%- for item in group.items -%}
+              {%- if item.context -%}
+                <article class="directory-item directory-file flat-view">
+                  <a href="{{ item.url | relative_url }}" class="file-link no-preview">
+                    <div class="directory-icon"><span class="section-icon">→</span></div>
+                    <div class="file-info"><div class="file-name">{{ item.context }}</div></div>
+                  </a>
+                </article>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- assign incoming_trim = incoming_html | strip -%}
+{%- assign outgoing_trim = outgoing_html | strip -%}
+
+{% if incoming_trim != '' or outgoing_trim != '' %}
 <!-- Connected Notes Section - Terminal Style -->
 <div class="terminal-connected-notes">
 
-  <!-- Incoming connections (backlinks) -->
-  {% if has_backlinks %}
+  {% if incoming_trim != '' %}
   <div class="terminal-command-section">
     <div class="terminal-command-line">
       <span class="prompt">$</span> <span class="command">ls incoming/</span>
     </div>
-
-    <div class="terminal-output">
-      {% assign grouped_backlinks = page.backlinks | group_by: "title" %}
-      {% for group in grouped_backlinks %}
-        {% if group.items.size == 1 %}
-          <article class="directory-item directory-file flat-view">
-            <a href="{{ group.items[0].url | relative_url }}" class="file-link no-preview">
-              <div class="directory-icon">
-                <i class="fas fa-arrow-left"></i>
-              </div>
-              <div class="file-info">
-                <div class="file-name">{{ group.name }}</div>
-              </div>
-            </a>
-          </article>
-        {% else %}
-          <div class="directory-group">
-            <article class="directory-item directory-file flat-view">
-              <a href="{{ group.items[0].url | split: '#' | first | relative_url }}" class="file-link no-preview">
-                <div class="directory-icon">
-                  <i class="fas fa-arrow-left"></i>
-                </div>
-                <div class="file-info">
-                  <div class="file-name">{{ group.name }}</div>
-                </div>
-              </a>
-            </article>
-            <div class="directory-group-sections">
-              {% for item in group.items %}
-                {% if item.context %}
-                  <article class="directory-item directory-file flat-view">
-                    <a href="{{ item.url | relative_url }}" class="file-link no-preview">
-                      <div class="directory-icon">
-                        <span class="section-icon">←</span>
-                      </div>
-                      <div class="file-info">
-                        <div class="file-name">{{ item.context }}</div>
-                      </div>
-                    </a>
-                  </article>
-                {% endif %}
-              {% endfor %}
-            </div>
-          </div>
-        {% endif %}
-      {% endfor %}
-    </div>
+    <div class="terminal-output">{{ incoming_html }}</div>
     <div class="terminal-cursor">_</div>
   </div>
   {% endif %}
 
-  <!-- Outgoing connections (references) -->
-  {% if has_outgoing %}
+  {% if outgoing_trim != '' %}
   <div class="terminal-command-section">
     <div class="terminal-command-line">
       <span class="prompt">$</span> <span class="command">ls outgoing/</span>
     </div>
-
-    <div class="terminal-output">
-      {% assign grouped_outgoing = page.outgoing_links | group_by: "title" %}
-      {% for group in grouped_outgoing %}
-        {% if group.items.size == 1 %}
-          <article class="directory-item directory-file flat-view">
-            <a href="{{ group.items[0].url | relative_url }}" class="file-link no-preview">
-              <div class="directory-icon">
-                <i class="fas fa-arrow-right"></i>
-              </div>
-              <div class="file-info">
-                <div class="file-name">{{ group.name }}</div>
-              </div>
-            </a>
-          </article>
-        {% else %}
-          <div class="directory-group">
-            <article class="directory-item directory-file flat-view">
-              <a href="{{ group.items[0].url | split: '#' | first | relative_url }}" class="file-link no-preview">
-                <div class="directory-icon">
-                  <i class="fas fa-arrow-right"></i>
-                </div>
-                <div class="file-info">
-                  <div class="file-name">{{ group.name }}</div>
-                </div>
-              </a>
-            </article>
-            <div class="directory-group-sections">
-              {% for item in group.items %}
-                {% if item.context %}
-                  <article class="directory-item directory-file flat-view">
-                    <a href="{{ item.url | relative_url }}" class="file-link no-preview">
-                      <div class="directory-icon">
-                        <span class="section-icon">→</span>
-                      </div>
-                      <div class="file-info">
-                        <div class="file-name">{{ item.context }}</div>
-                      </div>
-                    </a>
-                  </article>
-                {% endif %}
-              {% endfor %}
-            </div>
-          </div>
-        {% endif %}
-      {% endfor %}
-    </div>
+    <div class="terminal-output">{{ outgoing_html }}</div>
     <div class="terminal-cursor">_</div>
   </div>
   {% endif %}

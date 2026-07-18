@@ -16,8 +16,10 @@
   --card-hover-bg: rgba(255, 255, 255, 0.018);
   --ink: #c0caf5;
   --ink-strong: #e0e0e0;
-  --muted: #565f89;
-  --muted-2: #787c99;
+  // muted ramp lifted for readability: descriptions/labels were 4.21/2.78:1 on
+  // the dark surface; now ~5.4:1 (body) and ~3.4:1 (labels/dates).
+  --muted: #636c98;
+  --muted-2: #8b8fac;
   --link: #7aa2f7;
   --link-rgb: 122, 162, 247;
   --rule: rgba(255, 255, 255, 0.08);
@@ -37,7 +39,9 @@
   --card-hover-bg: rgba(0, 0, 0, 0.015);
   --ink: #334155;
   --ink-strong: #444;
-  --muted: #94a3b8;
+  // muted lifted so dates/section labels clear ~3:1 on white (was 2.56:1).
+  // muted-2 (#64748b, 4.76:1) already passes for descriptions, left as-is.
+  --muted: #8590a3;
   --muted-2: #64748b;
   --link: #2563eb;
   --link-rgb: 37, 99, 235;

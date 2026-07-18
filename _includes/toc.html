@@ -8,6 +8,8 @@
       <nav id="toc"></nav>
     </section>
     
-    {% include panel-backlinks.html lang=include.lang %}
+    {% if page.layout != 'nodify-docs' %}
+      {% include panel-backlinks.html lang=include.lang %}
+    {% endif %}
   </div>
 {% endif %}

@@ -24,6 +24,20 @@
 
   <article class="post-card{% if is_w40k %} w40k{% endif %}">
     <a class="pc-inner" href="{{ post.url | relative_url }}">
+      {%- comment -%}
+        The category is already shown as the eyebrow, and posts often tag with
+        their own category name (e.g. category "Psychology" + tag "psychology"),
+        which renders a duplicate label. Suppress any tag that matches the shown
+        category so the meta row reads "Psychology · cognitive-bias", not
+        "Psychology · Psychology · cognitive-bias".
+      {%- endcomment -%}
+      {%- if is_w40k -%}
+        {%- assign shown_cat = '40k' -%}
+      {%- elsif post.categories.size > 0 -%}
+        {%- assign shown_cat = post.categories.first | downcase -%}
+      {%- else -%}
+        {%- assign shown_cat = '' -%}
+      {%- endif -%}
       <div class="cat-label">
         <span class="cl-meta">
           {%- if is_w40k -%}
@@ -32,7 +46,10 @@
             <span class="cl-cat">{{ post.categories.first }}</span>
           {%- endif -%}
           {%- for tag in post.tags -%}
-            <span class="cl-sep">·</span><span class="cl-tag">{{ tag }}</span>
+            {%- assign tag_l = tag | downcase -%}
+            {%- unless tag_l == shown_cat -%}
+              <span class="cl-sep">·</span><span class="cl-tag">{{ tag }}</span>
+            {%- endunless -%}
           {%- endfor -%}
         </span>
         <span class="pc-date">

@@ -29,11 +29,13 @@
       {% elsif tab_title == "About" or tab_name == "about" %}
         <!-- About goes in Information section, skip here -->
       {% elsif tab_title == "SharpFocus" or tab_name == "sharpfocus" %}
-        <!-- SharpFocus goes in Apps section, skip here -->
+        <!-- SharpFocus goes in Projects section, skip here -->
       {% elsif tab_title == "Playground" or tab_name == "playground" %}
-        <!-- Playground goes in Apps section, skip here -->
+        <!-- Playground goes in Projects section, skip here -->
       {% elsif tab_title == "MelliLex" or tab_name == "mellilex" %}
-        <!-- MelliLex goes in Apps section, skip here -->
+        <!-- MelliLex goes in Projects section, skip here -->
+      {% elsif tab_title == "Nodify.Avalonia" or tab_name == "nodify-avalonia" %}
+        <!-- Nodify.Avalonia goes in Projects section, skip here -->
       {% else %}
         <a href="{{ tab.url | relative_url }}" class="nav-item{% if tab.url == page.url %} active{% endif %}">
           <span class="nav-icon"><i class="{{ tab_icon }}"></i></span>
@@ -44,9 +46,9 @@
 
     <div style="height: 1rem;"></div>
 
-    <div class="nav-header">Apps</div>
+    <div class="nav-header">Projects</div>
 
-    <!-- SharpFocus and Playground -->
+    <!-- Project tabs -->
     {% for tab in site.tabs %}
       {% capture tab_name %}{{ tab.url | split: '/' }}{% endcapture %}
       {% assign tab_title = site.data.locales[include.lang].tabs.[tab_name] | default: tab.title %}
@@ -65,6 +67,11 @@
         <a href="{{ tab.url | relative_url }}" class="nav-item{% if tab.url == page.url %} active{% endif %}">
           <span class="nav-icon"><i class="fa-solid fa-book-open"></i></span>
           <span>{{ tab_title }}</span>
+        </a>
+      {% elsif tab_title == "Nodify.Avalonia" or tab_name == "nodify-avalonia" %}
+        <a href="{{ tab.url | relative_url }}" class="nav-item{% if tab.url == page.url %} active{% endif %}">
+          <span class="nav-icon"><i class="fa-solid fa-diagram-project"></i></span>
+          <span>{{ tab.nav_title | default: tab_title }}</span>
         </a>
       {% endif %}
     {% endfor %}

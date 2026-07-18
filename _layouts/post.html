@@ -32,19 +32,10 @@ panel_includes:
     {% endif %}
 
     <div class="post-meta text-muted">
-      <!-- published date -->
+      <!-- created date only — no "Posted"/"Updated" labels, no git-stamped lastmod -->
       <span>
-        {{ site.data.locales[lang].post.posted }}
         {% include datetime.html date=page.date tooltip=true lang=lang %}
       </span>
-
-      <!-- lastmod date -->
-      {% if page.last_modified_at and page.last_modified_at != page.date %}
-        <span>
-          {{ site.data.locales[lang].post.updated }}
-          {% include datetime.html date=page.last_modified_at tooltip=true lang=lang %}
-        </span>
-      {% endif %}
 
       {% if page.image %}
         {% capture src %}src="{{ page.image.path | default: page.image }}"{% endcapture %}
@@ -122,10 +113,12 @@ panel_includes:
         <i class="fa-solid fa-angle-right fa-fw"></i>
       </button>
 
-      <button id="backlinks-solo-trigger" type="button" class="backlinks-trigger btn btn-outline-secondary btn-sm">
-        <span class="label ps-2 pe-1">Connected Notes</span>
-        <i class="fa-solid fa-angle-right fa-fw"></i>
-      </button>
+      {% if page.backlinks.size > 0 or page.outgoing_links.size > 0 %}
+        <button id="backlinks-solo-trigger" type="button" class="backlinks-trigger btn btn-outline-secondary btn-sm">
+          <span class="label ps-2 pe-1">Connected Notes</span>
+          <i class="fa-solid fa-angle-right fa-fw"></i>
+        </button>
+      {% endif %}
     </div>
 
     <dialog id="toc-popup" class="p-0">
@@ -138,17 +131,19 @@ panel_includes:
       <div id="toc-popup-content" class="px-4 py-3 pb-4"></div>
     </dialog>
 
-    <dialog id="backlinks-popup" class="p-0">
-      <div class="header d-flex flex-row align-items-center justify-content-between">
-        <div class="label text-truncate py-2 ms-4">Connected Notes</div>
-        <button id="backlinks-popup-close" type="button" class="btn mx-1 my-1 opacity-75">
-          <i class="fas fa-close"></i>
-        </button>
-      </div>
-      <div id="backlinks-popup-content" class="px-4 py-3 pb-4">
-        {% include panel-backlinks.html lang=lang %}
-      </div>
-    </dialog>
+    {% if page.backlinks.size > 0 or page.outgoing_links.size > 0 %}
+      <dialog id="backlinks-popup" class="p-0">
+        <div class="header d-flex flex-row align-items-center justify-content-between">
+          <div class="label text-truncate py-2 ms-4">Connected Notes</div>
+          <button id="backlinks-popup-close" type="button" class="btn mx-1 my-1 opacity-75">
+            <i class="fas fa-close"></i>
+          </button>
+        </div>
+        <div id="backlinks-popup-content" class="px-4 py-3 pb-4">
+          {% include panel-backlinks.html lang=lang %}
+        </div>
+      </dialog>
+    {% endif %}
   {% endif %}
 
   <div class="content">

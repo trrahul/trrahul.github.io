@@ -99,7 +99,11 @@ export function box(bag, x, y, w, h, text, opts = {}) {
 
 // Bound arrow between two boxes.
 // dir: "LR" | "RL" | "TD" | "BU" — controls which edges the arrow connects.
-// opts: stroke, strokeWidth, strokeStyle, groupIds, gap.
+// opts: stroke, strokeWidth, strokeStyle, groupIds, gap, toFrac.
+//   toFrac (0..1): place the arrowhead at a fraction along the target's
+//   connecting edge instead of its centre — lets several arrows fan into one
+//   box at distinct points (e.g. an event-bus hub). Drops the end binding so
+//   the explicit endpoint is honoured by the SVG export.
 export function arrow(bag, from, to, dir = "LR", opts = {}) {
   const id = nid(bag, "a");
   let sx;
@@ -149,6 +153,16 @@ export function arrow(bag, from, to, dir = "LR", opts = {}) {
       ex = tc.x;
       ey = tc.y;
   }
+  // Optional: slide the endpoint along the target's connecting edge.
+  if (opts.toFrac != null) {
+    const f = Math.max(0, Math.min(1, opts.toFrac));
+    if (resolved === "LR" || resolved === "RL") {
+      ey = to.y + to.height * f;
+    } else {
+      ex = to.x + to.width * f;
+    }
+  }
+  const bindEnd = opts.toFrac == null;
   const el = {
     ...BASE,
     id,
@@ -168,13 +182,15 @@ export function arrow(bag, from, to, dir = "LR", opts = {}) {
     ],
     lastCommittedPoint: null,
     startBinding: { elementId: from.id, focus: 0, gap: opts.gap ?? 1 },
-    endBinding: { elementId: to.id, focus: 0, gap: opts.gap ?? 1 },
+    endBinding: bindEnd ? { elementId: to.id, focus: 0, gap: opts.gap ?? 1 } : null,
     startArrowhead: null,
     endArrowhead: "arrow",
     elbowed: false,
   };
   from.boundElements = [...(from.boundElements ?? []), { type: "arrow", id }];
-  to.boundElements = [...(to.boundElements ?? []), { type: "arrow", id }];
+  if (bindEnd) {
+    to.boundElements = [...(to.boundElements ?? []), { type: "arrow", id }];
+  }
   bag.elements.push(el);
   return el;
 }

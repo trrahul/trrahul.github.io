@@ -1,12 +1,19 @@
-{% assign has_backlinks = page.backlinks and page.backlinks.size > 0 %}
-{% assign has_outgoing = page.outgoing_links and page.outgoing_links.size > 0 %}
+{%- comment -%}
+  page.backlinks / page.outgoing_links are always arrays (the generator seeds
+  them to []), and Liquid does NOT evaluate "and" / ">" inside an assign tag, so
+  a has_backlinks flag built that way stays truthy even when the array is empty.
+  Check ".size > 0" directly in the conditions instead, or an empty (0) panel
+  ships on every post.
+{%- endcomment -%}
+{%- assign incoming_count = page.backlinks.size | default: 0 -%}
+{%- assign outgoing_count = page.outgoing_links.size | default: 0 -%}
 
-{% if has_backlinks or has_outgoing %}
+{% if incoming_count > 0 or outgoing_count > 0 %}
 <section id="backlinks-wrapper" class="ps-0 pe-4">
   <h2 class="panel-heading ps-3 mb-3">Connected Notes</h2>
 
   <div class="panel-backlinks ps-3">
-    {% if has_backlinks %}
+    {% if incoming_count > 0 %}
     <div class="backlinks-group mb-3">
       <div class="backlinks-section-title mb-2">
         Incoming
@@ -40,7 +47,7 @@
     </div>
     {% endif %}
 
-    {% if has_outgoing %}
+    {% if outgoing_count > 0 %}
     <div class="backlinks-group">
       <div class="backlinks-section-title mb-2">
         Outgoing
