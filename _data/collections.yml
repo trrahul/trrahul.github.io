@@ -24,3 +24,8 @@
   name: SharpFocus
   desc: Program slicing for C# - VSCode and Rider extensions.
   order: 2
+
+- slug: xamlmcp
+  name: XamlMcp
+  desc: Runtime inspection and interaction for XAML applications through MCP.
+  order: 3

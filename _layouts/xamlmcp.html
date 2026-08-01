@@ -1,0 +1,92 @@
+---
+layout: compress
+---
+<!doctype html>
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  {%- assign page_title = page.seo_title | default: page.title | default: site.title -%}
+  {%- assign page_desc = page.description | default: site.description -%}
+  {%- assign page_url = page.url | absolute_url -%}
+  {%- assign page_author = page.author | default: site.social.name -%}
+
+  <title>{{ page_title }}</title>
+  <meta name="description" content="{{ page_desc }}">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="{{ page_author }}">
+  <link rel="canonical" href="{{ page_url }}">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ site.title }}">
+  <meta property="og:title" content="{{ page_title }}">
+  <meta property="og:description" content="{{ page_desc }}">
+  <meta property="og:url" content="{{ page_url }}">
+  {%- if page.image %}<meta property="og:image" content="{{ page.image | absolute_url }}">{% endif %}
+
+  <meta name="twitter:card" content="{% if page.image %}summary_large_image{% else %}summary{% endif %}">
+  <meta name="twitter:title" content="{{ page_title }}">
+  <meta name="twitter:description" content="{{ page_desc }}">
+  {%- if page.image %}<meta name="twitter:image" content="{{ page.image | absolute_url }}">{% endif %}
+
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ '/assets/css/jekyll-theme-chirpy.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/xamlmcp.css' | relative_url }}">
+  <script>
+    (() => {
+      const storedMode = localStorage.getItem('mode');
+      const dark = storedMode === 'dark' || (!storedMode && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.setAttribute('data-mode', dark ? 'dark' : 'light');
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": {{ page_url | append: '#webpage' | jsonify }},
+        "url": {{ page_url | jsonify }},
+        "name": {{ page_title | jsonify }},
+        "description": {{ page_desc | jsonify }},
+        "mainEntity": { "@id": {{ page_url | append: '#software' | jsonify }} }
+      },
+      {
+        "@type": "SoftwareSourceCode",
+        "@id": {{ page_url | append: '#software' | jsonify }},
+        "name": "XamlMcp",
+        "description": {{ page_desc | jsonify }},
+        "url": {{ page_url | jsonify }},
+        "codeRepository": "https://github.com/trrahul/XamlMcp",
+        "license": "https://www.apache.org/licenses/LICENSE-2.0",
+        "programmingLanguage": "C#",
+        "runtimePlatform": ".NET",
+        "isAccessibleForFree": true,
+        "sameAs": [
+          "https://github.com/trrahul/XamlMcp",
+          "https://www.nuget.org/packages/XamlMcp.Server"
+        ],
+        "author": {
+          "@type": "Person",
+          "name": {{ page_author | jsonify }},
+          "url": {{ site.url | jsonify }}
+        }
+      }
+    ]
+  }
+  </script>
+
+  {% if jekyll.environment == 'production' and site.analytics.google.id %}
+    {% include analytics/google.html %}
+  {% endif %}
+</head>
+<body>
+  {{ content }}
+</body>
+</html>

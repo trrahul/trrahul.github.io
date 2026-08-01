@@ -36,6 +36,8 @@
         <!-- MelliLex goes in Projects section, skip here -->
       {% elsif tab_title == "Nodify.Avalonia" or tab_name == "nodify-avalonia" %}
         <!-- Nodify.Avalonia goes in Projects section, skip here -->
+      {% elsif tab_title == "XamlMcp" or tab_name == "xamlmcp" %}
+        <!-- XamlMcp goes in Projects section, skip here -->
       {% else %}
         <a href="{{ tab.url | relative_url }}" class="nav-item{% if tab.url == page.url %} active{% endif %}">
           <span class="nav-icon"><i class="{{ tab_icon }}"></i></span>
@@ -71,6 +73,11 @@
       {% elsif tab_title == "Nodify.Avalonia" or tab_name == "nodify-avalonia" %}
         <a href="{{ tab.url | relative_url }}" class="nav-item{% if tab.url == page.url %} active{% endif %}">
           <span class="nav-icon"><i class="fa-solid fa-diagram-project"></i></span>
+          <span>{{ tab.nav_title | default: tab_title }}</span>
+        </a>
+      {% elsif tab_title == "XamlMcp" or tab_name == "xamlmcp" %}
+        <a href="{{ tab.url | relative_url }}" class="nav-item{% if tab.url == page.url %} active{% endif %}">
+          <span class="nav-icon"><i class="fa-solid fa-code"></i></span>
           <span>{{ tab.nav_title | default: tab_title }}</span>
         </a>
       {% endif %}
