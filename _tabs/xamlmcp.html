@@ -300,16 +300,18 @@ builder.UseXamlMcp();
           <table class="tool-table">
             <thead><tr><th>Tools</th><th>Purpose</th></tr></thead>
             <tbody>
-              <tr><td><code>tree</code>, <code>search</code>, <code>ancestors</code></td><td>Navigate visual or logical UI nodes.</td></tr>
+              <tr><td><code>tree</code>, <code>search</code>, <code>ancestors</code></td><td>Navigate visual or logical UI nodes; search by automation id, type, name, class, pseudo-class, or text.</td></tr>
               <tr><td><code>props</code>, <code>set-prop</code></td><td>Read properties, value sources, automation patterns, and command slots; write or clear local values.</td></tr>
-              <tr><td><code>styles</code>, <code>resources</code></td><td>Inspect style information and resolved resources.</td></tr>
-              <tr><td><code>screenshot</code></td><td>Capture a window or node as an MCP image.</td></tr>
+              <tr><td><code>styles</code>, <code>bindings</code>, <code>resources</code></td><td>Diagnose styles, active bindings, DataContext and template origins, and resolved resources.</td></tr>
+              <tr><td><code>screenshot</code></td><td>Capture a window or node as an MCP image, optionally with a same-capture node map.</td></tr>
+              <tr><td><code>wait-for</code>, <code>hit-test</code></td><td>Wait boundedly for UI state or map logical coordinates to a deepest-first node stack.</td></tr>
               <tr><td><code>input</code>, <code>action</code></td><td>Send input or use automation patterns and bound commands.</td></tr>
               <tr><td><code>assets</code>, <code>open-asset</code></td><td>Enumerate and read framework assets through safe identifiers.</td></tr>
               <tr><td><code>dialog-*</code>, <code>window-*</code></td><td>Optional Windows driver for app-owned native dialogs and windows.</td></tr>
             </tbody>
           </table>
           </div>
+          <p>Node tools accept an exact <code>{snapshotId, nodeId}</code> target or a durable locator using <code>automationId</code>, <code>name</code>, <code>type</code>, <code>text</code>, or <code>styleClass</code>. Locators can be scoped to an ancestor and return a typed ambiguity error instead of silently choosing a match. Exact references remain usable across the current and previous three snapshots while their node stays live; use locators when a workflow must survive re-querying.</p>
         </section>
 
       </article>
