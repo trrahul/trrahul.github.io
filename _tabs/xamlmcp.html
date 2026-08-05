@@ -3,7 +3,8 @@ layout: xamlmcp
 title: "XAML MCP Server for Avalonia, WPF, WinUI & MAUI | XamlMcp"
 seo_title: "XAML MCP Server for Avalonia, WPF, WinUI & MAUI | XamlMcp"
 nav_title: XamlMcp
-description: "Inspect, diagnose, and drive live Avalonia, WPF, WinUI 3, and .NET MAUI apps from Claude Code, Codex, or GitHub Copilot with XamlMcp."
+description: "Inspect, diagnose, and drive live Avalonia, WPF, WinUI 3, and .NET MAUI apps from Claude Code, Codex, or
+GitHub Copilot with XamlMcp."
 permalink: /xamlmcp/
 order: 7
 ---
@@ -11,152 +12,199 @@ order: 7
 
 
 <a class="skip-link" href="#main-content">Skip to content</a>
-  <nav class="mobile-nav" aria-label="Page navigation">
-    <a href="#overview">Overview</a>
-    <a href="#install">Install</a>
-    <a href="#configure">Framework</a>
-    <a href="#connect">Clients</a>
-    <a href="#verify">Verify</a>
-    <a href="#driver">Driver</a>
-    <a href="#tools">Tools</a>
+<nav class="mobile-nav" aria-label="Page navigation">
+  <a href="#overview">Overview</a>
+  <a href="#install">Install</a>
+  <a href="#configure">Framework</a>
+  <a href="#connect">Clients</a>
+  <a href="#verify">Verify</a>
+  <a href="#driver">Driver</a>
+  <a href="#tools">Tools</a>
+</nav>
+<aside class="sidebar" aria-label="Documentation navigation">
+  <nav>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Overview</div>
+      <a class="active" href="#overview"><span class="dot"></span>What is XamlMcp?</a>
+      <a href="#support"><span class="dot"></span>Framework support</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Getting started</div>
+      <a href="#install"><span class="dot"></span>Installation</a>
+      <a href="#configure"><span class="dot"></span>Framework setup</a>
+      <a href="#connect"><span class="dot"></span>Configure AI clients</a>
+      <a href="#verify"><span class="dot"></span>Verify the connection</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Reference</div>
+      <a href="#driver"><span class="dot"></span>Native dialogs and windows</a>
+      <a href="#tools"><span class="dot"></span>Available tools</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">References</div>
+      <a href="https://github.com/trrahul/XamlMcp/blob/master/docs/framework-feature-matrix.md">Feature matrix ↗</a>
+      <a href="https://www.nuget.org/packages/XamlMcp.Server">Server package on NuGet ↗</a>
+      <a href="https://github.com/trrahul/XamlMcp/tree/master/samples">Sample applications ↗</a>
+    </div>
   </nav>
-  <aside class="sidebar" aria-label="Documentation navigation">
-    <nav>
-      <div class="sidebar-section">
-        <div class="sidebar-title">Overview</div>
-        <a class="active" href="#overview"><span class="dot"></span>What is XamlMcp?</a>
-        <a href="#support"><span class="dot"></span>Framework support</a>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-title">Getting started</div>
-        <a href="#install"><span class="dot"></span>Installation</a>
-        <a href="#configure"><span class="dot"></span>Framework setup</a>
-        <a href="#connect"><span class="dot"></span>Configure AI clients</a>
-        <a href="#verify"><span class="dot"></span>Verify the connection</a>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-title">Reference</div>
-        <a href="#driver"><span class="dot"></span>Native dialogs and windows</a>
-        <a href="#tools"><span class="dot"></span>Available tools</a>
-      </div>
-      <div class="sidebar-divider"></div>
-      <div class="sidebar-section">
-        <div class="sidebar-title">References</div>
-        <a href="https://github.com/trrahul/XamlMcp/blob/master/docs/framework-feature-matrix.md">Feature matrix ↗</a>
-        <a href="https://www.nuget.org/packages/XamlMcp.Server">Server package on NuGet ↗</a>
-        <a href="https://github.com/trrahul/XamlMcp/tree/master/samples">Sample applications ↗</a>
-      </div>
-    </nav>
-  </aside>
+</aside>
 
-  <div class="layout">
-    <main id="main-content">
-      <div class="breadcrumbs">Documentation <span>/</span> XAML MCP server</div>
+<div class="layout">
+  <main id="main-content">
+    <div class="breadcrumbs">Documentation <span>/</span> XAML MCP server</div>
 
-      <article>
-        <section id="overview">
-          <h1>XamlMcp: an MCP server for XAML apps</h1>
-          <p class="lead">XamlMcp gives Claude Code, Codex, GitHub Copilot, and other AI coding assistants live context from Avalonia, WPF, WinUI 3, and .NET MAUI applications. They can inspect UI structure and state, diagnose XAML behavior, capture grounded screenshots, wait for changes, and interact with the running app.</p>
+    <article>
+      <section id="overview">
+        <h1>XamlMcp: an MCP server for XAML apps</h1>
+        <p class="lead">XamlMcp gives Claude Code, Codex, GitHub Copilot, and other AI coding assistants live context
+          from Avalonia, WPF, WinUI 3, and .NET MAUI applications. They can inspect UI structure and state, diagnose
+          XAML behavior, capture grounded screenshots, wait for changes, and interact with the running app.</p>
 
-          <div class="meta-row">
-            <span class="badge" title="Latest listed version from NuGet"><span data-nuget-package="XamlMcp.Server" aria-live="polite">Checking NuGet…</span></span>
-            <span class="badge">Apache-2.0</span>
+        <div class="meta-row">
+          <span class="badge" title="Latest listed version from NuGet"><span data-nuget-package="XamlMcp.Server"
+              aria-live="polite">Checking NuGet…</span></span>
+          <span class="badge">Apache-2.0</span>
+        </div>
+
+        <div class="hero-actions">
+          <a class="hero-action primary" href="#install">Install</a>
+          <a class="hero-action" href="https://github.com/trrahul/XamlMcp">View on GitHub ↗</a>
+          <a class="hero-action" href="https://github.com/trrahul/XamlMcp/tree/master/samples">Open samples ↗</a>
+        </div>
+
+        <div class="intro-panel">
+          <div class="intro-item">
+            <small>Use it when</small>
+            <strong>Your AI needs live UI context</strong>
+            <p>Understand visual state, trace bindings and failures, reproduce interactions, or verify a UI change.</p>
           </div>
-
-          <div class="hero-actions">
-            <a class="hero-action primary" href="#install">Install</a>
-            <a class="hero-action" href="https://github.com/trrahul/XamlMcp">View on GitHub ↗</a>
-            <a class="hero-action" href="https://github.com/trrahul/XamlMcp/tree/master/samples">Open samples ↗</a>
+          <div class="intro-item">
+            <small>Architecture</small>
+            <strong>Agent package + MCP server</strong>
+            <p>A small framework agent connects to the local <code>xamlmcp</code> server and can reconnect safely after
+              the application restarts.</p>
           </div>
+        </div>
+      </section>
 
-          <div class="intro-panel">
-            <div class="intro-item">
-              <small>Use it when</small>
-              <strong>Your AI needs live UI context</strong>
-              <p>Understand visual state, trace bindings and failures, reproduce interactions, or verify a UI change.</p>
-            </div>
-            <div class="intro-item">
-              <small>Architecture</small>
-              <strong>Agent package + MCP server</strong>
-              <p>A small framework agent connects to the local <code>xamlmcp</code> server and can reconnect safely after the application restarts.</p>
-            </div>
-          </div>
-        </section>
+      <section id="support">
+        <h2>Supported XAML frameworks</h2>
+        <p>The same protocol covers four UI frameworks. Some operations depend on platform or runtime capabilities; <a
+            href="https://github.com/trrahul/XamlMcp/blob/master/docs/framework-feature-matrix.md">check the full
+            feature matrix</a> for exact limits.</p>
 
-        <section id="support">
-          <h2>Supported XAML frameworks</h2>
-          <p>The same protocol covers four UI frameworks. Some operations depend on platform or runtime capabilities; <a href="https://github.com/trrahul/XamlMcp/blob/master/docs/framework-feature-matrix.md">check the full feature matrix</a> for exact limits.</p>
+        <div class="framework-list">
+          <a class="framework-card" href="#configure" data-open-tab="avalonia"><strong>Avalonia <span>11.3.18 / 12.x
+                →</span></strong>
+            <p>In-process agent for applications targeting .NET 8 or later.</p>
+          </a>
+          <a class="framework-card" href="#configure" data-open-tab="wpf"><strong>WPF <span>modern .NET
+                →</span></strong>
+            <p>Windows desktop agent for one application dispatcher.</p>
+          </a>
+          <a class="framework-card" href="#configure" data-open-tab="winui"><strong>WinUI 3 <span>unpackaged x64
+                →</span></strong>
+            <p>Self-contained applications using Windows App SDK 2.3.1.</p>
+          </a>
+          <a class="framework-card" href="#configure" data-open-tab="maui"><strong>.NET MAUI <span>10.0.80
+                →</span></strong>
+            <p>Logical agent for unpackaged Windows and debuggable Android apps.</p>
+          </a>
+        </div>
+      </section>
 
-          <div class="framework-list">
-            <a class="framework-card" href="#configure" data-open-tab="avalonia"><strong>Avalonia <span>11.3.18 / 12.x →</span></strong><p>In-process agent for applications targeting .NET 8 or later.</p></a>
-            <a class="framework-card" href="#configure" data-open-tab="wpf"><strong>WPF <span>modern .NET →</span></strong><p>Windows desktop agent for one application dispatcher.</p></a>
-            <a class="framework-card" href="#configure" data-open-tab="winui"><strong>WinUI 3 <span>unpackaged x64 →</span></strong><p>Self-contained applications using Windows App SDK 2.3.1.</p></a>
-            <a class="framework-card" href="#configure" data-open-tab="maui"><strong>.NET MAUI <span>10.0.80 →</span></strong><p>Logical agent for unpackaged Windows and debuggable Android apps.</p></a>
-          </div>
-        </section>
+      <section id="install">
+        <h2>Install the XAML MCP server</h2>
+        <p>The application references one framework agent. Your development environment also needs the
+          <code>xamlmcp</code> MCP server tool.</p>
 
-        <section id="install">
-          <h2>Install the XAML MCP server</h2>
-          <p>The application references one framework agent. Your development environment also needs the <code>xamlmcp</code> MCP server tool.</p>
-
-          <div class="steps">
-            <div class="step">
-              <h3>Install a framework agent</h3>
-              <p>Choose the package that matches the application.</p>
-              <div class="code-block">
-                <div class="code-head"><span>Terminal</span><button class="copy-button" type="button">Copy</button></div>
-                <pre><code><span class="code-command">dotnet add package</span> XamlMcp.Avalonia <span class="code-flag">--version</span> <span data-nuget-package="XamlMcp.Avalonia">VERSION</span>
+        <div class="steps">
+          <div class="step">
+            <h3>Install a framework agent</h3>
+            <p>Choose the package that matches the application.</p>
+            <div class="code-block">
+              <div class="code-head"><span>Terminal</span><button class="copy-button" type="button">Copy</button></div>
+              <pre><code><span class="code-command">dotnet add package</span> XamlMcp.Avalonia <span class="code-flag">--version</span> <span data-nuget-package="XamlMcp.Avalonia">VERSION</span>
 <span class="code-command">dotnet add package</span> XamlMcp.Wpf <span class="code-flag">--version</span> <span data-nuget-package="XamlMcp.Wpf">VERSION</span>
 <span class="code-command">dotnet add package</span> XamlMcp.WinUI <span class="code-flag">--version</span> <span data-nuget-package="XamlMcp.WinUI">VERSION</span>
 <span class="code-command">dotnet add package</span> XamlMcp.Maui <span class="code-flag">--version</span> <span data-nuget-package="XamlMcp.Maui">VERSION</span></code></pre>
-              </div>
             </div>
+          </div>
 
-            <div class="step">
-              <h3>Choose how to run the MCP server</h3>
-              <p>The client setup below runs the pinned package with <code>dnx</code> and needs no global installation. If you prefer a permanent <code>xamlmcp</code> command, install the .NET tool:</p>
-              <div class="code-block">
-                <div class="code-head"><span>Terminal</span><button class="copy-button" type="button">Copy</button></div>
-                <pre><code><span class="code-command">dotnet tool install</span> <span class="code-flag">--global</span> XamlMcp.Server <span class="code-flag">--version</span> <span data-nuget-package="XamlMcp.Server">VERSION</span></code></pre>
-              </div>
+          <div class="step">
+            <h3>Choose how to run the MCP server</h3>
+            <p>The client setup below runs the pinned package with <code>dnx</code> and needs no global installation. If
+              you prefer a permanent <code>xamlmcp</code> command, install the .NET tool:</p>
+            <div class="code-block">
+              <div class="code-head"><span>Terminal</span><button class="copy-button" type="button">Copy</button></div>
+              <pre><code><span class="code-command">dotnet tool install</span> <span class="code-flag">--global</span> XamlMcp.Server <span class="code-flag">--version</span> <span data-nuget-package="XamlMcp.Server">VERSION</span></code></pre>
             </div>
+          </div>
 
-            <div class="step" id="configure">
-              <h3>Attach the agent</h3>
-              <p>Select your framework for the exact startup code and release-gating behavior.</p>
+          <div class="step" id="configure">
+            <h3>Attach the agent</h3>
+            <p>Select your framework for the exact startup code and release-gating behavior.</p>
 
-              <div class="tabs">
-                <div class="tab-list" role="tablist" aria-label="Framework setup">
-                  <button class="tab-button" type="button" role="tab" id="tab-avalonia" aria-controls="panel-avalonia" aria-selected="true" data-tab="avalonia">Avalonia</button>
-                  <button class="tab-button" type="button" role="tab" id="tab-wpf" aria-controls="panel-wpf" aria-selected="false" tabindex="-1" data-tab="wpf">WPF</button>
-                  <button class="tab-button" type="button" role="tab" id="tab-winui" aria-controls="panel-winui" aria-selected="false" tabindex="-1" data-tab="winui">WinUI 3</button>
-                  <button class="tab-button" type="button" role="tab" id="tab-maui" aria-controls="panel-maui" aria-selected="false" tabindex="-1" data-tab="maui">.NET MAUI</button>
-                </div>
+            <div class="tabs">
+              <div class="tab-list" role="tablist" aria-label="Framework setup">
+                <button class="tab-button" type="button" role="tab" id="tab-avalonia" aria-controls="panel-avalonia"
+                  aria-selected="true" data-tab="avalonia">Avalonia</button>
+                <button class="tab-button" type="button" role="tab" id="tab-wpf" aria-controls="panel-wpf"
+                  aria-selected="false" tabindex="-1" data-tab="wpf">WPF</button>
+                <button class="tab-button" type="button" role="tab" id="tab-winui" aria-controls="panel-winui"
+                  aria-selected="false" tabindex="-1" data-tab="winui">WinUI 3</button>
+                <button class="tab-button" type="button" role="tab" id="tab-maui" aria-controls="panel-maui"
+                  aria-selected="false" tabindex="-1" data-tab="maui">.NET MAUI</button>
+              </div>
 
-                <div class="tab-panel" role="tabpanel" id="panel-avalonia" aria-labelledby="tab-avalonia" data-panel="avalonia">
-                  <p>Add the fluent attachment in <code>BuildAvaloniaApp</code>. This form stays inert unless <code>XAML_MCP=1</code> exists at launch.</p>
-                  <div class="code-block"><div class="code-head"><span>Program.cs</span><button class="copy-button" type="button">Copy</button></div><pre><code><span class="code-comment">using XamlMcp.Avalonia;</span>
+              <div class="tab-panel" role="tabpanel" id="panel-avalonia" aria-labelledby="tab-avalonia"
+                data-panel="avalonia">
+                <p>Add the fluent attachment in <code>BuildAvaloniaApp</code>. This form stays inert unless
+                  <code>XAML_MCP=1</code> exists at launch.</p>
+                <div class="code-block">
+                  <div class="code-head"><span>Program.cs</span><button class="copy-button" type="button">Copy</button>
+                  </div>
+                  <pre><code><span class="code-comment">using XamlMcp.Avalonia;</span>
 
 AppBuilder.Configure&lt;App&gt;()
     .UsePlatformDetect()
-    .AttachXamlMcp();</code></pre></div>
-                  <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5m0-8h.01"></path></svg><p>For hard exclusion from Release binaries, wrap <code>.AttachXamlMcp()</code> in your own <code>#if DEBUG</code>.</p></div>
+    .AttachXamlMcp();</code></pre>
                 </div>
+                <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    aria-hidden="true">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <path d="M12 11v5m0-8h.01"></path>
+                  </svg>
+                  <p>For hard exclusion from Release binaries, wrap <code>.AttachXamlMcp()</code> in your own
+                    <code>#if DEBUG</code>.</p>
+                </div>
+              </div>
 
-                <div class="tab-panel" role="tabpanel" id="panel-wpf" aria-labelledby="tab-wpf" data-panel="wpf" hidden>
-                  <p>Attach from <code>Application.OnStartup</code>. The call site disappears from Release builds because the method is conditional on <code>DEBUG</code>.</p>
-                  <div class="code-block"><div class="code-head"><span>App.xaml.cs</span><button class="copy-button" type="button">Copy</button></div><pre><code><span class="code-comment">using XamlMcp.Wpf;</span>
+              <div class="tab-panel" role="tabpanel" id="panel-wpf" aria-labelledby="tab-wpf" data-panel="wpf" hidden>
+                <p>Attach from <code>Application.OnStartup</code>. The call site disappears from Release builds because
+                  the method is conditional on <code>DEBUG</code>.</p>
+                <div class="code-block">
+                  <div class="code-head"><span>App.xaml.cs</span><button class="copy-button" type="button">Copy</button>
+                  </div>
+                  <pre><code><span class="code-comment">using XamlMcp.Wpf;</span>
 
 protected override void OnStartup(StartupEventArgs e)
 {
     this.AttachXamlMcp();
     base.OnStartup(e);
-}</code></pre></div>
+}</code></pre>
                 </div>
+              </div>
 
-                <div class="tab-panel" role="tabpanel" id="panel-winui" aria-labelledby="tab-winui" data-panel="winui" hidden>
-                  <p>Keep the session and registration in application fields. Attach on the UI thread, register each window, and dispose both when the window closes.</p>
-                  <div class="code-block"><div class="code-head"><span>App.xaml.cs</span><button class="copy-button" type="button">Copy</button></div><pre><code>private WinUiXamlMcpSession? _xamlMcp;
+              <div class="tab-panel" role="tabpanel" id="panel-winui" aria-labelledby="tab-winui" data-panel="winui"
+                hidden>
+                <p>Keep the session and registration in application fields. Attach on the UI thread, register each
+                  window, and dispose both when the window closes.</p>
+                <div class="code-block">
+                  <div class="code-head"><span>App.xaml.cs</span><button class="copy-button" type="button">Copy</button>
+                  </div>
+                  <pre><code>private WinUiXamlMcpSession? _xamlMcp;
 private IDisposable? _windowRegistration;
 
 #if DEBUG
@@ -168,60 +216,90 @@ window.Closed += async (_, _) =&gt;
     _windowRegistration?.Dispose();
     await session.DisposeAsync();
 };
-#endif</code></pre></div>
-                  <div class="callout warning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 9v4m0 4h.01"></path><path d="M10.3 3.8 2.4 18a2 2 0 0 0 1.8 3h15.6a2 2 0 0 0 1.8-3L13.7 3.8a2 2 0 0 0-3.4 0Z"></path></svg><p>WinUI support requires self-contained unpackaged <code>win-x64</code> output and one <code>DispatcherQueue</code>.</p></div>
+#endif</code></pre>
                 </div>
+                <div class="callout warning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    aria-hidden="true">
+                    <path d="M12 9v4m0 4h.01"></path>
+                    <path d="M10.3 3.8 2.4 18a2 2 0 0 0 1.8 3h15.6a2 2 0 0 0 1.8-3L13.7 3.8a2 2 0 0 0-3.4 0Z"></path>
+                  </svg>
+                  <p>WinUI support requires self-contained unpackaged <code>win-x64</code> output and one
+                    <code>DispatcherQueue</code>.</p>
+                </div>
+              </div>
 
-                <div class="tab-panel" role="tabpanel" id="panel-maui" aria-labelledby="tab-maui" data-panel="maui" hidden>
-                  <p>Call <code>UseXamlMcp()</code> while building the app. The same package works on Windows and Android.</p>
-                  <div class="code-block"><div class="code-head"><span>MauiProgram.cs</span><button class="copy-button" type="button">Copy</button></div><pre><code><span class="code-comment">using XamlMcp.Maui;</span>
+              <div class="tab-panel" role="tabpanel" id="panel-maui" aria-labelledby="tab-maui" data-panel="maui"
+                hidden>
+                <p>Call <code>UseXamlMcp()</code> while building the app. The same package works on Windows and Android.
+                </p>
+                <div class="code-block">
+                  <div class="code-head"><span>MauiProgram.cs</span><button class="copy-button"
+                      type="button">Copy</button></div>
+                  <pre><code><span class="code-comment">using XamlMcp.Maui;</span>
 
 #if DEBUG
 builder.UseXamlMcp();
-#endif</code></pre></div>
-                  <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5m0-8h.01"></path></svg><p>Android requires API 24 or later. Screenshots require API 26 or later. iOS and Mac Catalyst are unsupported.</p></div>
+#endif</code></pre>
+                </div>
+                <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    aria-hidden="true">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <path d="M12 11v5m0-8h.01"></path>
+                  </svg>
+                  <p>Android requires API 24 or later. Screenshots require API 26 or later. iOS and Mac Catalyst are
+                    unsupported.</p>
                 </div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section id="connect">
-          <h2>Configure Claude, Codex, and GitHub Copilot</h2>
-          <p>XamlMcp runs as a local stdio MCP server. Your client starts it when needed; you do not run a persistent server process. The commands below pin the published preview and require the .NET 10 SDK.</p>
+      <section id="connect">
+        <h2>Configure Claude, Codex, and GitHub Copilot</h2>
+        <p>XamlMcp runs as a local stdio MCP server. Your client starts it when needed; you do not run a persistent
+          server process. The commands below pin the published preview and require the .NET 10 SDK.</p>
 
-          <div class="client-list">
-            <div class="client-row">
-              <div class="client-name"><strong>Claude Code</strong><span>CLI</span></div>
-              <div class="client-body">
-                <p>Add XamlMcp for your Claude Code user account. Use <code>--scope project</code> instead if you want a committable project configuration.</p>
-                <div class="code-block">
-                  <div class="code-head"><span>Terminal</span><button class="copy-button" type="button">Copy</button></div>
-                  <pre><code><span class="code-command">claude mcp add</span> <span class="code-flag">--scope user</span> xamlmcp <span class="code-flag">--</span> dnx XamlMcp.Server@<span data-nuget-package="XamlMcp.Server">VERSION</span></code></pre>
+        <div class="client-list">
+          <div class="client-row">
+            <div class="client-name"><strong>Claude Code</strong><span>CLI</span></div>
+            <div class="client-body">
+              <p>Add XamlMcp for your Claude Code user account. Use <code>--scope project</code> instead if you want a
+                committable project configuration.</p>
+              <div class="code-block">
+                <div class="code-head"><span>Terminal</span><button class="copy-button" type="button">Copy</button>
                 </div>
-                <p class="client-note">Run <code>claude mcp list</code> to confirm the server is registered. <a href="https://code.claude.com/docs/en/mcp">Claude Code MCP documentation ↗</a></p>
+                <pre><code><span class="code-command">claude mcp add</span> <span class="code-flag">--scope user</span> xamlmcp <span class="code-flag">--</span> dnx XamlMcp.Server@<span data-nuget-package="XamlMcp.Server">VERSION</span></code></pre>
               </div>
+              <p class="client-note">Run <code>claude mcp list</code> to confirm the server is registered. <a
+                  href="https://code.claude.com/docs/en/mcp">Claude Code MCP documentation ↗</a></p>
             </div>
+          </div>
 
-            <div class="client-row">
-              <div class="client-name"><strong>Codex</strong><span>CLI, app, and IDE</span></div>
-              <div class="client-body">
-                <p>Add the server once. Codex CLI, the Codex app, and the IDE extension share the same MCP configuration.</p>
-                <div class="code-block">
-                  <div class="code-head"><span>Terminal</span><button class="copy-button" type="button">Copy</button></div>
-                  <pre><code><span class="code-command">codex mcp add</span> xamlmcp <span class="code-flag">--</span> dnx XamlMcp.Server@<span data-nuget-package="XamlMcp.Server">VERSION</span></code></pre>
+          <div class="client-row">
+            <div class="client-name"><strong>Codex</strong><span>CLI, app, and IDE</span></div>
+            <div class="client-body">
+              <p>Add the server once. Codex CLI, the Codex app, and the IDE extension share the same MCP configuration.
+              </p>
+              <div class="code-block">
+                <div class="code-head"><span>Terminal</span><button class="copy-button" type="button">Copy</button>
                 </div>
-                <p class="client-note">Run <code>codex mcp list</code> or use <code>/mcp</code> inside Codex to verify the connection. <a href="https://learn.chatgpt.com/docs/extend/mcp?surface=cli">Codex MCP documentation ↗</a></p>
+                <pre><code><span class="code-command">codex mcp add</span> xamlmcp <span class="code-flag">--</span> dnx XamlMcp.Server@<span data-nuget-package="XamlMcp.Server">VERSION</span></code></pre>
               </div>
+              <p class="client-note">Run <code>codex mcp list</code> or use <code>/mcp</code> inside Codex to verify the
+                connection. <a href="https://learn.chatgpt.com/docs/extend/mcp?surface=cli">Codex MCP documentation
+                  ↗</a></p>
             </div>
+          </div>
 
-            <div class="client-row">
-              <div class="client-name"><strong>GitHub Copilot</strong><span>VS Code</span></div>
-              <div class="client-body">
-                <p>Create <code>.vscode/mcp.json</code> in the repository.</p>
-                <div class="code-block">
-                  <div class="code-head"><span>.vscode/mcp.json</span><button class="copy-button" type="button">Copy</button></div>
-                  <pre><code>{
+          <div class="client-row">
+            <div class="client-name"><strong>GitHub Copilot</strong><span>VS Code</span></div>
+            <div class="client-body">
+              <p>Create <code>.vscode/mcp.json</code> in the repository.</p>
+              <div class="code-block">
+                <div class="code-head"><span>.vscode/mcp.json</span><button class="copy-button"
+                    type="button">Copy</button></div>
+                <pre><code>{
   "servers": {
     "xamlmcp": {
       "command": "dnx",
@@ -229,18 +307,23 @@ builder.UseXamlMcp();
     }
   }
 }</code></pre>
-                </div>
-                <p class="client-note">Select <strong>Start</strong> above the server entry, then open Copilot Chat in Agent mode and enable its tools. <a href="https://docs.github.com/en/copilot/how-tos/provide-context/use-mcp-in-your-ide/extend-copilot-chat-with-mcp">GitHub Copilot MCP documentation ↗</a></p>
               </div>
+              <p class="client-note">Select <strong>Start</strong> above the server entry, then open Copilot Chat in
+                Agent mode and enable its tools. <a
+                  href="https://docs.github.com/en/copilot/how-tos/provide-context/use-mcp-in-your-ide/extend-copilot-chat-with-mcp">GitHub
+                  Copilot MCP documentation ↗</a></p>
             </div>
+          </div>
 
-            <div class="client-row">
-              <div class="client-name"><strong>Other MCP clients</strong><span>Generic stdio</span></div>
-              <div class="client-body">
-                <p>For clients that use the common <code>mcpServers</code> configuration shape, register the executable directly.</p>
-                <div class="code-block">
-                  <div class="code-head"><span>MCP configuration</span><button class="copy-button" type="button">Copy</button></div>
-                  <pre><code>{
+          <div class="client-row">
+            <div class="client-name"><strong>Other MCP clients</strong><span>Generic stdio</span></div>
+            <div class="client-body">
+              <p>For clients that use the common <code>mcpServers</code> configuration shape, register the executable
+                directly.</p>
+              <div class="code-block">
+                <div class="code-head"><span>MCP configuration</span><button class="copy-button"
+                    type="button">Copy</button></div>
+                <pre><code>{
   "mcpServers": {
     "xamlmcp": {
       "command": "dnx",
@@ -248,223 +331,274 @@ builder.UseXamlMcp();
     }
   }
 }</code></pre>
-                </div>
-                <p class="client-note">Configuration filenames and top-level keys vary by client. Use stdio transport. If you install <code>XamlMcp.Server</code> globally, you can replace the <code>dnx</code> command and arguments with <code>xamlmcp</code>.</p>
               </div>
+              <p class="client-note">Configuration filenames and top-level keys vary by client. Use stdio transport. If
+                you install <code>XamlMcp.Server</code> globally, you can replace the <code>dnx</code> command and
+                arguments with <code>xamlmcp</code>.</p>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section id="verify">
-          <h2>Verify the XamlMcp connection</h2>
-          <p>Launch the instrumented application first. For Avalonia's fluent attachment form, launch it with <code>XAML_MCP=1</code>. Then open Claude Code or Codex with the XamlMcp server enabled and ask:</p>
+      <section id="verify">
+        <h2>Verify the XamlMcp connection</h2>
+        <p>Launch the instrumented application first. For Avalonia's fluent attachment form, launch it with
+          <code>XAML_MCP=1</code>. Then open Claude Code or Codex with the XamlMcp server enabled and ask:</p>
 
-          <div class="code-block">
-            <div class="code-head"><span>Prompt</span><button class="copy-button" type="button">Copy</button></div>
-            <pre><code>Use XamlMcp to list the running applications, attach to my app, and show its UI tree.</code></pre>
+        <div class="code-block">
+          <div class="code-head"><span>Prompt</span><button class="copy-button" type="button">Copy</button></div>
+          <pre><code>Use XamlMcp to list the running applications, attach to my app, and show its UI tree.</code></pre>
+        </div>
+
+        <p>The client performs this tool sequence:</p>
+        <div class="flow" aria-label="Verification tool sequence">
+          <div class="flow-item"><small>Discover</small><code>list-apps</code><span class="flow-arrow">→</span></div>
+          <div class="flow-item"><small>Connect</small><code>attach(instanceId)</code><span class="flow-arrow">→</span>
           </div>
+          <div class="flow-item"><small>Inspect</small><code>tree</code></div>
+        </div>
+        <p>If the client returns the application's UI tree, the framework package, discovery transport, MCP server,
+          authentication, and client configuration are working together. These are MCP tool calls made by the AI client,
+          not terminal commands.</p>
+      </section>
 
-          <p>The client performs this tool sequence:</p>
-          <div class="flow" aria-label="Verification tool sequence">
-            <div class="flow-item"><small>Discover</small><code>list-apps</code><span class="flow-arrow">→</span></div>
-            <div class="flow-item"><small>Connect</small><code>attach(instanceId)</code><span class="flow-arrow">→</span></div>
-            <div class="flow-item"><small>Inspect</small><code>tree</code></div>
-          </div>
-          <p>If the client returns the application's UI tree, the framework package, discovery transport, MCP server, authentication, and client configuration are working together. These are MCP tool calls made by the AI client, not terminal commands.</p>
-        </section>
+      <section id="driver">
+        <h2>Native dialogs and windows</h2>
+        <p>A native file picker or message box is a separate Win32 window. It does not belong to the application's XAML
+          tree, so it will not appear in <code>tree</code> and ordinary XamlMcp input cannot address it.</p>
 
-        <section id="driver">
-          <h2>Native dialogs and windows</h2>
-          <p>A native file picker or message box is a separate Win32 window. It does not belong to the application's XAML tree, so it will not appear in <code>tree</code> and ordinary XamlMcp input cannot address it.</p>
+        <p>The optional Windows Driver runs inside <code>XamlMcp.Server</code> to cover that boundary. It is disabled by
+          default. Enable it in the command registered with your MCP client:</p>
 
-          <p>The optional Windows Driver runs inside <code>XamlMcp.Server</code> to cover that boundary. It is disabled by default. Enable it in the command registered with your MCP client:</p>
-
-          <div class="code-block">
-            <div class="code-head"><span>Terminal</span><button class="copy-button" type="button">Copy</button></div>
-            <pre><code><span class="code-command">claude mcp add</span> <span class="code-flag">--scope user</span> xamlmcp <span class="code-flag">--</span> dnx XamlMcp.Server@<span data-nuget-package="XamlMcp.Server">VERSION</span> <span class="code-flag">--enable-driver</span>
+        <div class="code-block">
+          <div class="code-head"><span>Terminal</span><button class="copy-button" type="button">Copy</button></div>
+          <pre><code><span class="code-command">claude mcp add</span> <span class="code-flag">--scope user</span> xamlmcp <span class="code-flag">--</span> dnx XamlMcp.Server@<span data-nuget-package="XamlMcp.Server">VERSION</span> <span class="code-flag">--enable-driver</span>
 <span class="code-command">codex mcp add</span> xamlmcp <span class="code-flag">--</span> dnx XamlMcp.Server@<span data-nuget-package="XamlMcp.Server">VERSION</span> <span class="code-flag">--enable-driver</span></code></pre>
-          </div>
+        </div>
 
-          <p><code>dialog-wait</code> and <code>dialog-act</code> handle app-opened native dialogs. <code>window-list</code> and <code>window-act</code> inspect and manage the application's top-level windows.</p>
+        <p><code>dialog-wait</code> and <code>dialog-act</code> handle app-opened native dialogs.
+          <code>window-list</code> and <code>window-act</code> inspect and manage the application's top-level windows.
+        </p>
 
-          <div class="callout warning">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 9v4m0 4h.01"></path><path d="M10.3 3.8 2.4 18a2 2 0 0 0 1.8 3h15.6a2 2 0 0 0 1.8-3L13.7 3.8a2 2 0 0 0-3.4 0Z"></path></svg>
-            <p>The Driver only accepts windows owned by the attached process. Dialogs must appear after a mutating XamlMcp call, file paths must stay inside configured roots, and elevated applications and non-interactive sessions are rejected.</p>
-          </div>
-        </section>
+        <div class="callout warning">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M12 9v4m0 4h.01"></path>
+            <path d="M10.3 3.8 2.4 18a2 2 0 0 0 1.8 3h15.6a2 2 0 0 0 1.8-3L13.7 3.8a2 2 0 0 0-3.4 0Z"></path>
+          </svg>
+          <p>The Driver only accepts windows owned by the attached process. Dialogs must appear after a mutating XamlMcp
+            call, file paths must stay inside configured roots, and elevated applications and non-interactive sessions
+            are rejected.</p>
+        </div>
+      </section>
 
-        <section id="tools">
-          <h2>XAML inspection and automation tools</h2>
-          <p>XamlMcp exposes a consistent tool surface across frameworks. The capability map returned by <code>attach</code> is authoritative for the current process.</p>
-          <div class="table-scroll">
+      <section id="tools">
+        <h2>XAML inspection and automation tools</h2>
+        <p>XamlMcp exposes a consistent tool surface across frameworks. The capability map returned by
+          <code>attach</code> is authoritative for the current process.</p>
+        <div class="table-scroll">
           <table class="tool-table">
-            <thead><tr><th>Tools</th><th>Purpose</th></tr></thead>
+            <thead>
+              <tr>
+                <th>Tools</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td><code>list-apps</code>, <code>attach</code>, <code>detach</code></td><td>Discover running applications and manage the current connection, including replacement applications after a restart.</td></tr>
-              <tr><td><code>tree</code>, <code>search</code>, <code>ancestors</code></td><td>Navigate visual or logical UI nodes; search by automation id, type, name, class, pseudo-class, or text.</td></tr>
-              <tr><td><code>props</code>, <code>set-prop</code></td><td>Read properties, value sources, automation patterns, and command slots; write or clear local values.</td></tr>
-              <tr><td><code>styles</code>, <code>bindings</code>, <code>failures</code>, <code>resources</code></td><td>Diagnose styles, active bindings, DataContext and template origins, XAML failures, and resolved resources.</td></tr>
-              <tr><td><code>screenshot</code></td><td>Capture a window or node as an MCP image, optionally with a same-capture node map.</td></tr>
-              <tr><td><code>wait-for</code>, <code>hit-test</code></td><td>Wait boundedly for UI state or map logical coordinates to a deepest-first node stack.</td></tr>
-              <tr><td><code>input</code>, <code>action</code>, <code>pseudo-class</code></td><td>Send input, use automation patterns and bound commands, or control supported visual states.</td></tr>
-              <tr><td><code>assets</code>, <code>open-asset</code></td><td>Enumerate and read framework assets through safe identifiers.</td></tr>
-              <tr><td><code>dialog-*</code>, <code>window-*</code></td><td>Optional Windows driver for app-owned native dialogs and windows.</td></tr>
+              <tr>
+                <td><code>list-apps</code>, <code>attach</code>, <code>detach</code></td>
+                <td>Discover running applications and manage the current connection, including replacement applications
+                  after a restart.</td>
+              </tr>
+              <tr>
+                <td><code>tree</code>, <code>search</code>, <code>ancestors</code></td>
+                <td>Navigate visual or logical UI nodes; search by automation id, type, name, class, pseudo-class, or
+                  text.</td>
+              </tr>
+              <tr>
+                <td><code>props</code>, <code>set-prop</code></td>
+                <td>Read properties, value sources, automation patterns, and command slots; write or clear local values.
+                </td>
+              </tr>
+              <tr>
+                <td><code>styles</code>, <code>bindings</code>, <code>failures</code>, <code>resources</code></td>
+                <td>Diagnose styles, active bindings, DataContext and template origins, XAML failures, and resolved
+                  resources.</td>
+              </tr>
+              <tr>
+                <td><code>screenshot</code></td>
+                <td>Capture a window or node as an MCP image, optionally with a same-capture node map.</td>
+              </tr>
+              <tr>
+                <td><code>wait-for</code>, <code>hit-test</code></td>
+                <td>Wait boundedly for UI state or map logical coordinates to a deepest-first node stack.</td>
+              </tr>
+              <tr>
+                <td><code>input</code>, <code>action</code>, <code>pseudo-class</code></td>
+                <td>Send input, use automation patterns and bound commands, or control supported visual states.</td>
+              </tr>
+              <tr>
+                <td><code>assets</code>, <code>open-asset</code></td>
+                <td>Enumerate and read framework assets through safe identifiers.</td>
+              </tr>
+              <tr>
+                <td><code>dialog-*</code>, <code>window-*</code></td>
+                <td>Optional Windows driver for app-owned native dialogs and windows.</td>
+              </tr>
             </tbody>
           </table>
-          </div>
-          <p>Node tools accept an exact <code>{snapshotId, nodeId}</code> target or a durable locator using <code>automationId</code>, <code>name</code>, <code>type</code>, <code>text</code>, or <code>styleClass</code>. Locators can be scoped to an ancestor and return a typed ambiguity error instead of silently choosing a match. Exact references remain usable across the current and previous three snapshots while their node stays live; use locators when a workflow must survive re-querying.</p>
-        </section>
+        </div>
+      </section>
 
-      </article>
-    </main>
-  </div>
+    </article>
+  </main>
+</div>
 
-  <script>
-    const tabs = [...document.querySelectorAll('[role="tab"]')];
-    const panels = [...document.querySelectorAll('[role="tabpanel"]')];
-    const nugetVersionTargets = [...document.querySelectorAll('[data-nuget-package]')];
-    const nugetVersionBlocks = [...new Set(nugetVersionTargets
-      .map((target) => target.closest('.code-block'))
-      .filter(Boolean))];
+<script>
+  const tabs = [...document.querySelectorAll('[role="tab"]')];
+  const panels = [...document.querySelectorAll('[role="tabpanel"]')];
+  const nugetVersionTargets = [...document.querySelectorAll('[data-nuget-package]')];
+  const nugetVersionBlocks = [...new Set(nugetVersionTargets
+    .map((target) => target.closest('.code-block'))
+    .filter(Boolean))];
 
-    nugetVersionBlocks.forEach((block) => {
-      const button = block.querySelector('.copy-button');
-      if (!button) return;
-      button.disabled = true;
-      button.textContent = 'Loading…';
+  nugetVersionBlocks.forEach((block) => {
+    const button = block.querySelector('.copy-button');
+    if (!button) return;
+    button.disabled = true;
+    button.textContent = 'Loading…';
+  });
+
+  async function getNuGetSearchService() {
+    const response = await fetch('https://api.nuget.org/v3/index.json');
+    if (!response.ok) throw new Error(`NuGet service index returned ${response.status}.`);
+    const serviceIndex = await response.json();
+    const search = serviceIndex.resources.find((resource) => {
+      const types = Array.isArray(resource['@type']) ? resource['@type'] : [resource['@type']];
+      return types.some((type) => String(type).startsWith('SearchQueryService'));
     });
+    if (!search) throw new Error('NuGet search service was not found.');
+    return search['@id'];
+  }
 
-    async function getNuGetSearchService() {
-      const response = await fetch('https://api.nuget.org/v3/index.json');
-      if (!response.ok) throw new Error(`NuGet service index returned ${response.status}.`);
-      const serviceIndex = await response.json();
-      const search = serviceIndex.resources.find((resource) => {
-        const types = Array.isArray(resource['@type']) ? resource['@type'] : [resource['@type']];
-        return types.some((type) => String(type).startsWith('SearchQueryService'));
-      });
-      if (!search) throw new Error('NuGet search service was not found.');
-      return search['@id'];
-    }
+  async function getLatestNuGetVersion(searchService, packageId) {
+    const endpoint = new URL(searchService);
+    endpoint.searchParams.set('q', `packageid:${packageId}`);
+    endpoint.searchParams.set('prerelease', 'true');
+    endpoint.searchParams.set('semVerLevel', '2.0.0');
+    endpoint.searchParams.set('take', '1');
 
-    async function getLatestNuGetVersion(searchService, packageId) {
-      const endpoint = new URL(searchService);
-      endpoint.searchParams.set('q', `packageid:${packageId}`);
-      endpoint.searchParams.set('prerelease', 'true');
-      endpoint.searchParams.set('semVerLevel', '2.0.0');
-      endpoint.searchParams.set('take', '1');
+    const response = await fetch(endpoint);
+    if (!response.ok) throw new Error(`${packageId} lookup returned ${response.status}.`);
+    const result = await response.json();
+    const packageMetadata = result.data.find(
+      (entry) => entry.id.toLowerCase() === packageId.toLowerCase()
+    );
+    if (!packageMetadata?.version) throw new Error(`${packageId} has no listed versions.`);
+    return packageMetadata.version;
+  }
 
-      const response = await fetch(endpoint);
-      if (!response.ok) throw new Error(`${packageId} lookup returned ${response.status}.`);
-      const result = await response.json();
-      const packageMetadata = result.data.find(
-        (entry) => entry.id.toLowerCase() === packageId.toLowerCase()
-      );
-      if (!packageMetadata?.version) throw new Error(`${packageId} has no listed versions.`);
-      return packageMetadata.version;
-    }
+  async function hydrateNuGetVersions() {
+    try {
+      const searchService = await getNuGetSearchService();
+      const packageIds = [...new Set(nugetVersionTargets.map((target) => target.dataset.nugetPackage))];
+      const results = await Promise.allSettled(packageIds.map(async (packageId) => ({
+        packageId,
+        version: await getLatestNuGetVersion(searchService, packageId)
+      })));
 
-    async function hydrateNuGetVersions() {
-      try {
-        const searchService = await getNuGetSearchService();
-        const packageIds = [...new Set(nugetVersionTargets.map((target) => target.dataset.nugetPackage))];
-        const results = await Promise.allSettled(packageIds.map(async (packageId) => ({
-          packageId,
-          version: await getLatestNuGetVersion(searchService, packageId)
-        })));
-
-        results.forEach((result) => {
-          if (result.status !== 'fulfilled') {
-            console.warn(result.reason);
-            return;
-          }
-          const { packageId, version } = result.value;
-          nugetVersionTargets
-            .filter((target) => target.dataset.nugetPackage === packageId)
-            .forEach((target) => {
-              target.textContent = version;
-              target.dataset.nugetVersionReady = 'true';
-            });
-        });
-      } catch (error) {
-        console.warn(error);
-      } finally {
-        nugetVersionBlocks.forEach((block) => {
-          const button = block.querySelector('.copy-button');
-          if (!button) return;
-          const ready = [...block.querySelectorAll('[data-nuget-package]')]
-            .every((target) => target.dataset.nugetVersionReady === 'true');
-          button.disabled = !ready;
-          button.textContent = ready ? 'Copy' : 'Version unavailable';
-        });
-      }
-    }
-
-    hydrateNuGetVersions();
-
-    const copyStatus = document.createElement('span');
-    copyStatus.className = 'sr-only';
-    copyStatus.setAttribute('role', 'status');
-    copyStatus.setAttribute('aria-live', 'polite');
-    document.body.append(copyStatus);
-
-    function selectTab(name) {
-      tabs.forEach((tab) => {
-        const selected = tab.dataset.tab === name;
-        tab.setAttribute('aria-selected', String(selected));
-        tab.tabIndex = selected ? 0 : -1;
-      });
-      panels.forEach((panel) => { panel.hidden = panel.dataset.panel !== name; });
-    }
-
-    tabs.forEach((tab, index) => {
-      tab.addEventListener('click', () => selectTab(tab.dataset.tab));
-      tab.addEventListener('keydown', (event) => {
-        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
-        event.preventDefault();
-        const direction = event.key === 'ArrowRight' ? 1 : -1;
-        const next = event.key === 'Home' ? tabs[0]
-          : event.key === 'End' ? tabs[tabs.length - 1]
-          : tabs[(index + direction + tabs.length) % tabs.length];
-        selectTab(next.dataset.tab);
-        next.focus();
-      });
-    });
-
-    document.querySelectorAll('[data-open-tab]').forEach((link) => {
-      link.addEventListener('click', () => selectTab(link.dataset.openTab));
-    });
-
-    document.querySelectorAll('.copy-button').forEach((button) => {
-      button.addEventListener('click', async () => {
-        const source = button.closest('.code-block').querySelector('code').innerText;
-        try {
-          await navigator.clipboard.writeText(source);
-          button.textContent = 'Copied';
-          copyStatus.textContent = 'Code copied to clipboard.';
-        } catch {
-          button.textContent = 'Select text';
-          copyStatus.textContent = 'Clipboard access failed. Select the code manually.';
+      results.forEach((result) => {
+        if (result.status !== 'fulfilled') {
+          console.warn(result.reason);
+          return;
         }
-        window.setTimeout(() => { button.textContent = 'Copy'; }, 1400);
+        const { packageId, version } = result.value;
+        nugetVersionTargets
+          .filter((target) => target.dataset.nugetPackage === packageId)
+          .forEach((target) => {
+            target.textContent = version;
+            target.dataset.nugetVersionReady = 'true';
+          });
       });
+    } catch (error) {
+      console.warn(error);
+    } finally {
+      nugetVersionBlocks.forEach((block) => {
+        const button = block.querySelector('.copy-button');
+        if (!button) return;
+        const ready = [...block.querySelectorAll('[data-nuget-package]')]
+          .every((target) => target.dataset.nugetVersionReady === 'true');
+        button.disabled = !ready;
+        button.textContent = ready ? 'Copy' : 'Version unavailable';
+      });
+    }
+  }
+
+  hydrateNuGetVersions();
+
+  const copyStatus = document.createElement('span');
+  copyStatus.className = 'sr-only';
+  copyStatus.setAttribute('role', 'status');
+  copyStatus.setAttribute('aria-live', 'polite');
+  document.body.append(copyStatus);
+
+  function selectTab(name) {
+    tabs.forEach((tab) => {
+      const selected = tab.dataset.tab === name;
+      tab.setAttribute('aria-selected', String(selected));
+      tab.tabIndex = selected ? 0 : -1;
     });
+    panels.forEach((panel) => { panel.hidden = panel.dataset.panel !== name; });
+  }
 
-    const sidebarLinks = [...document.querySelectorAll('.sidebar a[href^="#"]')];
-    const sections = sidebarLinks
-      .map((link) => document.querySelector(link.getAttribute('href')))
-      .filter(Boolean);
-    const sectionObserver = new IntersectionObserver((entries) => {
-      const visible = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((left, right) => left.boundingClientRect.top - right.boundingClientRect.top)[0];
-      if (!visible) return;
-      sidebarLinks.forEach((link) => {
-        const active = link.getAttribute('href') === `#${visible.target.id}`;
-        link.classList.toggle('active', active);
-        if (active) link.setAttribute('aria-current', 'location');
-        else link.removeAttribute('aria-current');
-      });
-    }, { rootMargin: '-15% 0px -70% 0px' });
-    sections.forEach((section) => sectionObserver.observe(section));
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => selectTab(tab.dataset.tab));
+    tab.addEventListener('keydown', (event) => {
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+      event.preventDefault();
+      const direction = event.key === 'ArrowRight' ? 1 : -1;
+      const next = event.key === 'Home' ? tabs[0]
+        : event.key === 'End' ? tabs[tabs.length - 1]
+          : tabs[(index + direction + tabs.length) % tabs.length];
+      selectTab(next.dataset.tab);
+      next.focus();
+    });
+  });
 
-  </script>
+  document.querySelectorAll('[data-open-tab]').forEach((link) => {
+    link.addEventListener('click', () => selectTab(link.dataset.openTab));
+  });
+
+  document.querySelectorAll('.copy-button').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const source = button.closest('.code-block').querySelector('code').innerText;
+      try {
+        await navigator.clipboard.writeText(source);
+        button.textContent = 'Copied';
+        copyStatus.textContent = 'Code copied to clipboard.';
+      } catch {
+        button.textContent = 'Select text';
+        copyStatus.textContent = 'Clipboard access failed. Select the code manually.';
+      }
+      window.setTimeout(() => { button.textContent = 'Copy'; }, 1400);
+    });
+  });
+
+  const sidebarLinks = [...document.querySelectorAll('.sidebar a[href^="#"]')];
+  const sections = sidebarLinks
+    .map((link) => document.querySelector(link.getAttribute('href')))
+    .filter(Boolean);
+  const sectionObserver = new IntersectionObserver((entries) => {
+    const visible = entries
+      .filter((entry) => entry.isIntersecting)
+      .sort((left, right) => left.boundingClientRect.top - right.boundingClientRect.top)[0];
+    if (!visible) return;
+    sidebarLinks.forEach((link) => {
+      const active = link.getAttribute('href') === `#${visible.target.id}`;
+      link.classList.toggle('active', active);
+      if (active) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
+  }, { rootMargin: '-15% 0px -70% 0px' });
+  sections.forEach((section) => sectionObserver.observe(section));
+
+</script>
