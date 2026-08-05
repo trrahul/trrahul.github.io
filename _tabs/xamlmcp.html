@@ -3,7 +3,7 @@ layout: xamlmcp
 title: "XAML MCP Server for Avalonia, WPF, WinUI & MAUI | XamlMcp"
 seo_title: "XAML MCP Server for Avalonia, WPF, WinUI & MAUI | XamlMcp"
 nav_title: XamlMcp
-description: "Inspect live Avalonia, WPF, WinUI 3, and .NET MAUI apps from Claude Code, Codex, or GitHub Copilot with the open-source XamlMcp server."
+description: "Inspect, diagnose, and drive live Avalonia, WPF, WinUI 3, and .NET MAUI apps from Claude Code, Codex, or GitHub Copilot with XamlMcp."
 permalink: /xamlmcp/
 order: 7
 ---
@@ -56,7 +56,7 @@ order: 7
       <article>
         <section id="overview">
           <h1>XamlMcp: an MCP server for XAML apps</h1>
-          <p class="lead">XamlMcp lets Claude Code, Codex, GitHub Copilot, and other AI coding assistants inspect and drive live Avalonia, WPF, WinUI 3, and .NET MAUI applications. Use the Model Context Protocol to read the UI tree, properties, styles, and resources; capture screenshots; send input; and run automation actions.</p>
+          <p class="lead">XamlMcp gives Claude Code, Codex, GitHub Copilot, and other AI coding assistants live context from Avalonia, WPF, WinUI 3, and .NET MAUI applications. They can inspect UI structure and state, diagnose XAML behavior, capture grounded screenshots, wait for changes, and interact with the running app.</p>
 
           <div class="meta-row">
             <span class="badge" title="Latest listed version from NuGet"><span data-nuget-package="XamlMcp.Server" aria-live="polite">Checking NuGet…</span></span>
@@ -73,12 +73,12 @@ order: 7
             <div class="intro-item">
               <small>Use it when</small>
               <strong>Your AI needs live UI context</strong>
-              <p>Debug visual state, inspect control properties, reproduce interactions, or verify a UI change.</p>
+              <p>Understand visual state, trace bindings and failures, reproduce interactions, or verify a UI change.</p>
             </div>
             <div class="intro-item">
               <small>Architecture</small>
               <strong>Agent package + MCP server</strong>
-              <p>A small in-process framework agent connects to the <code>xamlmcp</code> server over an authenticated local transport.</p>
+              <p>A small framework agent connects to the local <code>xamlmcp</code> server and can reconnect safely after the application restarts.</p>
             </div>
           </div>
         </section>
@@ -300,12 +300,13 @@ builder.UseXamlMcp();
           <table class="tool-table">
             <thead><tr><th>Tools</th><th>Purpose</th></tr></thead>
             <tbody>
+              <tr><td><code>list-apps</code>, <code>attach</code>, <code>detach</code></td><td>Discover running applications and manage the current connection, including replacement applications after a restart.</td></tr>
               <tr><td><code>tree</code>, <code>search</code>, <code>ancestors</code></td><td>Navigate visual or logical UI nodes; search by automation id, type, name, class, pseudo-class, or text.</td></tr>
               <tr><td><code>props</code>, <code>set-prop</code></td><td>Read properties, value sources, automation patterns, and command slots; write or clear local values.</td></tr>
-              <tr><td><code>styles</code>, <code>bindings</code>, <code>resources</code></td><td>Diagnose styles, active bindings, DataContext and template origins, and resolved resources.</td></tr>
+              <tr><td><code>styles</code>, <code>bindings</code>, <code>failures</code>, <code>resources</code></td><td>Diagnose styles, active bindings, DataContext and template origins, XAML failures, and resolved resources.</td></tr>
               <tr><td><code>screenshot</code></td><td>Capture a window or node as an MCP image, optionally with a same-capture node map.</td></tr>
               <tr><td><code>wait-for</code>, <code>hit-test</code></td><td>Wait boundedly for UI state or map logical coordinates to a deepest-first node stack.</td></tr>
-              <tr><td><code>input</code>, <code>action</code></td><td>Send input or use automation patterns and bound commands.</td></tr>
+              <tr><td><code>input</code>, <code>action</code>, <code>pseudo-class</code></td><td>Send input, use automation patterns and bound commands, or control supported visual states.</td></tr>
               <tr><td><code>assets</code>, <code>open-asset</code></td><td>Enumerate and read framework assets through safe identifiers.</td></tr>
               <tr><td><code>dialog-*</code>, <code>window-*</code></td><td>Optional Windows driver for app-owned native dialogs and windows.</td></tr>
             </tbody>
