@@ -28,3 +28,5 @@ playground-app/*
 temp_reference_for_codebase_Access/*
 Azure
 Applications/
+.playwright-mcp/
+design
